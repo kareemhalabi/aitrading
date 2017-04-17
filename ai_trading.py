@@ -1,10 +1,10 @@
 from flask import Flask
 
-app = Flask(__name__)
+ai_trading = Flask(__name__)
 
-@app.route('/')
+@ai_trading.route('/')
 def index():
     return 'Hello World!'
 
 if __name__ == "__main__":
-    app.run()
+    ai_trading.run()
