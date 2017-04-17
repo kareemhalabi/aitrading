@@ -1,1 +1,1 @@
-web: gunicorn ai_trading:app
+web: gunicorn ai_trading:app --log-file=-
