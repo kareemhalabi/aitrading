@@ -1,1 +1,1 @@
-web: gunicorn app:app
+web: gunicorn ai_trading:app
