@@ -1,1 +1,1 @@
-web: gunicorn ai_trading:app --log-file=-
+web: gunicorn wsgi

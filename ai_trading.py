@@ -5,7 +5,7 @@ ai_trading = Flask(__name__)
 
 @ai_trading.route('/')
 def hello_world():
-    return 'Hello World!'
+    return '<h1> Hello World! </h1>'
 
 
 if __name__ == '__main__':
