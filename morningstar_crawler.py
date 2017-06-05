@@ -15,61 +15,84 @@ b = Browser('zope.testbrowser', ignore_robots=True)
 ALLOWED_EXCHANGES = {'CAD':['TSX', 'TSE'],'USD':['NASDAQ','NYSE','ARCA', 'AMEX']}
 MORNINGSTAR_BASE_URL = 'http://www.morningstar.co.uk/uk/funds/SecuritySearchResults.aspx?type=ALL&search='
 
-quote = {}
+_quote = {}
 
 def find_by_ISIN(ISIN, currency):
-    quote["currency"] = currency
+    _quote["currency"] = currency
 
-    b.visit(MORNINGSTAR_BASE_URL + ISIN)
+    try:
+        b.visit(MORNINGSTAR_BASE_URL + ISIN)
+    except Exception, e:
+        _quote["error"] = "Error contacting security search: " + str(e)
+        return _quote
 
+
+    # Search for results on allowed exchanges
     xpath_search = "//span[("
     for exch in ALLOWED_EXCHANGES[currency]:
         xpath_search += "contains(.,'" + exch + "') or "
+
+    # needs to start at -3 to override the last "or"
     xpath_search = xpath_search[:-3] + ")]"
 
-    result = b.find_by_xpath(xpath_search).first
-    quote["ticker"] = result.text.split(":",1)[1]
-
-    link = result.find_by_xpath('.//ancestor::tr/td[1]/a').first
+    try:
+        result = b.find_by_xpath(xpath_search).first
+        _quote["ticker"] = result.text.split(":", 1)[1]  # Get ticker value
+        link = result.find_by_xpath('.//ancestor::tr/td[1]/a').first
+    except:
+        _quote["error"] = "Invalid ISIN/currency pair"
+        return _quote
 
     _get_secutity_info(link)
 
-    return quote
+    return _quote
 
 def find_by_ticker(ticker, currency):
-    quote["ticker"] = ticker
-    quote["currency"] = currency
+    _quote["ticker"] = ticker
+    _quote["currency"] = currency
 
-    b.visit(MORNINGSTAR_BASE_URL + ticker)
+    try:
+        b.visit(MORNINGSTAR_BASE_URL + ticker)
+    except Exception, e:
+        _quote["error"] = "Error contacting security search: " + str(e)
+        return _quote
 
     xpath_search = "//span[("
     for exch in ALLOWED_EXCHANGES[currency]:
         xpath_search += "contains(.,'" + exch + "') or "
+
+    # needs to start at -3 to override the last "or"
     xpath_search = xpath_search[:-3] + ") and contains(.,':" + ticker + "')]"
 
-    result = b.find_by_xpath(xpath_search).first
-    link = result.find_by_xpath('.//ancestor::tr/td[1]/a').first
+    link = ""
+    try:
+        result = b.find_by_xpath(xpath_search).first
+        link = result.find_by_xpath('.//ancestor::tr/td[1]/a').first
+    except:
+        _quote["error"] = "Invalid ticker/currency pair"
+        return _quote
 
     _get_secutity_info(link)
 
-    return quote
+    return _quote
 
 def _get_secutity_info(link):
 
-    quote["security"] = filter(lambda x : x in set(string.printable), link.text) # removes any weird characters
+    _quote["security"] = filter(lambda x : x in set(string.printable), link.text) # removes any weird characters
 
     b.visit(link['href'])
 
-    if 'etf' in link['href']:
-        price_cell = b.find_by_xpath("//tr[contains(.,'Closing Price')]/td[3]")
-        quote["last_close_price"] = float(re.sub("[^0-9.]", "", price_cell.text))
-        quote["ISIN"] = b.find_by_xpath("//tr[contains(.,'ISIN')]/td[3]").text
+    # ETF pages have a different layout than Stock pages
+    try:
+        if 'etf' in link['href']:
+            price_cell = b.find_by_xpath("//tr[contains(.,'Closing Price')]/td[3]")
+            _quote["last_close_price"] = float(re.sub("[^0-9.]", "", price_cell.text))
+            _quote["ISIN"] = b.find_by_xpath("//tr[contains(.,'ISIN')]/td[3]").text
 
-    else:
-        quote["last_close_price"] = float(b.find_by_id("Col0LastClose").text)
-        quote["ISIN"] = b.find_by_id('Col0Isin').text
+        else:
+            _quote["last_close_price"] = float(b.find_by_id("Col0LastClose").text)
+            _quote["ISIN"] = b.find_by_id('Col0Isin').text
 
-
-#print find_by_ticker(raw_input('Enter ticker: ').upper(), raw_input('Enter CAD/USD: ').upper())
-
-print find_by_ISIN(raw_input('Enter ISIN: '), raw_input('Enter CAD/USD: ').upper())
+        _quote["error"] = ""
+    except:
+        _quote["error"] = "Error gathering security info"
