@@ -19,7 +19,7 @@
     <fieldset>
         <legend>New Trade</legend>
         <div class="alert alert-dismissible alert-danger" style="display: none">
-            <button type="button" class="close" onclick="this.parentNode.style.display='none'">&times;</button>
+            <button type="button" class="close" onclick="$(this).parent().hide(500)">&times;</button>
             <h4>Oh snap!</h4>
             <p id="error_message"></p>
         </div>
@@ -37,7 +37,7 @@
             <br>
             <div class="input-group">
                 <span class="input-group-btn">
-                    <input type="text" class="form-control" id="isin" maxlength="13" placeholder="US1234567890" oninput="isinInputHandler(this)" style="width: 150px;">
+                    <input type="text" class="form-control" id="isin" maxlength="13" placeholder="US1234567890" oninput="isinInputHandler($(this))" style="width: 150px;">
                     <button id="isin_btn" class="btn btn-default" type="button" onclick="searchByIsin()" disabled="disabled">
                         <span id="isin_search_icon" class="glyphicon glyphicon-search" style="display: inline-block"></span>
                         <div id="isin_loader" class="loader" style="display: none"></div>
@@ -51,7 +51,7 @@
             <br>
             <div class="input-group">
                 <span class="input-group-btn">
-                    <input type="text" class="form-control" id="ticker" maxlength="6" placeholder="ABC" oninput="tickerInputHandler(this)" style="width: 90px;">
+                    <input type="text" class="form-control" id="ticker" maxlength="6" placeholder="ABC" oninput="tickerInputHandler($(this))" style="width: 90px;">
                     <button id="ticker_btn" class="btn btn-default" type="button" onclick="searchByTicker()" disabled="disabled">
                         <span id="ticker_search_icon" class="glyphicon glyphicon-search"></span>
                         <div id="ticker_loader" class="loader" style="display: none"></div>
@@ -82,7 +82,7 @@
             <label for="shares" class="control-label">Shares</label>
             <br>
             <input type="number" class="form-control" id="shares" min="1" step="1" style="width: 100px;"
-               oninput="sharesInputHandler(this)">
+               oninput="sharesInputHandler($(this))">
         </div>
 
          <div id="price_group" class="form-group">
@@ -91,7 +91,7 @@
             <div class="input-group">
                 <span class="input-group-addon"><span class="glyphicon glyphicon-usd"></span></span>
                 <!-- Using tel, since when using "number", NaN results in empty value-->
-                <input type="tel" class="form-control" id="price" style="width: 110px;" oninput="priceInputHandler(this)">
+                <input type="tel" class="form-control" id="price" style="width: 110px;" oninput="priceInputHandler($(this))">
             </div>
         </div>
 
