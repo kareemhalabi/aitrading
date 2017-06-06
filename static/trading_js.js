@@ -1,17 +1,16 @@
 /**
  * Created by KareemHalabi on 6/4/2017.
  */
-var form;
-window.onload = function() {
-    this.form = document.getElementById("trade_form");
-};
 
+/**
+ * Searches for a security by ISIN
+ */
 function searchByIsin() {
 
     document.getElementById("isin_search_icon").style.display = "none";
     document.getElementById("isin_loader").style.display = "inline-block";
-    var isinSearch = {"ISIN":form.elements.namedItem("isin").value,
-        "currency":form.elements.namedItem("currency").value};
+    var isinSearch = {"ISIN":document.getElementById("isin").value,
+        "currency":document.getElementById("currency").value};
 
 
     var xhttp = new XMLHttpRequest();
@@ -32,13 +31,16 @@ function searchByIsin() {
     xhttp.open("GET", "search_by_isin?"+encodeQueryData(isinSearch), true);
     xhttp.send();
 }
-
+/**
+ * Searches for a security by ticker. Note only alphabetic characters and the period
+ * are allowed.
+ */
 function searchByTicker() {
 
     document.getElementById("ticker_search_icon").style.display = "none";
     document.getElementById("ticker_loader").style.display = "inline-block"
-    var tickerSearch = {"ticker":form.elements.namedItem("ticker").value,
-        "currency":form.elements.namedItem("currency").value};
+    var tickerSearch = {"ticker":document.getElementById("ticker").value,
+        "currency":document.getElementById("currency").value};
 
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
@@ -59,6 +61,10 @@ function searchByTicker() {
     xhttp.send();
 }
 
+/**
+ * Updates data fields with security information
+ * @param security object representing security info
+ */
 function populateTradeForm(security) {
     var errorText = document.getElementById("error_message");
     if(security.error.length > 0) {
@@ -73,6 +79,10 @@ function populateTradeForm(security) {
     }
 }
 
+/**
+ * Validates ISIN input
+ * @param field The ISIN field object
+ */
 function isinInputHandler(field) {
     field.value = field.value.replace(/[^a-zA-Z0-9]/g,"").toUpperCase();
 
@@ -94,8 +104,12 @@ function isinInputHandler(field) {
 
 }
 
+/**
+ * Validates ticker input
+ * @param field The ticker field object
+ */
 function tickerInputHandler(field) {
-    field.value = field.value.replace(/-/g,".").replace(/[^a-zA-Z\.]/g,"").toUpperCase();
+    field.value = field.value.replace(/-/g,".").replace(/[^a-zA-Z.]/g,"").toUpperCase();
 
     var parentDiv = document.getElementById("ticker_group");
     var tickerBtn = document.getElementById("ticker_btn");
@@ -115,6 +129,75 @@ function tickerInputHandler(field) {
     }
 }
 
+/**
+ * Validates shares input
+ * @param field The input field object
+ */
+function sharesInputHandler(field) {
+    // Strip non-numeric for browsers without "number" support
+    field.value = field.value.replace(/[^0-9]/,"");
+    var parentDiv = document.getElementById("shares_group");
+
+    if(field.value.length > 0) {
+        if(parseInt(field.value) > 0) {
+            parentDiv.className = "form-group has-success";
+            updateTotal(false);
+        } else {
+            parentDiv.className = "form-group has-error";
+            updateTotal(true);
+        }
+    } else {
+        parentDiv.className = "form-group";
+        updateTotal(true);
+    }
+}
+
+/**
+ * Validates price input
+ * @param field The input field object
+ */
+function priceInputHandler(field) {
+    // Strip non-numeric for browsers without "tel" support
+    field.value = field.value.replace(/[^0-9.]/g,"");
+    var parentDiv = document.getElementById("price_group");
+
+    if(field.value.length > 0) {
+
+        if ((/^\d+\.?\d{0,2}$/).test(field.value) && parseFloat(field.value) > 0) {
+            parentDiv.className = "form-group has-success";
+            updateTotal(false);
+        } else {
+            parentDiv.className = "form-group has-error";
+            updateTotal(true);
+        }
+    } else {
+        parentDiv.className = "form-group";
+        updateTotal(true);
+    }
+}
+
+/**
+ * Update the trade total using number of shares and price
+ * @param reset If true, resets total field to 0
+ */
+function updateTotal(reset) {
+    var totalField = document.getElementById("total"),
+        sharesField = document.getElementById("shares"),
+        priceField = document.getElementById("price");
+
+    var totalValue = sharesField.value * priceField.value;
+    if(!(isNaN(totalValue) || reset)) {
+        totalField.value = totalValue.toLocaleString("en-US", {style: "currency", currency: "USD"}).substring(1);
+    } else {
+        totalField.value = "0.00";
+    }
+}
+
+/**
+ * Transforms a JS object into a URL query
+ * @param data the JS object to encode
+ * @returns {string} query data
+ */
 function encodeQueryData(data) {
    var params = [];
    for (var d in data)

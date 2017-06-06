@@ -90,9 +90,10 @@ def _get_secutity_info(link):
             _quote["ISIN"] = b.find_by_xpath("//tr[contains(.,'ISIN')]/td[3]").text
 
         else:
-            _quote["last_close_price"] = float(b.find_by_id("Col0LastClose").text)
+            price_cell = b.find_by_id("Col0LastClose")
+            _quote["last_close_price"] = float(re.sub("[^0-9.]", "", price_cell.text))
             _quote["ISIN"] = b.find_by_id('Col0Isin').text
 
         _quote["error"] = ""
-    except:
-        _quote["error"] = "Error gathering security info"
+    except Exception, e:
+        _quote["error"] = "Error gathering security info: " + str(e)
