@@ -12,6 +12,9 @@ def index():
 def search_by_isin():
     return jsonify(find_by_ISIN(request.args.get("ISIN"), request.args.get("currency")))
 
+@ai_trading.route('/search_by_ticker', methods=["GET"])
+def search_by_ticker():
+    return jsonify(find_by_ticker(request.args.get("ticker"), request.args.get("currency")))
 
 if __name__ == "__main__":
     ai_trading.run(debug=True)

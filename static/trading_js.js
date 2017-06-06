@@ -33,6 +33,32 @@ function searchByIsin() {
     xhttp.send();
 }
 
+function searchByTicker() {
+
+    document.getElementById("ticker_search_icon").style.display = "none";
+    document.getElementById("ticker_loader").style.display = "inline-block"
+    var tickerSearch = {"ticker":form.elements.namedItem("ticker").value,
+        "currency":form.elements.namedItem("currency").value};
+
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if(this.readyState == 4) {
+            if(this.status == 200) {
+                populateTradeForm(JSON.parse(this.responseText));
+            }
+            else { // Error occurred
+                var errorText = document.getElementById("error_message");
+                errorText.innerHTML = "Error "+this.status + ": " + this.statusText;
+                errorText.parentNode.style.display = "block";
+            }
+            document.getElementById("ticker_search_icon").style.display = "inline-block";
+            document.getElementById("ticker_loader").style.display = "none";
+        }
+    };
+    xhttp.open("GET", "search_by_ticker?"+encodeQueryData(tickerSearch), true);
+    xhttp.send();
+}
+
 function populateTradeForm(security) {
     var errorText = document.getElementById("error_message");
     if(security.error.length > 0) {
@@ -43,12 +69,12 @@ function populateTradeForm(security) {
         document.getElementById("isin").value = security.ISIN;
         document.getElementById("ticker").value = security.ticker;
         document.getElementById("sec_name").value = security.security;
-        document.getElementById("price").value = security.last_close_price;
+        document.getElementById("price").value = security.last_close_price.toFixed(2);
     }
 }
 
 function isinInputHandler(field) {
-    field.value = field.value.replace(/[^a-zA-Z0-9]/,"").toUpperCase();
+    field.value = field.value.replace(/[^a-zA-Z0-9]/g,"").toUpperCase();
 
     var parentDiv = document.getElementById("isin_group");
     var isinBtn = document.getElementById("isin_btn");
@@ -66,6 +92,27 @@ function isinInputHandler(field) {
         isinBtn.disabled = true;
     }
 
+}
+
+function tickerInputHandler(field) {
+    field.value = field.value.replace(/-/g,".").replace(/[^a-zA-Z\.]/g,"").toUpperCase();
+
+    var parentDiv = document.getElementById("ticker_group");
+    var tickerBtn = document.getElementById("ticker_btn");
+
+    if(field.value.length > 0) {
+        if((/^([A-Z]+)(\.[A-Z]{1,2})?$/).test(field.value)) {
+            parentDiv.className = "form-group has-success";
+            tickerBtn.disabled = false;
+        } else {
+            parentDiv.className = "form-group has-error";
+            tickerBtn.disabled = true;
+        }
+
+    } else {
+        parentDiv.className = "form-group";
+        tickerBtn.disabled = true;
+    }
 }
 
 function encodeQueryData(data) {
