@@ -2,19 +2,22 @@
  * Created by KareemHalabi on 6/4/2017.
  */
 
+
 /**
  * Searches for a security by ISIN
  */
 function searchByIsin() {
 
+    // Toggle loader
     $("#isin_search_icon").css("display", "none");
     $("#isin_loader").css("display", "inline-block");
+
     var isinSearch = {ISIN: $("#isin").val(),
         currency: $("#currency").val()};
 
     $.ajax({url: "search_by_isin", data: isinSearch, timeout: 20000,
             success: function(response) {
-                populateTradeForm(response);
+                populateTradeForm(response, $("#isin_group"));
             },
             error: function (error) {
                 $("#error_message").text("Error " + error.status + ": " + error.statusText).parent().show();
@@ -39,7 +42,7 @@ function searchByTicker() {
 
     $.ajax({url: "search_by_ticker", data: tickerSearch, timeout: 20000,
         success: function(response) {
-            populateTradeForm(response);
+            populateTradeForm(response, $("#ticker_group"));
         },
         error: function (error) {
             $("#error_message").text("Error " + error.status + ": " + error.statusText).parent().show();
@@ -52,20 +55,78 @@ function searchByTicker() {
 }
 
 /**
- * Updates data fields with security information
+ * Updates data fields with security information. Clears other fields if error returned
  * @param security object representing security info
+ * @param $source The source of the update (either ISIN group or ticker group)
  */
-function populateTradeForm(security) {
+function populateTradeForm(security, $source) {
     if(security.error.length > 0) {
         $("#error_message").text(security.error)
             .parent().show();
+        $source.attr("class", "form-group has-error");
+
+        // Store old values
+        var $currency = $("#currency"),
+            currency = $currency.val(),
+            sourceVal = $source.find("input").val();
+
+        resetForm();
+
+        // Restore values
+        $currency.val(currency)
+            .parents(".form-group").addClass("has-error");
+        $source.addClass("has-error").find("input").val(sourceVal);
+        $source.find("button").prop("disabled", false).attr("class", "btn btn-danger");
+
     } else {
         $("#error_message").parent().hide();
-        $("#isin").val(security.ISIN);
-        $("#ticker").val(security.ticker);
-        $("#sec_name").val(security.security);
-        $("#price").val(security.last_close_price.toFixed(2));
+
+        // Set values and set has-success
+        $("#currency")
+            .parents(".form-group").addClass("has-success");
+        $("#isin").val(security.ISIN)
+            .parents(".form-group").addClass("has-success");
+        $("#ticker").val(security.ticker)
+            .parents(".form-group").addClass("has-success");
+        $("#sec_name").val(security.security)
+            .parents(".form-group").addClass("has-success");
+        $("#price").val(security.last_close_price.toFixed(2))
+            .parents(".form-group").addClass("has-success");
+
+        $("#isin_btn").prop("disabled", false).attr("class", "btn btn-success");
+        $("#ticker_btn").prop("disabled", false).attr("class", "btn btn-success");
     }
+
+    updateTotal();
+    submitCheck();
+}
+
+function resetForm() {
+    var $form = $("#trade_form");
+    $form[0].reset();
+    $form.find(".form-group").removeClass("has-success has-error");
+    $("#form_panel").attr("class", "panel panel-primary");
+    $("#add_trade_btn").prop("disabled", true).attr("class", "btn btn-primary btn-block");
+    $("#isin_btn").prop("disabled", true).attr("class", "btn btn-primary");
+    $("#ticker_btn").prop("disabled", true).attr("class", "btn btn-primary");
+}
+
+function currencyHandler() {
+    $("#currency").parents('.form-group').addClass('has-success');
+
+    // Enable search buttons if search field is valid
+    $("#ticker_btn.btn-success").prop("disabled", false);
+    $("#isin_btn.btn-success").prop("disabled", false);
+    submitCheck();
+}
+
+/**
+ * Sets a select icon to success when an option has been selected
+ * @param $field
+ */
+function selectHandler($field) {
+    $field.parents('.form-group').addClass('has-success');
+    submitCheck();
 }
 
 /**
@@ -77,18 +138,9 @@ function isinInputHandler($field) {
         return oldval.replace(/[^a-zA-Z0-9]/g,"").toUpperCase()
     });
 
-    if($field.val().length > 0) {
-        if(validateISIN($field.val())) {
-            $("#isin_group").attr("class", "form-group has-success");
-            $("#isin_btn").prop("disabled", false);
-        } else {
-            $("#isin_group").attr("class", "form-group has-error");
-            $("#isin_btn").prop("disabled", true);
-        }
-    } else {
-        $("#isin_group").attr("class", "form-group");
-        $("#isin_btn").prop("disabled", true);
-    }
+    searchValidator($field, validateISIN($field.val()));
+
+    submitCheck();
 }
 
 /**
@@ -100,18 +152,47 @@ function tickerInputHandler($field) {
         return oldval.replace(/-/g,".").replace(/[^a-zA-Z.]/g,"").toUpperCase()
     });
 
-    if($field.val().length > 0) {
-        if((/^([A-Z]+)(\.[A-Z]{1,2})?$/).test($field.val())) {
-            $("#ticker_group").attr("class", "form-group has-success");
-            $("#ticker_btn").prop("disabled", false);
+    searchValidator($field, (/^([A-Z]+)(\.[A-Z]{1,2})?$/).test($field.val()));
+
+    submitCheck();
+}
+
+function searchValidator($input, isValid) {
+
+    var $parentGroup = $input.parents(".form-group");
+    var $button = $input.next().find("button");
+
+    if ($input.val().length > 0) {
+        if (isValid) {
+            $parentGroup.attr("class", "form-group has-success");
+            $button.attr("class", "btn btn-success");
+
+            if($("#currency").val() != null) {
+                $button.prop("disabled", false);
+            } else {
+                $button.prop("disabled", true);
+            }
+
         } else {
-            $("#ticker_group").attr("class", "form-group has-error");
-            $("#ticker_btn").prop("disabled", true);
+            $parentGroup.attr("class", "form-group has-error");
+            $button.prop("disabled", true)
+                .attr("class", "btn btn-danger");
         }
     } else {
-        $("#ticker_group").attr("class", "form-group");
-        $("#ticker_btn").prop("disabled", true);
+        $parentGroup.attr("class", "form-group");
+        $button.prop("disabled", true)
+                .attr("class", "btn btn-primary");
     }
+}
+
+function secNameInputHandler($field) {
+    if($field.val().length > 0) {
+        $("#sec_name_group").attr("class", "form-group has-success");
+    } else {
+        $("#sec_name_group").attr("class", "form-group");
+    }
+
+    submitCheck();
 }
 
 /**
@@ -136,6 +217,8 @@ function sharesInputHandler($field) {
         $("#shares_group").attr("class", "form-group");
         updateTotal(true);
     }
+
+    submitCheck();
 }
 
 /**
@@ -149,7 +232,6 @@ function priceInputHandler($field) {
     });
 
     if($field.val().length > 0) {
-
         if ((/^\d+\.?\d{0,2}$/).test($field.val()) && parseFloat($field.val()) > 0) {
             $("#price_group").attr("class", "form-group has-success");
             updateTotal(false);
@@ -161,6 +243,8 @@ function priceInputHandler($field) {
         $("#price_group").attr("class", "form-group");
         updateTotal(true);
     }
+
+    submitCheck();
 }
 
 /**
@@ -171,12 +255,31 @@ function updateTotal(reset) {
 
     var totalValue = $("#shares").val() * $("#price").val();
 
-    if(!(isNaN(totalValue) || reset)) {
+    if(!(isNaN(totalValue) || totalValue == 0 || reset)) {
         $("#total").val(totalValue.toLocaleString("en-US", {style: "currency", currency: "USD"}).substring(1));
+        $("#total_group").addClass("has-success");
     } else {
         $("#total").val("0.00");
+        $("#total_group").removeClass("has-success");
     }
 }
+
+/**
+ * Checks if the form can be submitted enabling the submit button
+ */
+function submitCheck() {
+
+    if($("#trade_form").find(".form-group:not(.has-success)").length == 0) {
+        $("#form_panel").attr("class", "panel panel-success");
+        $("#add_trade_btn").attr("class", "btn btn-success btn-block")
+            .prop("disabled", false);
+    } else {
+        $("#form_panel").attr("class", "panel panel-primary");
+        $("#add_trade_btn").attr("class", "btn btn-primary btn-block")
+            .prop("disabled", true);
+    }
+}
+
 
 /**
  * Verifies an ISIN is correct. Assume all alphabetic characters are upper case

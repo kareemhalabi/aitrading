@@ -12,121 +12,143 @@
     <title>Trade Request</title>
 </head>
 <body>
-
-<h1>Make a trade</h1>
-
-<form class="form-inline" autocomplete="off" id="trade_form">
-    <fieldset>
-        <legend>New Trade</legend>
-        <div class="alert alert-dismissible alert-danger" style="display: none">
-            <button type="button" class="close" onclick="$(this).parent().hide(500)">&times;</button>
-            <h4>Oh snap!</h4>
-            <p id="error_message"></p>
+<div id="form_container" class="container">
+    <div id="form_panel" class="panel panel-primary">
+        <div class="panel-heading">
+            <h2>Trade details</h2>
         </div>
-        <div class="form-group">
-            <label for="currency" class="control-label">Currency</label>
-            <br>
-            <select class="form-control" id="currency">
-                <option>CAD</option>
-                <option>USD</option>
-            </select>
-        </div>
+        <div class="panel-body">
+            <form class="form-inline" autocomplete="off" id="trade_form">
+                <fieldset>
+                    <div class="alert alert-dismissible alert-danger" style="display: none">
+                        <button type="button" class="close" onclick="$(this).parent().hide(500)">&times;</button>
+                        <h4>Oh snap!</h4>
+                        <p id="error_message"></p>
+                    </div>
+                    <div class="form-group">
+                        <label for="currency" class="control-label">Currency</label>
+                        <br>
+                        <select class="form-control" id="currency" oninput="currencyHandler()">
+                            <option disabled selected style="display: none"></option>
+                            <option value="CAD">CAD</option>
+                            <option value="USD">USD</option>
+                        </select>
+                    </div>
 
-        <div class="form-group" id="isin_group">
-            <label for="isin" class="control-label">ISIN</label>
-            <br>
-            <div class="input-group">
-                <span class="input-group-btn">
-                    <input type="text" class="form-control" id="isin" maxlength="13" placeholder="US1234567890" oninput="isinInputHandler($(this))" style="width: 150px;">
-                    <button id="isin_btn" class="btn btn-default" type="button" onclick="searchByIsin()" disabled="disabled">
-                        <span id="isin_search_icon" class="glyphicon glyphicon-search" style="display: inline-block"></span>
-                        <div id="isin_loader" class="loader" style="display: none"></div>
+                    <div class="form-group" id="isin_group">
+                        <label for="isin" class="control-label">ISIN</label>
+                        <br>
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="isin" maxlength="13" placeholder="US1234567890"
+                                   oninput="isinInputHandler($(this))">
+                            <div class="input-group-btn">
+                                <button id="isin_btn" class="btn btn-primary" type="button" onclick="searchByIsin()"
+                                        disabled="disabled">
+                                <span id="isin_search_icon" class="glyphicon glyphicon-search"
+                                      style="display: inline-block"></span>
+                                    <div id="isin_loader" class="loader" style="display: none"></div>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group" id="ticker_group">
+                        <label for="ticker" class="control-label">Ticker</label>
+                        <br>
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="ticker" maxlength="6" placeholder="ABC"
+                                   oninput="tickerInputHandler($(this))">
+                            <div class="input-group-btn">
+                                <button id="ticker_btn" class="btn btn-primary" type="button" onclick="searchByTicker()"
+                                        disabled="disabled">
+                                    <span id="ticker_search_icon" class="glyphicon glyphicon-search"></span>
+                                    <div id="ticker_loader" class="loader" style="display: none"></div>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="sec_name_group" class="form-group">
+                        <label for="sec_name" class="control-label">Security Name</label>
+                        <br>
+                        <textarea rows="1" class="form-control" id="sec_name" oninput="secNameInputHandler($(this))" style="resize: none;"></textarea>
+                    </div>
+
+                    <br class="hidden-xs">
+                    <br class="hidden-xs">
+
+                    <div class="form-group">
+                        <label for="buy_sell" class="control-label">Buy/Sell</label>
+                        <br>
+                        <select class="form-control" id="buy_sell" oninput="selectHandler($(this))">
+                            <option disabled selected style="display: none"></option>
+                            <option>BUY</option>
+                            <option>SELL</option>
+                        </select>
+                    </div>
+
+                    <div id="shares_group" class="form-group">
+                        <label for="shares" class="control-label">Shares</label>
+                        <br>
+                        <input type="number" class="form-control" id="shares" min="1" step="1"
+                               oninput="sharesInputHandler($(this))">
+                    </div>
+
+                    <div id="price_group" class="form-group">
+                        <label for="price" class="control-label">Price</label>
+                        <br>
+                        <div class="input-group">
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-usd"></span></span>
+                            <!-- Using tel, since when using "number", NaN results in empty value-->
+                            <input type="tel" class="form-control" id="price" oninput="priceInputHandler($(this))">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="mkt-limit" class="control-label">MKT/LIMIT</label>
+                        <br>
+                        <select class="form-control" id="mkt-limit" oninput="selectHandler($(this))">
+                            <option disabled selected style="display: none"></option>
+                            <option value="MKT">MKT</option>
+                            <option value="LIMIT">LIMIT</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="order-type" class="control-label">Order Type</label>
+                        <br>
+                        <select class="form-control" id="order-type" oninput="selectHandler($(this))">
+                            <option disabled selected style="display: none"></option>
+                            <option value="GTC">GTC</option>
+                            <option value="DAY">DAY</option>
+                            <option value="IOC">IOC</option>
+                            <option value="FOK">FOK</option>
+                            <option value="AON">AON</option>
+                        </select>
+                    </div>
+
+                    <div id="total_group" class="form-group">
+                        <label for="total" class="control-label">Total</label>
+                        <br>
+                        <div class="input-group">
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-usd"></span></span>
+                            <input class="form-control" id="total" value="0.00" readonly>
+                        </div>
+                    </div>
+
+                    <br>
+                    <br class="hidden-xs">
+
+                    <button id="add_trade_btn" class="btn btn-primary btn-block" disabled>
+                        Add Trade
                     </button>
-                </span>
-            </div>
+
+                </fieldset>
+            </form>
         </div>
+    </div>
+</div>
 
-        <div class="form-group" id="ticker_group">
-            <label for="ticker" class="control-label">Ticker</label>
-            <br>
-            <div class="input-group">
-                <span class="input-group-btn">
-                    <input type="text" class="form-control" id="ticker" maxlength="6" placeholder="ABC" oninput="tickerInputHandler($(this))" style="width: 90px;">
-                    <button id="ticker_btn" class="btn btn-default" type="button" onclick="searchByTicker()" disabled="disabled">
-                        <span id="ticker_search_icon" class="glyphicon glyphicon-search"></span>
-                        <div id="ticker_loader" class="loader" style="display: none"></div>
-                    </button>
-                </span>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label for="sec_name" class="control-label">Security Name</label>
-            <br>
-            <textarea rows="1" class="form-control" id="sec_name"></textarea>
-        </div>
-
-        <div class="form-group">
-            <label for="side" class="control-label">Side</label>
-            <br>
-            <select class="form-control" id="side">
-                <option>BUY</option>
-                <option>SELL</option>
-            </select>
-        </div>
-
-        <br>
-        <br>
-
-        <div id="shares_group" class="form-group">
-            <label for="shares" class="control-label">Shares</label>
-            <br>
-            <input type="number" class="form-control" id="shares" min="1" step="1" style="width: 100px;"
-               oninput="sharesInputHandler($(this))">
-        </div>
-
-         <div id="price_group" class="form-group">
-            <label for="price" class="control-label">Price</label>
-            <br>
-            <div class="input-group">
-                <span class="input-group-addon"><span class="glyphicon glyphicon-usd"></span></span>
-                <!-- Using tel, since when using "number", NaN results in empty value-->
-                <input type="tel" class="form-control" id="price" style="width: 110px;" oninput="priceInputHandler($(this))">
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label for="mkt-limit" class="control-label">MKT/LIMIT</label>
-            <br>
-            <select class="form-control" id="mkt-limit">
-                <option value="MKT">MKT</option>
-                <option value="LIMIT">LIMIT</option>
-            </select>
-        </div>
-
-         <div class="form-group">
-            <label for="order-type" class="control-label">Order Type</label>
-            <br>
-            <select class="form-control" id="order-type">
-                <option value="GTC">GTC</option>
-                <option value="DAY">DAY</option>
-                <option value="IOC">IOC</option>
-                <option value="FOK">FOK</option>
-                <option value="AON">AON</option>
-            </select>
-        </div>
-
-        <div class="form-group">
-            <label for="total" class="control-label">Total</label>
-            <br>
-            <div class="input-group">
-                <span class="input-group-addon"><span class="glyphicon glyphicon-usd"></span></span>
-                <input class="form-control" id="total" value="0.00" readonly>
-            </div>
-        </div>
-
-    </fieldset>
-</form>
 
 </body>
 </html>
