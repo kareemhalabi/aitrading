@@ -18,28 +18,28 @@
             <h2>Trade details</h2>
         </div>
         <div class="panel-body">
-            <form class="form-inline" autocomplete="off" id="trade_form">
+            <form id="trade_form" class="form-inline" autocomplete="off">
                 <fieldset>
                     <div class="alert alert-dismissible alert-danger" style="display: none">
                         <button type="button" class="close" onclick="$(this).parent().hide(500)">&times;</button>
                         <h4>Oh snap!</h4>
                         <p id="error_message"></p>
                     </div>
-                    <div class="form-group">
+                    <div id="currency_group" class="form-group">
                         <label for="currency" class="control-label">Currency</label>
                         <br>
-                        <select class="form-control" id="currency" oninput="currencyHandler()">
+                        <select id="currency" class="form-control" oninput="currencyHandler()">
                             <option disabled selected style="display: none"></option>
                             <option value="CAD">CAD</option>
                             <option value="USD">USD</option>
                         </select>
                     </div>
 
-                    <div class="form-group" id="isin_group">
+                    <div id="isin_group" class="form-group">
                         <label for="isin" class="control-label">ISIN</label>
                         <br>
                         <div class="input-group">
-                            <input type="text" class="form-control" id="isin" maxlength="13" placeholder="US1234567890"
+                            <input id="isin" type="text" class="form-control" maxlength="13" placeholder="US1234567890"
                                    oninput="isinInputHandler($(this))">
                             <div class="input-group-btn">
                                 <button id="isin_btn" class="btn btn-primary" type="button" onclick="searchByIsin()"
@@ -52,11 +52,11 @@
                         </div>
                     </div>
 
-                    <div class="form-group" id="ticker_group">
+                    <div id="ticker_group" class="form-group">
                         <label for="ticker" class="control-label">Ticker</label>
                         <br>
                         <div class="input-group">
-                            <input type="text" class="form-control" id="ticker" maxlength="6" placeholder="ABC"
+                            <input id="ticker" type="text" class="form-control" maxlength="6" placeholder="ABC"
                                    oninput="tickerInputHandler($(this))">
                             <div class="input-group-btn">
                                 <button id="ticker_btn" class="btn btn-primary" type="button" onclick="searchByTicker()"
@@ -71,16 +71,17 @@
                     <div id="sec_name_group" class="form-group">
                         <label for="sec_name" class="control-label">Security Name</label>
                         <br>
-                        <textarea rows="1" class="form-control" id="sec_name" oninput="secNameInputHandler($(this))" style="resize: none;"></textarea>
+                        <textarea id="sec_name" rows="1" class="form-control" oninput="secNameInputHandler($(this))"
+                                  style="resize: none;"></textarea>
                     </div>
 
                     <br class="hidden-xs">
                     <br class="hidden-xs">
 
-                    <div class="form-group">
+                    <div id="buy_sell_group" class="form-group">
                         <label for="buy_sell" class="control-label">Buy/Sell</label>
                         <br>
-                        <select class="form-control" id="buy_sell" oninput="selectHandler($(this))">
+                        <select id="buy_sell" class="form-control" oninput="selectHandler($(this))">
                             <option disabled selected style="display: none"></option>
                             <option>BUY</option>
                             <option>SELL</option>
@@ -90,7 +91,7 @@
                     <div id="shares_group" class="form-group">
                         <label for="shares" class="control-label">Shares</label>
                         <br>
-                        <input type="number" class="form-control" id="shares" min="1" step="1"
+                        <input id="shares" type="number" class="form-control" min="1" step="1"
                                oninput="sharesInputHandler($(this))">
                     </div>
 
@@ -100,24 +101,24 @@
                         <div class="input-group">
                             <span class="input-group-addon"><span class="glyphicon glyphicon-usd"></span></span>
                             <!-- Using tel, since when using "number", NaN results in empty value-->
-                            <input type="tel" class="form-control" id="price" oninput="priceInputHandler($(this))">
+                            <input id="price" type="tel" class="form-control" oninput="priceInputHandler($(this))">
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <label for="mkt-limit" class="control-label">MKT/LIMIT</label>
+                    <div id="mkt_limit_group" class="form-group">
+                        <label for="mkt_limit" class="control-label">MKT/LIMIT</label>
                         <br>
-                        <select class="form-control" id="mkt-limit" oninput="selectHandler($(this))">
+                        <select id="mkt_limit" class="form-control" oninput="selectHandler($(this))">
                             <option disabled selected style="display: none"></option>
                             <option value="MKT">MKT</option>
                             <option value="LIMIT">LIMIT</option>
                         </select>
                     </div>
 
-                    <div class="form-group">
+                    <div id="order_type_group" class="form-group">
                         <label for="order-type" class="control-label">Order Type</label>
                         <br>
-                        <select class="form-control" id="order-type" oninput="selectHandler($(this))">
+                        <select id="order-type" class="form-control" oninput="selectHandler($(this))">
                             <option disabled selected style="display: none"></option>
                             <option value="GTC">GTC</option>
                             <option value="DAY">DAY</option>
@@ -132,7 +133,7 @@
                         <br>
                         <div class="input-group">
                             <span class="input-group-addon"><span class="glyphicon glyphicon-usd"></span></span>
-                            <input class="form-control" id="total" value="0.00" readonly>
+                            <input id="total" class="form-control" value="0.00" readonly>
                         </div>
                     </div>
 

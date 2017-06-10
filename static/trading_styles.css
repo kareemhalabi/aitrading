@@ -1,52 +1,82 @@
 /* Styling to override bootstrap */
 @media screen and (min-width: 768px) {
-  #isin {
-    width: 150px;
-  }
 
-  #ticker {
-    width: 90px;
-  }
+    #currency_group, #buy_sell_group {
+        width: 12.3969%;
+    }
 
-  #sec_name {
-    width: 279px;
-  }
+    #isin_group {
+        width: 27.8241%;
+    }
 
-  #shares {
-    width: 100px;
-  }
+    #ticker_group {
+        width: 19.5595%;
+    }
 
-  #price {
-    width: 100px;
-  }
+    #sec_name {
+        width: 100%;
+    }
 
-  #total {
-    width: 120px;
-  }
+    #sec_name_group {
+        width: 38.4303%;
+    }
 
-  #form_container {
-    width: 788px;
-  }
+    #shares {
+        width: 100%;
+    }
+
+    #shares_group {
+        width: 13.7743%;
+    }
+
+    #price_group {
+        width: 20.9370%;
+    }
+
+    #mkt_limit_group {
+        width: 13.3611%;
+    }
+
+    #order_type_group {
+        width: 12.6724%;
+    }
+
+    #total_group {
+        width: 23.6918%;
+    }
+
+    #form_container {
+        width: 788px;
+    }
 }
 
+/* Styles for loader */
 .loader {
-border: 3px solid #ffffff;
-border-radius: 50%;
-border-top: 3px solid #aaaaaa;
-width: 21px;
-height: 21px;
-margin: -2px -3px -4px -3px;
--webkit-animation: spin 2s linear infinite;
-animation: spin 2s linear infinite;
+    border: 3px solid #ffffff;
+    border-radius: 50%;
+    border-top: 3px solid #aaaaaa;
+    width: 21px;
+    height: 21px;
+    margin: -2px -3px -4px -3px;
+    -webkit-animation: spin 2s linear infinite;
+    animation: spin 2s linear infinite;
 }
 
 @-webkit-keyframes spin {
-0% { -webkit-transform: rotate(0deg); }
-100% { -webkit-transform: rotate(360deg); }
+    0% {
+        -webkit-transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(360deg);
+    }
 }
 
 @keyframes spin {
-0% { transform: rotate(0deg); }
-100% { transform: rotate(360deg); }
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
