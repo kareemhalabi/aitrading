@@ -50,6 +50,53 @@
     }
 }
 
+/* For preview table. Modified from https://codepen.io/geoffyuen/pen/FCBEg */
+.rwd-table th {
+    display: none;
+    text-align: left;
+    margin: .5em 1em;
+}
+
+.rwd-table td {
+    display: block;
+    text-align: left;
+    margin: .5em 1em;
+}
+
+.rwd-table td:before {
+    content: attr(data-th) ": ";
+    font-weight: bold;
+    width: 6.5em;
+    display: inline-block;
+}
+
+@media (min-width: 992px) {
+    .rwd-table td:before {
+        display: none;
+    }
+
+    .rwd-table th, .rwd-table td {
+        display: table-cell;
+        padding: .5em;
+    }
+
+}
+
+@media (max-width: 992px) {
+    .rwd-table td:first-child {
+        border-top-width: 0px !important;
+    }
+
+    .rwd-table tr {
+        border-top: 1px solid #3fb618;
+        border-bottom: 1px solid #3fb618;
+    }
+}
+
+[data-th="Edit/Delete"] {
+    white-space: nowrap;
+}
+
 /* Styles for loader */
 .loader {
     border: 3px solid #ffffff;

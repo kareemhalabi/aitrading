@@ -9,6 +9,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="/static/trading_js.js"></script>
+    <script src="/static/orderPreview_js.js"></script>
     <title>Trade Request</title>
 </head>
 <body>
@@ -116,9 +117,9 @@
                     </div>
 
                     <div id="order_type_group" class="form-group">
-                        <label for="order-type" class="control-label">Order Type</label>
+                        <label for="order_type" class="control-label">Order Type</label>
                         <br>
-                        <select id="order-type" class="form-control" oninput="selectHandler($(this))">
+                        <select id="order_type" class="form-control" oninput="selectHandler($(this))">
                             <option disabled selected style="display: none"></option>
                             <option value="GTC">GTC</option>
                             <option value="DAY">DAY</option>
@@ -140,7 +141,7 @@
                     <br>
                     <br class="hidden-xs">
 
-                    <button id="add_trade_btn" class="btn btn-primary btn-block" disabled>
+                    <button id="add_trade_btn" class="btn btn-primary btn-block" disabled onclick="addTrade()">
                         Add Trade
                     </button>
 
@@ -150,6 +151,33 @@
     </div>
 </div>
 
+<div id="order_preview_container" class="container" style="display: none;">
+    <div class="panel panel-success">
+        <div class="panel-heading">
+            <h2>Order Preview</h2>
+        </div>
+        <div class="panel-body">
+
+            <table class="rwd-table table table-striped table-hover">
+                <tbody id="preview_table">
+                <tr>
+                    <th>Currency</th>
+                    <th>ISIN</th>
+                    <th>Ticker</th>
+                    <th>Security Name</th>
+                    <th>Buy/Sell</th>
+                    <th>Shares</th>
+                    <th>Price</th>
+                    <th>MKT/LIMIT</th>
+                    <th>Order Type</th>
+                    <th>Total</th>
+                    <th></th>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 
 </body>
 </html>

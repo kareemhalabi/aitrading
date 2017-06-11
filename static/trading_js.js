@@ -2,6 +2,8 @@
  * Created by KareemHalabi on 6/4/2017.
  */
 
+// Global variable storing pending trades
+var pending_trades = [];
 
 /**
  * Searches for a security by ISIN
@@ -280,6 +282,25 @@ function submitCheck() {
     }
 }
 
+function addTrade() {
+    var trade = {
+        currency: $("#currency").val(),
+        ISIN:  $("#isin").val(),
+        ticker: $("#ticker").val(),
+        security: $("#sec_name").val(),
+        buy_sell: $("#buy_sell").val(),
+        shares: $("#shares").val(),
+        price: $("#price").val(),
+        mkt_limit: $("#mkt_limit").val(),
+        order_type: $("#order_type").val(),
+        total: parseFloat($("#total").val().replace("," ,""))
+    };
+    pending_trades.push(trade);
+
+    resetForm();
+
+    updatePreview(trade);
+}
 
 /**
  * Verifies an ISIN is correct. Assume all alphabetic characters are upper case
