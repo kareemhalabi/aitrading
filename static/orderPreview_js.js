@@ -28,5 +28,7 @@ function updatePreview(trade) {
                 '</td>' +
         '</tr>';
 
-    $("#preview_table").append(tr);
+    var $table = $("#preview_table");
+    $table.append(tr);
+    $table.find("tr").show("slow");
 }
