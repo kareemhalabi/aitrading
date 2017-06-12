@@ -18,7 +18,7 @@ def find_by_ISIN(ISIN, currency):
 
     try:
         page = html.fromstring(requests.get(MORNINGSTAR_BASE_URL + ISIN).content)
-    except Exception, e:
+    except Exception as e:
         _quote["error"] = "Error contacting security search: " + str(e)
         return _quote
 
@@ -48,7 +48,7 @@ def find_by_ticker(ticker, currency):
 
     try:
         page = html.fromstring(requests.get(MORNINGSTAR_BASE_URL + ticker).content)
-    except Exception, e:
+    except Exception as e:
         _quote["error"] = "Error contacting security search: " + str(e)
         return _quote
 
@@ -72,7 +72,7 @@ def find_by_ticker(ticker, currency):
 
 def _get_secutity_info(link):
 
-    _quote["security"] = filter(lambda x : x in set(string.printable), link.text) # removes any weird characters
+    _quote["security"] = ''.join(filter(lambda x : x in string.printable, link.text)) # removes any weird characters
 
     # Some hrefs are relative, need to add back the domain
     if str(link.attrib['href']).startswith('/uk'):
@@ -93,5 +93,5 @@ def _get_secutity_info(link):
             _quote["ISIN"] = page.xpath("//*[@id = 'Col0Isin']")[0].text
 
         _quote["error"] = ""
-    except Exception, e:
+    except Exception as e:
         _quote["error"] = "Error gathering security info: " + str(e)
