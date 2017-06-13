@@ -29,7 +29,7 @@
                     <div id="currency_group" class="form-group">
                         <label for="currency" class="control-label">Currency</label>
                         <br>
-                        <select id="currency" class="form-control" oninput="currencyHandler()">
+                        <select id="currency" class="form-control" onchange="currencyHandler()">
                             <option disabled selected style="display: none"></option>
                             <option value="CAD">CAD</option>
                             <option value="USD">USD</option>
@@ -82,7 +82,7 @@
                     <div id="buy_sell_group" class="form-group">
                         <label for="buy_sell" class="control-label">Buy/Sell</label>
                         <br>
-                        <select id="buy_sell" class="form-control" oninput="selectHandler($(this))">
+                        <select id="buy_sell" class="form-control" onchange="selectHandler($(this))">
                             <option disabled selected style="display: none"></option>
                             <option>BUY</option>
                             <option>SELL</option>
@@ -109,7 +109,7 @@
                     <div id="mkt_limit_group" class="form-group">
                         <label for="mkt_limit" class="control-label">MKT/LIMIT</label>
                         <br>
-                        <select id="mkt_limit" class="form-control" oninput="selectHandler($(this))">
+                        <select id="mkt_limit" class="form-control" onchange="selectHandler($(this))">
                             <option disabled selected style="display: none"></option>
                             <option value="MKT">MKT</option>
                             <option value="LIMIT">LIMIT</option>
@@ -119,7 +119,7 @@
                     <div id="order_type_group" class="form-group">
                         <label for="order_type" class="control-label">Order Type</label>
                         <br>
-                        <select id="order_type" class="form-control" oninput="selectHandler($(this))">
+                        <select id="order_type" class="form-control" onchange="selectHandler($(this))">
                             <option disabled selected style="display: none"></option>
                             <option value="GTC">GTC</option>
                             <option value="DAY">DAY</option>
