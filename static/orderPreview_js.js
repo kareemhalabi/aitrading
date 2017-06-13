@@ -9,9 +9,9 @@ function updatePreview(trade) {
     }
     var tr = '<tr style="display: none">' +
                 '<td data-th="Currency">'+ trade.currency +'</td>' +
-                '<td data-th="ISIN">' + trade.ISIN + '</td>' +
+                '<td data-th="ISIN">' + trade.isin + '</td>' +
                 '<td data-th="Ticker">' + trade.ticker + '</td>' +
-                '<td data-th="Security Name">' + trade.security + '</td>' +
+                '<td data-th="Security Name">' + trade.sec_name + '</td>' +
                 '<td data-th="Buy/Sell">' + trade.buy_sell + '</td>' +
                 '<td data-th="Shares">' + trade.shares + '</td>' +
                 '<td data-th="Price">$' + trade.price + '</td>' +
@@ -19,10 +19,10 @@ function updatePreview(trade) {
                 '<td data-th="Order Type">' + trade.order_type + '</td>' +
                 '<td data-th="Total">' + trade.total.toLocaleString("en-US", {style: "currency", currency: "USD"}) + '</td>' +
                 '<td data-th="Edit/Delete">' +
-                    '<button type="button" class="btn btn-xs btn-success">' +
+                    '<button type="button" class="btn btn-xs btn-success" onclick="editTrade($(this).closest(\'tr\'))">' +
                         '<span class="glyphicon glyphicon-pencil"></span>' +
                     '</button>&nbsp;'+
-                    '<button type="button" class="btn btn-xs btn-success">' +
+                    '<button type="button" class="btn btn-xs btn-success" onclick="deleteTrade($(this).closest(\'tr\'))">' +
                         '<span class="glyphicon glyphicon-remove"></span>' +
                     '</button>' +
                 '</td>' +
@@ -31,4 +31,21 @@ function updatePreview(trade) {
     var $table = $("#preview_table");
     $table.append(tr);
     $table.find("tr").show("slow");
+}
+
+function editTrade($row) {
+    var trade = pending_trades.splice($row.index() - 1, 1)[0];
+    populateTradeForm(trade);
+    $row.hide("slow", function (){$row.remove()});
+    if(pending_trades.length == 0) {
+        $("#order_preview_container").slideUp();
+    }
+}
+
+function deleteTrade($row) {
+    pending_trades.splice($row.index() - 1, 1);
+    $row.hide("slow", function (){$row.remove()});
+    if(pending_trades.length == 0) {
+        $("#order_preview_container").slideUp();
+    }
 }

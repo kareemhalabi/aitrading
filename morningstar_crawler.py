@@ -13,11 +13,11 @@ MORNINGSTAR_BASE_URL = 'http://www.morningstar.co.uk/uk/funds/SecuritySearchResu
 
 _quote = {}
 
-def find_by_ISIN(ISIN, currency):
+def find_by_isin(isin, currency):
     _quote["currency"] = currency
 
     try:
-        page = html.fromstring(requests.get(MORNINGSTAR_BASE_URL + ISIN).content)
+        page = html.fromstring(requests.get(MORNINGSTAR_BASE_URL + isin).content)
     except Exception as e:
         _quote["error"] = "Error contacting security search: " + str(e)
         return _quote
@@ -72,7 +72,7 @@ def find_by_ticker(ticker, currency):
 
 def _get_secutity_info(link):
 
-    _quote["security"] = ''.join(filter(lambda x : x in string.printable, link.text)) # removes any weird characters
+    _quote["sec_name"] = ''.join(filter(lambda x : x in string.printable, link.text)) # removes any weird characters
 
     # Some hrefs are relative, need to add back the domain
     if str(link.attrib['href']).startswith('/uk'):
@@ -84,14 +84,14 @@ def _get_secutity_info(link):
     try:
         if 'etf' in link.attrib['href']:
             price_cell = page.xpath("//tr[contains(.,'Closing Price')]/td[3]")[0]
-            _quote["last_close_price"] = float(re.sub("[^0-9.]", "", price_cell.text))
-            _quote["ISIN"] = page.xpath("//tr[contains(.,'ISIN')]/td[3]")[0].text
+            _quote["price"] = float(re.sub("[^0-9.]", "", price_cell.text))
+            _quote["isin"] = page.xpath("//tr[contains(.,'ISIN')]/td[3]")[0].text
 
         else:
             price_cell = page.xpath("//*[@id = 'Col0LastClose']")[0]
-            _quote["last_close_price"] = float(re.sub("[^0-9.]", "", price_cell.text))
-            _quote["ISIN"] = page.xpath("//*[@id = 'Col0Isin']")[0].text
+            _quote["price"] = float(re.sub("[^0-9.]", "", price_cell.text))
+            _quote["isin"] = page.xpath("//*[@id = 'Col0Isin']")[0].text
 
-        _quote["error"] = ""
+        _quote.pop("error", None)
     except Exception as e:
         _quote["error"] = "Error gathering security info: " + str(e)

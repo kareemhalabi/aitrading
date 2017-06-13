@@ -6,7 +6,7 @@
 var pending_trades = [];
 
 /**
- * Searches for a security by ISIN
+ * Searches for a security by isin
  */
 function searchByIsin() {
 
@@ -14,7 +14,7 @@ function searchByIsin() {
     $("#isin_search_icon").css("display", "none");
     $("#isin_loader").css("display", "inline-block");
 
-    var isinSearch = {ISIN: $("#isin").val(),
+    var isinSearch = {isin: $("#isin").val(),
         currency: $("#currency").val()};
 
     $.ajax({url: "search_by_isin", data: isinSearch, timeout: 20000,
@@ -59,10 +59,10 @@ function searchByTicker() {
 /**
  * Updates data fields with security information. Clears other fields if error returned
  * @param security object representing security info
- * @param $source The source of the update (either ISIN group or ticker group)
+ * @param $source The source of the update if applicable (either isin group, ticker group)
  */
 function populateTradeForm(security, $source) {
-    if(security.error.length > 0) {
+    if(security.hasOwnProperty("error")) {
         $("#error_message").text(security.error)
             .parent().show();
         $source.attr("class", "form-group has-error");
@@ -83,17 +83,12 @@ function populateTradeForm(security, $source) {
     } else {
         $("#error_message").parent().hide();
 
-        // Set values and set has-success
-        $("#currency")
-            .parents(".form-group").addClass("has-success");
-        $("#isin").val(security.ISIN)
-            .parents(".form-group").addClass("has-success");
-        $("#ticker").val(security.ticker)
-            .parents(".form-group").addClass("has-success");
-        $("#sec_name").val(security.security)
-            .parents(".form-group").addClass("has-success");
-        $("#price").val(security.last_close_price.toFixed(2))
-            .parents(".form-group").addClass("has-success");
+        // Iterate over security object
+        for (var prop in security) {
+            if(security.hasOwnProperty(prop)) {
+                $("#"+prop).val(security[prop]).parents(".form-group").addClass("has-success");
+            }
+        }
 
         $("#isin_btn").prop("disabled", false).attr("class", "btn btn-success");
         $("#ticker_btn").prop("disabled", false).attr("class", "btn btn-success");
@@ -132,8 +127,8 @@ function selectHandler($field) {
 }
 
 /**
- * Validates ISIN input
- * @param $field The ISIN field object
+ * Validates isin input
+ * @param $field The isin field object
  */
 function isinInputHandler($field) {
     $field.val(function(i, oldval) {
@@ -285,9 +280,9 @@ function submitCheck() {
 function addTrade() {
     var trade = {
         currency: $("#currency").val(),
-        ISIN:  $("#isin").val(),
+        isin:  $("#isin").val(),
         ticker: $("#ticker").val(),
-        security: $("#sec_name").val(),
+        sec_name: $("#sec_name").val(),
         buy_sell: $("#buy_sell").val(),
         shares: $("#shares").val(),
         price: $("#price").val(),
@@ -303,8 +298,8 @@ function addTrade() {
 }
 
 /**
- * Verifies an ISIN is correct. Assume all alphabetic characters are upper case
- * @param isin String representing ISIN
+ * Verifies an isin is correct. Assume all alphabetic characters are upper case
+ * @param isin String representing isin
  * @returns true if valid, false otherwise
  */
 function validateISIN(isin) {

@@ -10,7 +10,7 @@ def index():
 
 @ai_trading.route('/search_by_isin', methods=["GET"])
 def search_by_isin():
-    return jsonify(find_by_ISIN(request.args.get("ISIN"), request.args.get("currency")))
+    return jsonify(find_by_isin(request.args.get("isin"), request.args.get("currency")))
 
 @ai_trading.route('/search_by_ticker', methods=["GET"])
 def search_by_ticker():
