@@ -10,6 +10,11 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="/static/trading_js.js"></script>
     <script src="/static/orderPreview_js.js"></script>
+    <script>
+    $(document).ready(function(){
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+    </script>
     <title>Trade Request</title>
 </head>
 <body>
@@ -158,6 +163,8 @@
         </div>
         <div class="panel-body">
 
+            <h3 style="margin-top: 0">Securities</h3>
+
             <table class="rwd-table table table-striped table-hover">
                 <tbody id="preview_table">
                 <tr>
@@ -172,6 +179,51 @@
                     <th>Order Type</th>
                     <th>Total</th>
                     <th></th>
+                </tr>
+                </tbody>
+            </table>
+
+            <h3 style="margin-top: 30px">Cash</h3>
+            <p id="fx_info"></p>
+            <table class="rwd-table table table-striped table-hover" style="table-layout: fixed">
+                <tbody id="cash_recap">
+                <tr>
+                    <th>Currency</th>
+                    <th>Opening</th>
+                    <th>Total Buy</th>
+                    <th>Total Sell</th>
+                    <th>Conversion
+                        <span data-toggle="tooltip" data-placement="top" data-html="true" class="glyphicon glyphicon-question-sign"
+                              title="<p style='text-align: left'>A negative value indicates the source currency</p>
+                              <p style='text-align: left'>A positive value indicates the destination currency<p>"
+                              ></span>
+                    </th>
+                    <th>Net Change</th>
+                    <th>Closing Balance</th>
+                </tr>
+                <tr id="CAD_recap">
+                    <td data-th="Currency">CAD</td>
+                    <td data-th="Opening"></td>
+                    <td data-th="Buys"></td>
+                    <td data-th="Sells"></td>
+                    <td data-th="Conversion">
+                        <input id="cad_conv" type="tel" class="form-control input-sm" title="CAD Currency"
+                        oninput="convertCashCAD()">
+                    </td>
+                    <td data-th="Net"></td>
+                    <td data-th="Closing"></td>
+                </tr>
+                <tr id="USD_recap">
+                    <td data-th="Currency">USD</td>
+                    <td data-th="Opening"></td>
+                    <td data-th="Buys"></td>
+                    <td data-th="Sells"></td>
+                    <td data-th="Conversion">
+                        <input id="usd_conv" type="tel" class="form-control input-sm" title="USD Currency"
+                        oninput="convertCashUSD()">
+                    </td>
+                    <td data-th="Net"></td>
+                    <td data-th="Closing"></td>
                 </tr>
                 </tbody>
             </table>

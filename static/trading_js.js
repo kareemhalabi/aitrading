@@ -90,6 +90,10 @@ function populateTradeForm(security, $source) {
             }
         }
 
+        //Ensures 2 decimal places
+        $("#price").val(function (i, oldVal) {
+           return parseFloat(oldVal).toFixed(2);
+        });
         $("#isin_btn").prop("disabled", false).attr("class", "btn btn-success");
         $("#ticker_btn").prop("disabled", false).attr("class", "btn btn-success");
     }
