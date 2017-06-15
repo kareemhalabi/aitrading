@@ -26,6 +26,8 @@ var fxRate = {
     "date": ""
 };
 
+var autoConvertEnabled = true;
+
 $(document).ready( function () {
     // Get the fx Rate
     $.ajax("https://api.fixer.io/latest?base=CAD&symbols=USD",{
@@ -37,7 +39,8 @@ $(document).ready( function () {
                 "<b>CAD/USD = " + fxRate["CAD/USD"] + "</b> and <b>USD/CAD = " + fxRate["USD/CAD"] + "</b>")
         },
         error: function(error) {
-            $("#fx_info").text("Could not get exchange rate: " + error.status + ": " + error.statusText);
+            $("#fx_info").text("Could not get exchange rate, input conversions manually: " + error.status + ": " + error.statusText);
+            autoConvertEnabled = false;
         }
     });
 
@@ -60,8 +63,8 @@ function updatePreview(trade) {
     }
     var tr = '<tr style="display: none">' +
                 '<td data-th="Currency">'+ trade.currency +'</td>' +
-                '<td data-th="ISIN">' + trade.isin + '</td>' +
                 '<td data-th="Ticker">' + trade.ticker + '</td>' +
+                '<td data-th="ISIN">' + trade.isin + '</td>' +
                 '<td data-th="Security Name">' + trade.sec_name + '</td>' +
                 '<td data-th="Buy/Sell">' + trade.buy_sell + '</td>' +
                 '<td data-th="Shares">' + trade.shares + '</td>' +
@@ -132,9 +135,12 @@ function convertCash($source, base, target) {
     if (sourceString.length > 0) {
         if((/^-?\d+\.?\d{0,2}$/).test(sourceString)) {
             conversions[base] = parseFloat(sourceString);
-            conversions[target] = -1 * conversions[base] * fxRate["" + base + "/" + target];
 
-            $targetInput.val(conversions[target].toFixed(2));
+            if(autoConvertEnabled) {
+                conversions[target] = -1 * conversions[base] * fxRate["" + base + "/" + target];
+                $targetInput.val(conversions[target].toFixed(2));
+            }
+
             $source.parent().removeClass("has-error");
         } else {
             $targetInput.val('');

@@ -22,7 +22,7 @@ function searchByIsin() {
                 populateTradeForm(response, $("#isin_group"));
             },
             error: function (error) {
-                $("#error_message").text("Error " + error.status + ": " + error.statusText).parent().show();
+                $("#trade_error").text("Error " + error.status + ": " + error.statusText).parent().show();
             },
             complete: function () {
                     $("#isin_search_icon").css("display", "inline-block");
@@ -47,7 +47,7 @@ function searchByTicker() {
             populateTradeForm(response, $("#ticker_group"));
         },
         error: function (error) {
-            $("#error_message").text("Error " + error.status + ": " + error.statusText).parent().show();
+            $("#trade_error").text("Error " + error.status + ": " + error.statusText).parent().show();
         },
         complete: function () {
                 $("#ticker_search_icon").css("display", "inline-block");
@@ -63,7 +63,7 @@ function searchByTicker() {
  */
 function populateTradeForm(security, $source) {
     if(security.hasOwnProperty("error")) {
-        $("#error_message").text(security.error)
+        $("#trade_error").text(security.error)
             .parent().show();
         $source.attr("class", "form-group has-error");
 
@@ -81,7 +81,7 @@ function populateTradeForm(security, $source) {
         $source.find("button").prop("disabled", false).attr("class", "btn btn-danger");
 
     } else {
-        $("#error_message").parent().hide();
+        $("#trade_error").parent().hide();
 
         // Iterate over security object
         for (var prop in security) {
