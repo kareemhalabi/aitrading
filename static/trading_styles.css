@@ -45,7 +45,7 @@
         width: 23.6918%;
     }
 
-    #form_container {
+    #form_container, #portfolio_container {
         width: 788px;
     }
 }
@@ -120,7 +120,7 @@
 .loader {
     border: 3px solid #ffffff;
     border-radius: 50%;
-    border-top: 3px solid #aaaaaa;
+    border-top: 3px solid rgba(0,0,0,0);
     width: 21px;
     height: 21px;
     margin: -2px -3px -4px -3px;
