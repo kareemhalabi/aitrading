@@ -11,9 +11,9 @@
     <script src="/static/trading_js.js"></script>
     <script src="/static/orderPreview_js.js"></script>
     <script>
-    $(document).ready(function(){
-        $('[data-toggle="tooltip"]').tooltip();
-    });
+        $(document).ready(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+        });
     </script>
     <title>Trade Request</title>
 </head>
@@ -41,6 +41,22 @@
                         </select>
                     </div>
 
+                    <div id="ticker_group" class="form-group">
+                        <label for="ticker" class="control-label">Ticker</label>
+                        <br>
+                        <div class="input-group">
+                            <input id="ticker" type="text" class="form-control" maxlength="6" placeholder="ABC"
+                                   oninput="tickerInputHandler($(this))">
+                            <div class="input-group-btn">
+                                <button id="ticker_btn" class="btn btn-primary" type="button" onclick="searchByTicker()"
+                                        disabled="disabled">
+                                    <span id="ticker_search_icon" class="glyphicon glyphicon-search"></span>
+                                    <div id="ticker_loader" class="loader" style="display: none"></div>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
                     <div id="isin_group" class="form-group">
                         <label for="isin" class="control-label">ISIN</label>
                         <br>
@@ -53,22 +69,6 @@
                                 <span id="isin_search_icon" class="glyphicon glyphicon-search"
                                       style="display: inline-block"></span>
                                     <div id="isin_loader" class="loader" style="display: none"></div>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div id="ticker_group" class="form-group">
-                        <label for="ticker" class="control-label">Ticker</label>
-                        <br>
-                        <div class="input-group">
-                            <input id="ticker" type="text" class="form-control" maxlength="6" placeholder="ABC"
-                                   oninput="tickerInputHandler($(this))">
-                            <div class="input-group-btn">
-                                <button id="ticker_btn" class="btn btn-primary" type="button" onclick="searchByTicker()"
-                                        disabled="disabled">
-                                    <span id="ticker_search_icon" class="glyphicon glyphicon-search"></span>
-                                    <div id="ticker_loader" class="loader" style="display: none"></div>
                                 </button>
                             </div>
                         </div>
@@ -193,10 +193,11 @@
                     <th>Total Buy</th>
                     <th>Total Sell</th>
                     <th>Conversion
-                        <span data-toggle="tooltip" data-placement="top" data-html="true" class="glyphicon glyphicon-question-sign"
+                        <span data-toggle="tooltip" data-placement="top" data-html="true"
+                              class="glyphicon glyphicon-question-sign"
                               title="<p style='text-align: left'>A negative value indicates the source currency</p>
                               <p style='text-align: left'>A positive value indicates the destination currency<p>"
-                              ></span>
+                        ></span>
                     </th>
                     <th>Net Change</th>
                     <th>Closing Balance</th>
@@ -207,8 +208,14 @@
                     <td data-th="Buys"></td>
                     <td data-th="Sells"></td>
                     <td data-th="Conversion">
+                        <span data-toggle="tooltip" data-placement="top" data-html="true"
+                              class="conversion-tooltip glyphicon glyphicon-question-sign"
+                              title="<p style='text-align: left'>A negative value indicates the source currency</p>
+                              <p style='text-align: left'>A positive value indicates the destination currency<p>"
+                        ></span>
                         <div class="input-group">
-                            <span class="input-group-addon input-sm"><span class="glyphicon glyphicon-usd"></span></span>
+                            <span class="input-group-addon input-sm"><span
+                                    class="glyphicon glyphicon-usd"></span></span>
                             <input id="CAD_conv" type="tel" class="form-control input-sm" title="CAD Currency"
                                    oninput="convertCash($(this), 'CAD', 'USD')">
                         </div>
@@ -222,8 +229,14 @@
                     <td data-th="Buys"></td>
                     <td data-th="Sells"></td>
                     <td data-th="Conversion">
+                        <span data-toggle="tooltip" data-placement="top" data-html="true"
+                              class="conversion-tooltip glyphicon glyphicon-question-sign"
+                              title="<p style='text-align: left'>A negative value indicates the source currency</p>
+                              <p style='text-align: left'>A positive value indicates the destination currency<p>"
+                        ></span>
                         <div class="input-group">
-                            <span class="input-group-addon input-sm"><span class="glyphicon glyphicon-usd"></span></span>
+                            <span class="input-group-addon input-sm"><span
+                                    class="glyphicon glyphicon-usd"></span></span>
                             <input id="USD_conv" type="tel" class="form-control input-sm" title="USD Currency"
                                    oninput="convertCash($(this), 'USD', 'CAD')">
                         </div>

@@ -75,6 +75,7 @@
     width: 80%;
 }
 
+/* Desktop table view */
 @media (min-width: 992px) {
     .rwd-table td:before {
         display: none;
@@ -85,8 +86,12 @@
         padding: .5em;
     }
 
+    .conversion-tooltip {
+        display: none;
+    }
 }
 
+/* Mobile table view */
 @media (max-width: 992px) {
     .rwd-table td:first-child {
         border-top-width: 0 !important;
@@ -99,6 +104,11 @@
 
     .rwd-table input {
         width: 100%;
+    }
+
+    .conversion-tooltip {
+        margin-left: -12px;
+        display: inline-block;
     }
 }
 
@@ -135,4 +145,3 @@
         transform: rotate(360deg);
     }
 }
-
