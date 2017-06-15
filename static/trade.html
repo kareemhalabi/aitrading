@@ -207,8 +207,11 @@
                     <td data-th="Buys"></td>
                     <td data-th="Sells"></td>
                     <td data-th="Conversion">
-                        <input id="cad_conv" type="tel" class="form-control input-sm" title="CAD Currency"
-                        oninput="convertCashCAD()">
+                        <div class="input-group">
+                            <span class="input-group-addon input-sm"><span class="glyphicon glyphicon-usd"></span></span>
+                            <input id="CAD_conv" type="tel" class="form-control input-sm" title="CAD Currency"
+                                   oninput="convertCash($(this), 'CAD', 'USD')">
+                        </div>
                     </td>
                     <td data-th="Net"></td>
                     <td data-th="Closing"></td>
@@ -219,8 +222,11 @@
                     <td data-th="Buys"></td>
                     <td data-th="Sells"></td>
                     <td data-th="Conversion">
-                        <input id="usd_conv" type="tel" class="form-control input-sm" title="USD Currency"
-                        oninput="convertCashUSD()">
+                        <div class="input-group">
+                            <span class="input-group-addon input-sm"><span class="glyphicon glyphicon-usd"></span></span>
+                            <input id="USD_conv" type="tel" class="form-control input-sm" title="USD Currency"
+                                   oninput="convertCash($(this), 'USD', 'CAD')">
+                        </div>
                     </td>
                     <td data-th="Net"></td>
                     <td data-th="Closing"></td>

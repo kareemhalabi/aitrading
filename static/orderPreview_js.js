@@ -21,19 +21,28 @@ var conversions = {
 };
 
 var fxRate = {
-    "CAD/USD": Number.NaN,
-    "date": "N/A"
+    "CAD/USD": 0,
+    "USD/CAD": 0,
+    "date": ""
 };
 
 $(document).ready( function () {
     // Get the fx Rate
-    $.get("http://api.fixer.io/latest?base=CAD&symbols=USD", function (data, status) {
-        if(status == "success") {
-            fxRate["CAD/USD"] = data.rates.USD;
-                fxRate["date"] = data.date;
+    $.ajax("https://api.fixer.io/latest?base=CAD&symbols=USD",{
+        success: function (response) {
+            fxRate["CAD/USD"] = response.rates.USD;
+            fxRate["USD/CAD"] = parseFloat((1/response.rates.USD).toFixed(5));
+            fxRate["date"] = response.date;
+            $("#fx_info").html("As of " + fxRate["date"] + " 11:00 AM EST, &nbsp;" +
+                "<b>CAD/USD = " + fxRate["CAD/USD"] + "</b> and <b>USD/CAD = " + fxRate["USD/CAD"] + "</b>")
+        },
+        error: function(error) {
+            $("#fx_info").text("Could not get exchange rate: " + error.status + ": " + error.statusText);
         }
-        $("#fx_info").text("As of " + fxRate["date"] + " 11:00 AM, 1 CAD = " + fxRate["CAD/USD"] + " USD");
     });
+
+
+    $("#fx_info").text("As of " + fxRate["date"] + " 11:00 AM, 1 CAD = " + fxRate["CAD/USD"] + " USD");
 
     // Set the opening balances
     for (currency in cash) {
@@ -111,81 +120,33 @@ function deleteTrade($row) {
     updateCashTable();
 }
 
-function convertCashCAD() {
-    var $CAD = $("#cad_conv"), $USD = $("#usd_conv");
+function convertCash($source, base, target) {
+
     // Strip non-numeric for browsers without "tel" support
-    $CAD.val(function (i, oldval) {
+    $source.val(function (i, oldval) {
         return oldval.replace(/[^\-0-9.]/,"");
     });
 
-    var CADString = $CAD.val();
-    if(CADString.length > 0) {
-        if ((/^-?\d+\.?\d{0,2}$/).test(CADString)) {
+    var $targetInput = $("#cash_recap").find("input[id*='"+ target +"']");
+    var sourceString = $source.val();
+    if (sourceString.length > 0) {
+        if((/^-?\d+\.?\d{0,2}$/).test(sourceString)) {
+            conversions[base] = parseFloat(sourceString);
+            conversions[target] = -1 * conversions[base] * fxRate["" + base + "/" + target];
 
-            conversions.CAD = parseFloat(CADString);
-
-            // sell CAD, buy USD
-            if (conversions.CAD < 0) {
-                conversions.USD = -1 * conversions.CAD * fxRate["CAD/USD"];
-            }
-            // buy CAD, sell USD
-            else {
-                conversions.USD = -1 * conversions.CAD / fxRate["CAD/USD"];
-            }
-            $USD.val(conversions.USD.toFixed(2));
-            $CAD.removeClass("has-error")
-
+            $targetInput.val(conversions[target].toFixed(2));
+            $source.parent().removeClass("has-error");
         } else {
-            $CAD.addClass("has-error");
-            $USD.val('');
-            conversions.CAD = 0;
-            conversions.USD = 0;
+            $targetInput.val('');
+            $source.parent().addClass("has-error");
+            conversions[base] = 0;
+            conversions[target] = 0;
         }
     } else {
-        $CAD.removeClass("has-error");
-        conversions.CAD = 0;
-        $USD.val('');
-        conversions.USD = 0;
-    }
-
-    updateCashTable();
-}
-
-function convertCashUSD() {
-    var  $USD = $("#usd_conv"), $CAD = $("#cad_conv");
-    // Strip non-numeric for browsers without "tel" support
-    $USD.val(function (i, oldval) {
-        return oldval.replace(/[^\-0-9.]/,"");
-    });
-
-    var USDString = $USD.val();
-    if(USDString.length > 0) {
-        if ((/^-?\d+\.?\d{0,2}$/).test(USDString)) {
-
-            conversions.USD = parseFloat(USDString);
-
-            // sell USD, buy CAD
-            if (conversions.USD < 0) {
-                conversions.CAD = -1 * conversions.USD / fxRate["CAD/USD"];
-            }
-            // buy USD, sell CAD
-            else {
-                conversions.CAD = -1 * conversions.USD * fxRate["CAD/USD"];
-            }
-            $CAD.val(conversions.CAD.toFixed(2));
-            $USD.removeClass("has-error");
-
-        } else {
-            $USD.addClass("has-error");
-            $CAD.val('');
-            conversions.CAD = 0;
-            conversions.USD = 0;
-        }
-    } else {
-        $CAD.val('');
-        conversions.CAD = 0;
-        $USD.val('').removeClass("has-error");
-        conversions.USD = 0;
+        $targetInput.val('');
+        $source.parent().removeClass("has-error");
+        conversions[base] = 0;
+        conversions[target] = 0;
     }
 
     updateCashTable();
