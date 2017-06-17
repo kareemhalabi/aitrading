@@ -106,6 +106,11 @@ function editTrade($row) {
     // Update cash
     cash[trade.currency][trade.buy_sell] -= trade.total;
     updateCashTable();
+
+    // Scroll to trade details
+    $("html, body").animate({
+       scrollTop: $("#trade_form").offset().top
+    }, 1000);
 }
 
 function deleteTrade($row) {

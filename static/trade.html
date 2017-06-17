@@ -36,20 +36,117 @@
         <div class="navbar-collapse collapse" id="bs-example-navbar-collapse-1" aria-expanded="false"
              style="height: 1px;">
             <ul class="nav navbar-nav navbar-right">
-                <li><button type="submit" class="btn btn-default">About</button></li>
-                <li><button type="submit" class="btn btn-default">Help</button></li>
-                <li><button type="submit" class="btn btn-default">Logout</button></li>
+                <li><a href="#" data-toggle="modal" data-target="#about_modal">About</a></li>
+                <li><a href="#">Logout</a></li>
             </ul>
         </div>
     </div>
 </nav>
 
+<div id="about_modal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">About</h4>
+            </div>
+            <div class="modal-body">
+                <p>Welcome to AI-Trading! I created this site to help facilitate the execution of trades for
+                    the Applied Investments (FINE 541) class at McGill. There are four main panels in the application:
+                </p>
+                <ol>
+                    <li><b>Group Info:</b> Displays the trading supervisor(s), all group members and
+                        <span class="label label-default">the currently active trader</span>
+                    </li>
+                    <li><b>Your Portfolio:</b> Pulls the latest portfolio info straight from CIBC BNY Mellon. Each row
+                        has
+                        a
+                        <button type="button" class="btn btn-xs btn-info">Sell</button>
+                        button to populate the Trade Details panel with the security's info.
+                    </li>
+                    <li><b>Trade Details:</b> Allows you to search
+                        <button class="btn btn-primary btn-xs" type="button">
+                            <span class="glyphicon glyphicon-search"></span></button>
+                        for security information by ticker or ISIN. The ticker/ISIN, name and last close price is
+                        pulled from <a href="http://www.morningstar.co.uk/uk/" target="_blank">Morningstar UK</a> (Yes,
+                        UK. It was the only website I could find with publicly available ISIN
+                        numbers). Then fill in the remaining details of the trade.
+                    </li>
+                    <li><b>Order Preview:</b> Shows the pending orders, allowing the user to edit
+                        <button type="button" class="btn btn-xs btn-success"><span
+                                class="glyphicon glyphicon-pencil"></span></button>
+                        or delete
+                        <button type="button" class="btn btn-xs btn-success"><span
+                                class="glyphicon glyphicon-remove"></span></button>
+                        any entry and also
+                        specify currency conversion instructions (FX rates are pulled from <a href="http://fixer.io/"
+                                                                                              target="_blank">fixer.io</a>).
+                        Calculates an estimate of the
+                        remaining cash in each currency.
+                    </li>
+                </ol>
+                <p>Once you submit, the application sends an email to the supervisor with all other group members CCed
+                    outlining the executed trades and currency conversion instructions if applicable.
+                    <b>Please verify this email and notify the supervisor if any information is missing or
+                        incorrect.</b>
+                </p>
+                <br>
+                <p>If you are experiencing any problems using the application or are interested in how it was built,
+                    feel free to contact me or check out the source code at <a
+                            href="https://github.com/kareemhalabi/ai-trading" target="_blank">https://github.com/kareemhalabi/ai-trading</a>
+                </p>
+                <br>
+                <p>Cheers,<br>Kareem Halabi<br><a href="mailto:kareem.halabi@mail.mcgill.ca" target="_top">kareem.halabi@mail.mcgill.ca</a>
+                </p>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="group_info_container" class="container">
+    <div id="group_info_panel" class="panel panel-default">
+        <div class="panel-heading">
+            <h2>Group Info<span style="float: right">
+                <button class="btn btn-default" data-toggle="collapse" data-target="#group_info_panel_body">Show/Hide
+                </button>
+            </span></h2>
+        </div>
+        <div id="group_info_panel_body" class="panel-body collapse in">
+            <h3 style="margin-top: 0">Supervisor</h3>
+            <ul class="list-group">
+                <li class="list-group-item">
+                    <p>Ken Lester<span style="float: right">klester@lesterasset.com</span></p>
+                </li>
+            </ul>
+            <h3>Members</h3>
+            <ul class="list-group">
+                <li class="list-group-item active">
+                    <p>Kareem Halabi<span style="float: right">kareem.halabi@mail.mcgill.ca</span></p>
+                </li>
+                <li class="list-group-item">
+                    <p>Qitong Deng<span style="float: right">qitong.deng@mail.mcgill.ca</span></p>
+                </li>
+                <li class="list-group-item">
+                    <p>Jaskrit Singh<span style="float: right">jaskrit.singh@mail.mcgill.ca</span></p>
+                </li>
+                <li class="list-group-item">
+                    <p>Louis Lee<span style="float: right">chen-in.lee@mail.mcgill.ca</span></p>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
 <div id="portfolio_container" class="container">
     <div id="portfolio_panel" class="panel panel-info">
         <div class="panel-heading">
-            <h2>Your Portfolio</h2>
+            <h2>Your Portfolio <span style="float: right">
+                <button class="btn btn-info" data-toggle="collapse" data-target="#portfolio_panel_body">Show/Hide
+                </button>
+            </span></h2>
         </div>
-        <div class="panel-body">
+        <div id="portfolio_panel_body" class="panel-body collapse in">
             <p id="portfolio-update-date">Last Updated:</p>
             <h3>Securities</h3>
             <table class="rwd-table table table-striped table-hover">
@@ -81,15 +178,14 @@
             <h3>Cash</h3>
             <div style="width: 25%">
                 <ul class="list-group">
-                <li class="list-group-item">
-                    <b>CAD: </b>$125,000.00
-                </li>
-                <li class="list-group-item">
-                    <b>USD: </b>$125,000.00
-                </li>
-            </ul>
+                    <li class="list-group-item">
+                        <b>CAD: </b>$125,000.00
+                    </li>
+                    <li class="list-group-item">
+                        <b>USD: </b>$125,000.00
+                    </li>
+                </ul>
             </div>
-
         </div>
     </div>
 </div>
