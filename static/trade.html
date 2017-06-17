@@ -22,7 +22,7 @@
 <nav class="navbar navbar-default">
     <div class="container-fluid">
         <div class="navbar-header">
-            <a class="navbar-brand" href="#">Applied Investments Group 12 (UESF00120002)</a>
+            <a class="navbar-brand" href="#">AI-Trading Group 12</a>
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
                     data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
                 <span class="sr-only">Toggle navigation</span>
@@ -36,8 +36,8 @@
         <div class="navbar-collapse collapse" id="bs-example-navbar-collapse-1" aria-expanded="false"
              style="height: 1px;">
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="#" data-toggle="modal" data-target="#about_modal">About</a></li>
-                <li><a href="#">Logout</a></li>
+                <li><a href="#" class="no-focus-outline" data-toggle="modal" data-target="#about_modal">About</a></li>
+                <li><a href="#" class="no-focus-outline">Logout</a></li>
             </ul>
         </div>
     </div>
@@ -67,10 +67,10 @@
                     <li><b>Trade Details:</b> Allows you to search
                         <button class="btn btn-primary btn-xs" type="button">
                             <span class="glyphicon glyphicon-search"></span></button>
-                        for security information by ticker or ISIN. The ticker/ISIN, name and last close price is
+                        for security information by ticker or ISIN. The security's ticker, ISIN, name and last close price are
                         pulled from <a href="http://www.morningstar.co.uk/uk/" target="_blank">Morningstar UK</a> (Yes,
                         UK. It was the only website I could find with publicly available ISIN
-                        numbers). Then fill in the remaining details of the trade.
+                        numbers). Then fill in the remaining details of the trade and add it to the preview.
                     </li>
                     <li><b>Order Preview:</b> Shows the pending orders, allowing the user to edit
                         <button type="button" class="btn btn-xs btn-success"><span
@@ -108,7 +108,7 @@
     <div id="group_info_panel" class="panel panel-default">
         <div class="panel-heading">
             <h2>Group Info<span style="float: right">
-                <button class="btn btn-default" data-toggle="collapse" data-target="#group_info_panel_body">Show/Hide
+                <button class="btn btn-default no-focus-outline" data-toggle="collapse" data-target="#group_info_panel_body">Show/Hide
                 </button>
             </span></h2>
         </div>
@@ -119,19 +119,25 @@
                     <p>Ken Lester<span style="float: right">klester@lesterasset.com</span></p>
                 </li>
             </ul>
+            <h3>Account</h3>
+            <ul class="list-group">
+                <li class="list-group-item">
+                    <p>Group 12<span style="float: right">UESF00120002</span></p>
+                </li>
+            </ul>
             <h3>Members</h3>
             <ul class="list-group">
                 <li class="list-group-item active">
-                    <p>Kareem Halabi<span style="float: right">kareem.halabi@mail.mcgill.ca</span></p>
+                    <p>Kareem Halabi<span class="hidden-xs" style="float: right">kareem.halabi@mail.mcgill.ca</span></p>
                 </li>
                 <li class="list-group-item">
-                    <p>Qitong Deng<span style="float: right">qitong.deng@mail.mcgill.ca</span></p>
+                    <p>Qitong Deng<span class="hidden-xs" style="float: right">qitong.deng@mail.mcgill.ca</span></p>
                 </li>
                 <li class="list-group-item">
-                    <p>Jaskrit Singh<span style="float: right">jaskrit.singh@mail.mcgill.ca</span></p>
+                    <p>Jaskrit Singh<span class="hidden-xs" style="float: right">jaskrit.singh@mail.mcgill.ca</span></p>
                 </li>
                 <li class="list-group-item">
-                    <p>Louis Lee<span style="float: right">chen-in.lee@mail.mcgill.ca</span></p>
+                    <p>Louis Lee<span class="hidden-xs" style="float: right">chen-in.lee@mail.mcgill.ca</span></p>
                 </li>
             </ul>
         </div>
@@ -142,14 +148,14 @@
     <div id="portfolio_panel" class="panel panel-info">
         <div class="panel-heading">
             <h2>Your Portfolio <span style="float: right">
-                <button class="btn btn-info" data-toggle="collapse" data-target="#portfolio_panel_body">Show/Hide
+                <button class="btn btn-info no-focus-outline" data-toggle="collapse" data-target="#portfolio_panel_body">Show/Hide
                 </button>
             </span></h2>
         </div>
         <div id="portfolio_panel_body" class="panel-body collapse in">
             <p id="portfolio-update-date">Last Updated:</p>
             <h3>Securities</h3>
-            <table class="rwd-table table table-striped table-hover">
+            <table class="rwd-table rwd-table-info table table-striped table-hover">
                 <tbody id="portfolio-table">
                 <tr>
                     <th>Currency</th>
@@ -176,16 +182,14 @@
                 </tbody>
             </table>
             <h3>Cash</h3>
-            <div style="width: 25%">
-                <ul class="list-group">
-                    <li class="list-group-item">
-                        <b>CAD: </b>$125,000.00
-                    </li>
-                    <li class="list-group-item">
-                        <b>USD: </b>$125,000.00
-                    </li>
-                </ul>
-            </div>
+            <ul class="list-group">
+                <li class="list-group-item">
+                    <b>CAD: </b> <span style="float:right">$125,000.00</span>
+                </li>
+                <li class="list-group-item">
+                    <b>USD: </b> <span style="float:right">$125,000.00</span>
+                </li>
+            </ul>
         </div>
     </div>
 </div>
@@ -348,7 +352,7 @@
 
             <h3 style="margin-top: 0">Securities</h3>
 
-            <table class="rwd-table table table-striped table-hover">
+            <table class="rwd-table rwd-table-success table table-striped table-hover">
                 <tbody id="preview_table">
                 <tr>
                     <th>Currency</th>
@@ -368,7 +372,7 @@
 
             <h3 style="margin-top: 30px">Cash</h3>
             <p id="fx_info"></p>
-            <table class="rwd-table table table-striped table-hover" style="table-layout: fixed">
+            <table class="rwd-table rwd-table-success table table-striped table-hover" style="table-layout: fixed">
                 <tbody id="cash_recap">
                 <tr>
                     <th>Currency</th>
