@@ -1,14 +1,17 @@
 {% extends 'base.html' %}
-{% block title %}AI Trading - No Javascript{% endblock title %}
+{% block title %}AI Trading - No Javascript{% endblock %}
 {% block head %}
     {{ super() }}
     <script>
         {{ redirect }}
     </script>
-{% endblock head %}
+
+    {#  Disables the default noscript in base.html  #}
+    {% block noscript %}{% endblock %}
+{% endblock %}
 {% block  content %}
     <div class="jumbotron container">
         <h1>Javascript is disabled</h1>
         <p>It looks like you have Javascript disabled, please enable it and then refresh this page</p>
     </div>
-{% endblock content %}
+{% endblock %}
