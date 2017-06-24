@@ -1,0 +1,137 @@
+<div class="container data-container">
+    <div id="trade_details_panel" class="panel panel-primary">
+        <div class="panel-heading">
+            <h2>Trade Details</h2>
+        </div>
+        <div class="panel-body">
+            <form id="trade_form" class="form-inline" autocomplete="off">
+                <fieldset>
+                    <div class="alert alert-dismissible alert-danger" style="display: none">
+                        <button type="button" class="close" onclick="$(this).parent().hide(500)">&times;</button>
+                        <h4>Oh snap!</h4>
+                        <p id="trade_error"></p>
+                    </div>
+                    <div id="currency_group" class="form-group">
+                        <label for="currency" class="control-label">Currency</label>
+                        <br>
+                        <select id="currency" class="form-control" onchange="currencyHandler()">
+                            <option disabled selected style="display: none"></option>
+                            <option value="CAD">CAD</option>
+                            <option value="USD">USD</option>
+                        </select>
+                    </div>
+
+                    <div id="ticker_group" class="form-group">
+                        <label for="ticker" class="control-label">Ticker</label>
+                        <br>
+                        <div class="input-group">
+                            <input id="ticker" type="text" class="form-control" maxlength="6" placeholder="ABC"
+                                   oninput="tickerInputHandler($(this))">
+                            <div class="input-group-btn">
+                                <button id="ticker_btn" class="btn btn-primary" type="button" onclick="searchByTicker()"
+                                        disabled="disabled">
+                                    <span id="ticker_search_icon" class="glyphicon glyphicon-search"></span>
+                                    <div id="ticker_loader" class="loader" style="display: none"></div>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="isin_group" class="form-group">
+                        <label for="isin" class="control-label">ISIN</label>
+                        <br>
+                        <div class="input-group">
+                            <input id="isin" type="text" class="form-control" maxlength="13" placeholder="US1234567890"
+                                   oninput="isinInputHandler($(this))">
+                            <div class="input-group-btn">
+                                <button id="isin_btn" class="btn btn-primary" type="button" onclick="searchByIsin()"
+                                        disabled="disabled">
+                                <span id="isin_search_icon" class="glyphicon glyphicon-search"
+                                      style="display: inline-block"></span>
+                                    <div id="isin_loader" class="loader" style="display: none"></div>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="sec_name_group" class="form-group">
+                        <label for="sec_name" class="control-label">Security Name</label>
+                        <br>
+                        <textarea id="sec_name" rows="1" class="form-control" oninput="secNameInputHandler($(this))"
+                                  style="resize: none;"></textarea>
+                    </div>
+
+                    <br class="hidden-xs">
+                    <br class="hidden-xs">
+
+                    <div id="buy_sell_group" class="form-group">
+                        <label for="buy_sell" class="control-label">Buy/Sell</label>
+                        <br>
+                        <select id="buy_sell" class="form-control" onchange="selectHandler($(this))">
+                            <option disabled selected style="display: none"></option>
+                            <option>BUY</option>
+                            <option>SELL</option>
+                        </select>
+                    </div>
+
+                    <div id="shares_group" class="form-group">
+                        <label for="shares" class="control-label">Shares</label>
+                        <br>
+                        <input id="shares" type="number" class="form-control" min="1" step="1"
+                               oninput="sharesInputHandler($(this))">
+                    </div>
+
+                    <div id="price_group" class="form-group">
+                        <label for="price" class="control-label">Price</label>
+                        <br>
+                        <div class="input-group">
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-usd"></span></span>
+                            <!-- Using tel, since when using "number", NaN results in empty value-->
+                            <input id="price" type="tel" class="form-control" oninput="priceInputHandler($(this))">
+                        </div>
+                    </div>
+
+                    <div id="mkt_limit_group" class="form-group">
+                        <label for="mkt_limit" class="control-label">MKT/LIMIT</label>
+                        <br>
+                        <select id="mkt_limit" class="form-control" onchange="selectHandler($(this))">
+                            <option disabled selected style="display: none"></option>
+                            <option value="MKT">MKT</option>
+                            <option value="LIMIT">LIMIT</option>
+                        </select>
+                    </div>
+
+                    <div id="order_type_group" class="form-group">
+                        <label for="order_type" class="control-label">Order Type</label>
+                        <br>
+                        <select id="order_type" class="form-control" onchange="selectHandler($(this))">
+                            <option disabled selected style="display: none"></option>
+                            <option value="GTC">GTC</option>
+                            <option value="DAY">DAY</option>
+                            <option value="IOC">IOC</option>
+                            <option value="FOK">FOK</option>
+                            <option value="AON">AON</option>
+                        </select>
+                    </div>
+
+                    <div id="total_group" class="form-group">
+                        <label for="total" class="control-label">Total</label>
+                        <br>
+                        <div class="input-group">
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-usd"></span></span>
+                            <input id="total" class="form-control" value="0.00" readonly>
+                        </div>
+                    </div>
+
+                    <br>
+                    <br class="hidden-xs">
+
+                    <button id="add_trade_btn" class="btn btn-primary btn-block" disabled onclick="addTrade()">
+                        Add Trade
+                    </button>
+
+                </fieldset>
+            </form>
+        </div>
+    </div>
+</div>

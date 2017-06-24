@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block title %}AI Trading{% endblock %}
+{% block head %}
+    {{ super() }}
+    <link rel="stylesheet" href="/static/trading_styles.css">
+    <script src="/static/trading_js.js"></script>
+    <script src="/static/orderPreview_js.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+    </script>
+    <noscript>
+        <meta http-equiv="refresh" content="0; url=./noscript?redirect=/"/>
+    </noscript>
+{% endblock %}
+{% block navbar_buttons %}
+    <li><a href="#" class="no-focus-outline" data-toggle="modal" data-target="#about_modal">About</a></li>
+    <li><a href="#" class="no-focus-outline">Logout</a></li>
+{% endblock %}
+
+{% block content %}
+
+    {% include 'about_modal.html' %}
+    {% include 'containers/group_info_container.html' %}
+    {% include 'containers/portfolio_container.html' %}
+    {% include 'containers/trade_details_container.html' %}
+    {% include 'containers/order_preview_container.html' %}
+
+{% endblock %}

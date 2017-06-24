@@ -6,7 +6,7 @@ ai_trading = Flask(__name__)
 
 @ai_trading.route('/')
 def index():
-    return ai_trading.send_static_file("trade.html")
+    return render_template("trade.html")
 
 
 @ai_trading.route('/noscript')

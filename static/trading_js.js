@@ -106,7 +106,7 @@ function resetForm() {
     var $form = $("#trade_form");
     $form[0].reset();
     $form.find(".form-group").removeClass("has-success has-error");
-    $("#form_panel").attr("class", "panel panel-primary");
+    $("#trade_details_panel").attr("class", "panel panel-primary");
     $("#add_trade_btn").prop("disabled", true).attr("class", "btn btn-primary btn-block");
     $("#isin_btn").prop("disabled", true).attr("class", "btn btn-primary");
     $("#ticker_btn").prop("disabled", true).attr("class", "btn btn-primary");
@@ -271,11 +271,11 @@ function updateTotal(reset) {
 function submitCheck() {
 
     if($("#trade_form").find(".form-group:not(.has-success)").length == 0) {
-        $("#form_panel").attr("class", "panel panel-success");
+        $("#trade_details_panel").attr("class", "panel panel-success");
         $("#add_trade_btn").attr("class", "btn btn-success btn-block")
             .prop("disabled", false);
     } else {
-        $("#form_panel").attr("class", "panel panel-primary");
+        $("#trade_details_panel").attr("class", "panel panel-primary");
         $("#add_trade_btn").attr("class", "btn btn-primary btn-block")
             .prop("disabled", true);
     }

@@ -45,7 +45,7 @@
         width: 23.6918%;
     }
 
-    #form_container, #portfolio_container, #group_info_container {
+    .data-container {
         width: 788px;
     }
 }

@@ -1,0 +1,49 @@
+<div class="container data-container">
+    <div id="portfolio_panel" class="panel panel-info">
+        <div class="panel-heading">
+            <h2>Your Portfolio <span style="float: right">
+                <button class="btn btn-info no-focus-outline" data-toggle="collapse" data-target="#portfolio_panel_body">Show/Hide
+                </button>
+            </span></h2>
+        </div>
+        <div id="portfolio_panel_body" class="panel-body collapse in">
+            <p id="portfolio-update-date">Last Updated:</p>
+            <h3>Securities</h3>
+            <table class="rwd-table rwd-table-info table table-striped table-hover">
+                <tbody id="portfolio-table">
+                <tr>
+                    <th>Currency</th>
+                    <th>Ticker</th>
+                    <th>ISIN</th>
+                    <th>Security Name</th>
+                    <th>Shares</th>
+                    <th>Price</th>
+                    <th>Total</th>
+                    <th></th>
+                </tr>
+                <tr>
+                    <td>CAD</td>
+                    <td>ABCDE</td>
+                    <td>US1234567890</td>
+                    <td>A Fake Security Incorporated</td>
+                    <td>10,000</td>
+                    <td>$10.00</td>
+                    <td>$100,000</td>
+                    <td>
+                        <button type="button" class="btn btn-xs btn-info">Sell</button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <h3>Cash</h3>
+            <ul class="list-group">
+                <li class="list-group-item">
+                    <b>CAD: </b> <span style="float:right">$125,000.00</span>
+                </li>
+                <li class="list-group-item">
+                    <b>USD: </b> <span style="float:right">$125,000.00</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

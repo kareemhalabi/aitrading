@@ -1,0 +1,49 @@
+<p>Welcome to AI-Trading! This application was designed to help facilitate the execution of trades for
+    the Applied Investments (FINE 541) class at McGill. There are four main panels in the application:
+</p>
+<ol>
+    <li><b>Group Info:</b> Displays the trading supervisor(s), all group members and
+        <span class="label label-default">the currently active trader</span>
+    </li>
+    <li><b>Your Portfolio:</b> Pulls the latest portfolio info straight from CIBC BNY Mellon. Each row
+        has
+        a
+        <button type="button" class="btn btn-xs btn-info">Sell</button>
+        button to populate the Trade Details panel with the security's info.
+    </li>
+    <li><b>Trade Details:</b> Allows you to search
+        <button class="btn btn-primary btn-xs" type="button">
+            <span class="glyphicon glyphicon-search"></span></button>
+        for security information by ticker or ISIN. The security's ticker, ISIN, name and last close price are
+        pulled from <a href="http://www.morningstar.co.uk/uk/" target="_blank">Morningstar UK</a> (Yes,
+        UK. It was the only website I could find with publicly available ISIN
+        numbers). Then fill in the remaining details of the trade and add it to the preview.
+    </li>
+    <li><b>Order Preview:</b> Shows the pending orders, allowing the user to edit
+        <button type="button" class="btn btn-xs btn-success"><span
+                class="glyphicon glyphicon-pencil"></span></button>
+        or delete
+        <button type="button" class="btn btn-xs btn-success"><span
+                class="glyphicon glyphicon-remove"></span></button>
+        any entry and also
+        specify currency conversion instructions (FX rates are pulled from <a href="http://fixer.io/"
+                                                                              target="_blank">fixer.io</a>).
+        Calculates an estimate of the
+        remaining cash in each currency.
+    </li>
+</ol>
+<p>Once you submit, the application sends an email to the supervisor with all other group members CCed
+    outlining the executed trades and currency conversion instructions if applicable.
+    <b>Please verify this email and notify the supervisor if any information is missing or
+        incorrect.</b>
+</p>
+<br>
+<p>If you are experiencing any problems using the application or are interested in how it was built,
+    feel free to contact me or check out the source code at <a
+            href="https://github.com/kareemhalabi/ai-trading"
+            target="_blank">https://github.com/kareemhalabi/ai-trading</a>
+</p>
+<br>
+<p>Cheers,<br>Kareem Halabi<br><a href="mailto:kareem.halabi@mail.mcgill.ca"
+                                  target="_top">kareem.halabi@mail.mcgill.ca</a>
+</p>
