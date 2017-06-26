@@ -51,7 +51,7 @@ def no_script():
     redir = request.args.get("redirect")
 
     # Prevent erroneous redirects
-    if len(redir) == 0 or redir[0] != "/":
+    if (redir is None) or  len(redir) == 0 or redir[0] != "/":
         redirect_srcipt = Markup("")
     else:
         redirect_srcipt = Markup('window.location.replace("%s");' % redir)

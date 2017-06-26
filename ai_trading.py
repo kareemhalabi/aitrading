@@ -19,8 +19,12 @@ class AuthorizedUser(db.Model):
     def __repr__(self):
         return '<User %r, Account %r>' % (self.email, self.account)
 
+
+@ai_trading.before_first_request
+def create_all():
+    db.create_all()
+
 from views import *
 
 if __name__ == "__main__":
-    db.create_all()
     ai_trading.run(host= '0.0.0.0')
