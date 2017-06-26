@@ -1,0 +1,22 @@
+/* Styling to override bootstrap */
+@media screen and (min-width: 768px) {
+
+    .data-container {
+        width: 500px;
+    }
+    .data-container-large {
+        width: 600px;
+    }
+
+    #add_user_form input {
+        width: 100%;
+    }
+
+    #email_group {
+        width: 65%;
+    }
+
+    #account_group {
+        width: 34%;
+    }
+}

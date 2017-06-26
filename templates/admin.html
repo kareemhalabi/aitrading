@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% block title %}AI Trading - Admin{% endblock title %}
+{% set noscript_redirect_url = '/admin' %}
+
+{% block head %}
+    {{ super() }}
+    <link rel="stylesheet" href="/static/global_styles.css">
+    <link rel="stylesheet" href="/static/admin_styles.css">
+    <script src="/static/admin_js.js"></script>
+{% endblock %}
+
+{% block navbar_buttons %}
+    <li><a href="#" class="no-focus-outline">Logout</a></li>
+{% endblock %}
+
+{% block content %}
+    <div class="container data-container">
+        <div id="add_user_panel" class="panel panel-primary">
+            <div class="panel-heading">
+                <h2>Add New User</h2>
+            </div>
+            <div class="panel-body">
+                <form id="add_user_form" class="form-inline" autocomplete="off">
+                    <fieldset>
+                        <div class="alert alert-dismissible alert-danger" style="display: none">
+                            <button type="button" class="close" onclick="$(this).parent().hide(500)">&times;</button>
+                            <h4>Oh snap!</h4>
+                            <p id="add_user_error"></p>
+                        </div>
+                        <div id="email_group" class="form-group">
+                            <label for="email" class="control-label">Email</label>
+                            <br>
+                            <input id="email" type="text" class="form-control"
+                                   placeholder="firstname.lastname@mail.mcgill.ca"
+                                   oninput="emailHandler($(this))">
+                        </div>
+                        <div id="account_group" class="form-group">
+                            <label for="account" class="control-label">Account</label>
+                            <br>
+                            <input id="account" type="text" class="form-control" placeholder="UESF00XX0002"
+                                   maxlength="12"
+                                   oninput="accountHandler($(this))">
+                        </div>
+
+                        <br class="hidden-xs">
+                        <br class="hidden-xs">
+                    </fieldset>
+                </form>
+                <button id="add_user_btn" class="btn btn-primary btn-block" onclick="addUser()" disabled>
+                    <div id="add_user_label">Add User</div>
+                    <div id="add_user_loader" class="loader" style="display: none"></div>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container data-container-large">
+        <div id="athorized_user_panel" class="panel panel-success">
+            <div class="panel-heading">
+                <h2>Authorized Users</h2>
+            </div>
+            <div class="panel-body">
+                <table class="rwd-table rwd-table-success table table-striped table-hover">
+                    <tbody id="authorized_user_table">
+                    <tr>
+                        <th>Email</th>
+                        <th>Account</th>
+                        <th></th>
+                    </tr>
+                    {% for user in authorized_users %}
+                    <tr>
+                        <td data-th="Email">{{ user.email }}</td>
+                        <td data-th="Account">{{ user.account }}</td>
+                        <td data-th="Edit/Delete">
+                            <button type="button" class="btn btn-xs btn-success"
+                                    onclick="editUser($(this).closest('tr'))">
+                                <span class="glyphicon glyphicon-pencil"></span>
+                            </button>&nbsp;<button
+                                type="button" class="btn btn-xs btn-success"
+                                    onclick="deleteUser($(this).closest('tr'))">
+                                <span class="glyphicon glyphicon-remove"></span>
+                            </button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}
