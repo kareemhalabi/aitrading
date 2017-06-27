@@ -1,1 +1,1 @@
-web: gunicorn ai_trading:ai_trading
+web: gunicorn aitrading.wsgi --log-file -
