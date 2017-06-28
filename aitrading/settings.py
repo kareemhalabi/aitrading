@@ -27,7 +27,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG')
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '[::1]', '.herokuapp.com']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '[::1]', '.herokuapp.com', '.ngrok.io']
 
 
 # Application definition
@@ -113,6 +113,13 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# Email Configurations
+EMAIL_HOST = 'smtp.sendgrid.net'
+EMAIL_PORT = '587'
+EMAIL_HOST_USER = 'apikey'
+EMAIL_HOST_PASSWORD = os.environ.get('SENDGRID_API_KEY')
+EMAIL_USE_TLS = 'True'
+DEFAULT_FROM_EMAIL = 'mcgill.ai.trading@gmail.com'
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/

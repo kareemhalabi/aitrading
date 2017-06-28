@@ -48,4 +48,10 @@
     .data-container {
         width: 788px;
     }
+
+    .navbar-brand {
+        font-size: 24px;
+        font-weight: 300;
+        padding-left: 40px;
+    }
 }

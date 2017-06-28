@@ -1,0 +1,18 @@
+{% extends "admin/base_site.html" %}
+{% load i18n %}
+
+{% block title %}Logged Out | AI Trading{% endblock %}
+
+{% block breadcrumbs %}<div class="breadcrumbs"><a href="{% url 'trade' %}">{% trans 'Home' %}</a></div>{% endblock %}
+
+{% block branding %}
+    <h1 id="site-name"><a href="{% url 'admin:index' %}">Logged Out of AI Trading</a></h1>
+{% endblock %}
+
+{% block content %}
+
+<p>{% trans "Thanks for using AI Trading!" %}</p>
+
+<p><a href="{% url 'trade' %}">{% trans 'Log in again' %}</a></p>
+
+{% endblock %}
