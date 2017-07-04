@@ -1,10 +1,10 @@
 {% extends "registration/base_site.html" %}
 {% load i18n static %}
 
-{% block title %}Reset Complete | AI Trading{% endblock %}
+{% block title %}Activation Sent | AI Trading{% endblock %}
 
 {% block branding %}
-    <h1 id="site-name">AI Trading - Password Reset Complete</h1>
+    <h1 id="site-name">AI Trading Activation Sent</h1>
 {% endblock %}
 
 {% block extrastyle %}{{ block.super }}
@@ -22,9 +22,5 @@
 {% block breadcrumbs %}{% endblock %}
 
 {% block content %}
-
-<p>{% trans "Your password has been set.  You may go ahead and log in now." %}</p>
-
-<p><a href="{{ login_url }}">{% trans 'Log in' %}</a></p>
-
+<p>{% trans "An activation email was sent. Please click the link to confirm your registration." %}</p>
 {% endblock %}

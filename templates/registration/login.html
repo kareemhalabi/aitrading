@@ -4,7 +4,7 @@
 {% block title %}Login | AI Trading{% endblock %}
 
 {% block branding %}
-    <h1 id="site-name"><a href="{% url 'trade' %}">AI Trading Login</a></h1>
+    <h1 id="site-name">AI Trading Login</h1>
 {% endblock %}
 
 {% block extrastyle %}{{ block.super }}<link rel="stylesheet" type="text/css" href="{% static "admin/css/login.css" %}" />
@@ -41,7 +41,7 @@
 {% if user.is_authenticated %}
 <p class="errornote">
 {% blocktrans trimmed %}
-    You are authenticated as {{ username }}, but are not authorized to
+    You are authenticated as {{ user.username }}, but are not authorized to
     access this page. Would you like to login to a different account?
 {% endblocktrans %}
 </p>
@@ -58,14 +58,12 @@
     <input type="hidden" name="next" value="{{ next }}" />
   </div>
   {% url 'admin_password_reset' as password_reset_url %}
-  {% if password_reset_url %}
-  <div class="password-reset-link">
-    <a href="{{ password_reset_url }}">{% trans 'Forgotten your password or username?' %}</a>
-  </div>
-  {% endif %}
-  <div class="submit-row">
-    <label>&nbsp;</label><input type="submit" value="{% trans 'Log in' %}" />
-  </div>
+  <input type="submit" value="{% trans 'Log in' %}" style="width: 100%; margin: 10px 0"/>
+    <br>
+    <div class="password-reset-link">
+        <!--suppress HtmlUnknownTarget -->
+        <a href="/accounts/password_reset">{% trans 'Forgotten your password or username?' %}</a>
+    </div>
 </form>
 
 </div>

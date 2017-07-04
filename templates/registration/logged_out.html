@@ -1,13 +1,25 @@
-{% extends "admin/base_site.html" %}
-{% load i18n %}
+{% extends "registration/base_site.html" %}
+{% load i18n static %}
 
 {% block title %}Logged Out | AI Trading{% endblock %}
 
-{% block breadcrumbs %}<div class="breadcrumbs"><a href="{% url 'trade' %}">{% trans 'Home' %}</a></div>{% endblock %}
-
 {% block branding %}
-    <h1 id="site-name"><a href="{% url 'admin:index' %}">Logged Out of AI Trading</a></h1>
+    <h1 id="site-name">AI Trading Logged Out</h1>
 {% endblock %}
+
+{% block extrastyle %}{{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static "admin/css/login.css" %}"/>
+{% endblock %}
+
+{% block bodyclass %}{{ block.super }} login{% endblock %}
+
+{% block usertools %}{% endblock %}
+
+{% block nav-global %}{% endblock %}
+
+{% block content_title %}{% endblock %}
+
+{% block breadcrumbs %}{% endblock %}
 
 {% block content %}
 

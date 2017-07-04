@@ -113,13 +113,16 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+ACCOUNT_ACTIVATION_DAYS = 7
+
 # Email Configurations
+# https://docs.djangoproject.com/en/1.11/topics/email/
 EMAIL_HOST = 'smtp.sendgrid.net'
 EMAIL_PORT = '587'
 EMAIL_HOST_USER = 'apikey'
 EMAIL_HOST_PASSWORD = os.environ.get('SENDGRID_API_KEY')
 EMAIL_USE_TLS = 'True'
-DEFAULT_FROM_EMAIL = 'mcgill.ai.trading@gmail.com'
+DEFAULT_FROM_EMAIL = 'AI Trading <mcgill.ai.trading@gmail.com>'
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/

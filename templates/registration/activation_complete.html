@@ -1,10 +1,10 @@
 {% extends "registration/base_site.html" %}
 {% load i18n static %}
 
-{% block title %}Reset Complete | AI Trading{% endblock %}
+{% block title %}Account Activated | AI Trading{% endblock %}
 
 {% block branding %}
-    <h1 id="site-name">AI Trading - Password Reset Complete</h1>
+    <h1 id="site-name">AI Trading Account Activated</h1>
 {% endblock %}
 
 {% block extrastyle %}{{ block.super }}
@@ -21,10 +21,11 @@
 
 {% block breadcrumbs %}{% endblock %}
 
+{% block extrahead %}
+    <meta http-equiv="refresh" content="5; url=/"/>
+{% endblock %}
+
 {% block content %}
-
-<p>{% trans "Your password has been set.  You may go ahead and log in now." %}</p>
-
-<p><a href="{{ login_url }}">{% trans 'Log in' %}</a></p>
-
+<p>{% trans "Your account is now activated. You will be redirected to the login page in 5 seconds" %}</p>
+<p>Click <a style="color: dodgerblue" href="/">here</a> if you are not redirected automatically</p>
 {% endblock %}

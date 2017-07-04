@@ -1,10 +1,10 @@
 {% extends "registration/base_site.html" %}
 {% load i18n static %}
 
-{% block title %}Reset Complete | AI Trading{% endblock %}
+{% block title %}Activation Failed | AI Trading{% endblock %}
 
 {% block branding %}
-    <h1 id="site-name">AI Trading - Password Reset Complete</h1>
+    <h1 id="site-name">AI Trading Activation Failed</h1>
 {% endblock %}
 
 {% block extrastyle %}{{ block.super }}
@@ -23,8 +23,6 @@
 
 {% block content %}
 
-<p>{% trans "Your password has been set.  You may go ahead and log in now." %}</p>
-
-<p><a href="{{ login_url }}">{% trans 'Log in' %}</a></p>
+<p>{% trans "Account activation failed" %}</p>
 
 {% endblock %}

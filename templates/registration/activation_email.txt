@@ -1,0 +1,8 @@
+{% load i18n %}
+{% trans "Thanks for creating an account at" %} {{ site.name }} !
+
+Click the link below to confirm your email and activate your account
+
+http://{{ site.domain }}{% url 'registration_activate' activation_key %}
+
+{% blocktrans %}Link is valid for {{ expiration_days }} days.{% endblocktrans %}

@@ -38,6 +38,13 @@
             color: #447e9b;
         }
 
+        input[value='Log in'] {
+            width: 100%;
+        }
+        .submit-row {
+            padding-left: 0 !important;
+        }
+
         .button, input[type=submit], input[type=button], .submit-row input, a.button {
             background-color: #2780e3;
         }
@@ -57,6 +64,10 @@
         }
 
     </style>
+{% endblock %}
+
+{% block extrahead %}
+    <link rel="icon" href="/static/favicon.ico">
 {% endblock %}
 
 {% block branding %}

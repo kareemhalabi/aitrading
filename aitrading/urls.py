@@ -20,6 +20,9 @@ from . import views
 
 urlpatterns = [
     url(r'^accounts/', include('django.contrib.auth.urls')),
+    url(r'^accounts/register/$', views.RegistrationView.as_view()),
+    url(r'^accounts/', include('registration.backends.hmac.urls')),
+    url(r'^accounts/check_authorized_email/', views.check_authorized_email, name='check_authorization'),
     url(r'^admin/', admin.site.urls),
     url(r'^$', views.trade, name='trade'),
     url(r'^noscript/$', views.no_script, name='no_script'),
