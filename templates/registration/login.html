@@ -41,7 +41,7 @@
 {% if user.is_authenticated %}
 <p class="errornote">
 {% blocktrans trimmed %}
-    You are authenticated as {{ user.username }}, but are not authorized to
+    You are authenticated as {{ user }}, but are not authorized to
     access this page. Would you like to login to a different account?
 {% endblocktrans %}
 </p>
@@ -63,6 +63,12 @@
     <div class="password-reset-link">
         <!--suppress HtmlUnknownTarget -->
         <a href="/accounts/password_reset">{% trans 'Forgotten your password or username?' %}</a>
+    </div>
+    <br>
+
+    <div class="password-reset-link">
+        <!--suppress HtmlUnknownTarget -->
+        <a href="/accounts/register">{% trans 'Need to create an account?' %}</a>
     </div>
 </form>
 

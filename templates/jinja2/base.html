@@ -11,7 +11,7 @@
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
         {% block noscript %}
         <noscript>
-            <meta http-equiv="refresh" content="0; url=./noscript?redirect={{ noscript_redirect_url }}"/>
+            <meta http-equiv="refresh" content="0; url=/noscript/?redirect={{ request.path }}"/>
         </noscript>
         {% endblock %}
     {% endblock %}

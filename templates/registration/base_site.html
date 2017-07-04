@@ -59,6 +59,11 @@
 
 {% block extrahead %}
     <link rel="icon" href="/static/favicon.ico">
+    {% block noscript %}
+        <noscript>
+            <meta http-equiv="refresh" content="0; url=/noscript/?redirect={{ request.path }}"/>
+        </noscript>
+    {% endblock %}
 {% endblock %}
 
 {% block nav-global %}{% endblock %}
