@@ -35,8 +35,6 @@ a:hover {
 
 .button, input[type=submit], input[type=button], .submit-row input, a.button {
     background-color: #2780e3;
-    width: 100%;
-    margin: 10px 0;
 }
 
 .button:active, input[type=submit]:active, input[type=button]:active, .button:focus, input[type=submit]:focus,
