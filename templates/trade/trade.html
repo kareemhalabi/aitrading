@@ -1,7 +1,6 @@
-{% extends 'base.html' %}
-{% block title %}AI Trading{% endblock %}
+{% extends 'trade/base.html' %}
 {% block head %}
-    {{ super() }}
+    {{ block.super }}
     <link rel="stylesheet" href="/static/css/global_styles.css">
     <link rel="stylesheet" href="/static/css/trading_styles.css">
     <script src="/static/js/trading_js.js"></script>
@@ -20,10 +19,10 @@
 
 {% block content %}
 
-    {% include 'about_modal.html' %}
-    {% include 'containers/group_info_container.html' %}
-    {% include 'containers/portfolio_container.html' %}
-    {% include 'containers/trade_details_container.html' %}
-    {% include 'containers/order_preview_container.html' %}
+    {% include 'trade/about_modal.html' %}
+    {% include 'trade/containers/group_info_container.html' %}
+    {% include 'trade/containers/portfolio_container.html' %}
+    {% include 'trade/containers/trade_details_container.html' %}
+    {% include 'trade/containers/order_preview_container.html' %}
 
 {% endblock %}

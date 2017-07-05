@@ -1,7 +1,6 @@
-{% extends 'base.html' %}
-{% block title %}AI Trading - No Javascript{% endblock %}
+{% extends 'trade/base.html' %}
 {% block head %}
-    {{ super() }}
+    {{ block.super }}
     <script>
         {{ redirect }}
     </script>
