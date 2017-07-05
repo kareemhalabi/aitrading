@@ -2,7 +2,6 @@ import re
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseNotFound, HttpResponseBadRequest ,JsonResponse
 from django.shortcuts import render
-from django.views.decorators.csrf import csrf_exempt
 from markupsafe import Markup
 
 from aitrading.models import AuthorizedUser
@@ -13,7 +12,23 @@ from registration.backends.hmac.views import RegistrationView
 
 @login_required
 def trade(request):
-    return render(request, 'trade.html')
+    try:
+        group_account = AuthorizedUser.objects.get(email=request.user.email).account
+        group_number = int(group_account[6:8])
+        member_emails = AuthorizedUser.objects.filter(account=group_account).values_list('email', flat=True)
+        members = User.objects.filter(email__in=member_emails)
+        supervisor = User.objects.get(groups__name='supervisor')
+        return render(request, 'trade/trade.html',
+                  {'title': 'AI Trading - %s %s' % (request.user.first_name, request.user.last_name),
+                   'supervisor': supervisor, 'group_number': group_number, 'group_account': group_account, 'members': members})
+
+    except AuthorizedUser.DoesNotExist:
+        return render(request, 'trade/unauthorized.html', {'title': 'Unauthorized'}, status=401)
+
+    except User.MultipleObjectsReturned:
+        return HttpResponse('Error: More than one trading supervisor exists. '
+                            'Please remove supervisor status from all but one user using the admin page.', status=500)
+
 
 
 def no_script(request):
@@ -23,8 +38,9 @@ def no_script(request):
     if redir[0] != '/':
         redir = '/'
 
-    return render(request, 'noscript.html',
-                  {'redirect': Markup('window.location.replace("%s");' % redir)})
+    return render(request, 'trade/noscript.html',
+                  {'title': 'AI Trading - No Javascript',
+                   'redirect': Markup('window.location.replace("%s");' % redir)})
 
 
 @login_required

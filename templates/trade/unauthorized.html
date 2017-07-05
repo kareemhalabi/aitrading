@@ -1,0 +1,12 @@
+{% extends "trade/base.html" %}
+
+{% block navbar_buttons %}
+    <li><a href="/accounts/logout" class="no-focus-outline">Logout</a></li>
+{% endblock %}
+
+{% block content %}
+<div class="jumbotron container">
+        <h1>Unauthorized - No associated group</h1>
+        <p>It looks like you have not been associated with a group, please contact the supervisor to correct this</p>
+</div>
+{% endblock %}
