@@ -4,12 +4,12 @@
 
 var cash = {
   "CAD": {
-      "open": 0.00,
+      "open": 10000.00,
       "BUY": 0.00,
       "SELL": 0.00
   },
   "USD": {
-      "open": 0.00,
+      "open": 10000.00,
       "BUY": 0.00,
       "SELL": 0.00
   }
@@ -28,6 +28,10 @@ var fxRate = {
 
 var autoConvertEnabled = true;
 
+var securities_error = "";
+var cash_error = "", cash_warning = "";
+var CASH_WARNING_THRESH = 0.05;
+
 $(document).ready( function () {
     // Get the fx Rate
     $.ajax("https://api.fixer.io/latest?base=CAD&symbols=USD",{
@@ -35,8 +39,8 @@ $(document).ready( function () {
             fxRate["CAD/USD"] = response.rates.USD;
             fxRate["USD/CAD"] = parseFloat((1/response.rates.USD).toFixed(5));
             fxRate["date"] = response.date;
-            $("#fx_info").html("As of " + fxRate["date"] + " 11:00 AM EST, &nbsp;" +
-                "<b>CAD/USD = " + fxRate["CAD/USD"] + "</b> and <b>USD/CAD = " + fxRate["USD/CAD"] + "</b>")
+            $("#fx_info").html("As of " + fxRate["date"] + " 11:00 AM EST, " +
+                "<b>1 CAD= " + fxRate["CAD/USD"] + " USD</b> and <b>1 USD = " + fxRate["USD/CAD"] + " CAD</b>")
         },
         error: function(error) {
             $("#fx_info").text("Could not get exchange rate, input conversions manually: " + error.status + ": " + error.statusText);
@@ -56,11 +60,23 @@ $(document).ready( function () {
     }
 });
 
+/**
+ * Update the preview table when a new trade has been added.
+ *
+ * @param trade The newly added trade
+ */
 function updatePreview(trade) {
+
+    // Clear previous errors
+    $("#preview_error").text("").parent().hide();
+
+
     // Show the panel
     if (pending_trades.length == 1) {
         $("#order_preview_container").slideDown();
     }
+
+    // Format trade row
     var tr = '<tr style="display: none">' +
                 '<td data-th="Currency">'+ trade.currency +'</td>' +
                 '<td data-th="Ticker">' + trade.ticker + '</td>' +
@@ -92,13 +108,22 @@ function updatePreview(trade) {
     $table.find("tr").show("slow");
 }
 
+/**
+ * Removes a trade from the preview and repopulates the trade form with the details
+ * to be edited.
+ *
+ * @param $row The row object to be edited
+ */
 function editTrade($row) {
+    // Find index in trade list and remove
     var index = $row.index() - 1;
     var trade = pending_trades[index];
     pending_trades.splice(index, 1);
 
     populateTradeForm(trade);
     $row.hide("slow", function (){$row.remove()});
+
+    // Hide preview if no trades remain
     if(pending_trades.length == 0) {
         $("#order_preview_container").slideUp();
     }
@@ -113,7 +138,13 @@ function editTrade($row) {
     }, 1000);
 }
 
+/**
+ * Removes a trade from the preview
+ *
+ * @param $row The row object to be edited
+ */
 function deleteTrade($row) {
+    // Find index in trade list and remove
     var index = $row.index() - 1;
     var trade = pending_trades[index];
     pending_trades.splice(index, 1);
@@ -128,6 +159,13 @@ function deleteTrade($row) {
     updateCashTable();
 }
 
+/**
+ * Input handler for a conversion request.
+ *
+ * @param $source The input field triggering the handler
+ * @param base The base currency
+ * @param target The target currency
+ */
 function convertCash($source, base, target) {
 
     // Strip non-numeric for browsers without "tel" support
@@ -137,23 +175,33 @@ function convertCash($source, base, target) {
 
     var $targetInput = $("#cash_recap").find("input[id*='"+ target +"']");
     var sourceString = $source.val();
+
     if (sourceString.length > 0) {
+
         if((/^-?\d+\.?\d{0,2}$/).test(sourceString)) {
+            // Non-empty and valid conversion value
+
             conversions[base] = parseFloat(sourceString);
 
+            // Only modify target input if auto-convert is enabled
             if(autoConvertEnabled) {
                 conversions[target] = -1 * conversions[base] * fxRate["" + base + "/" + target];
                 $targetInput.val(conversions[target].toFixed(2));
             }
 
             $source.parent().removeClass("has-error");
+
         } else {
+            // Non-empty and invalid conversion value
+
             $targetInput.val('');
             $source.parent().addClass("has-error");
             conversions[base] = 0;
             conversions[target] = 0;
         }
     } else {
+        // Empty conversion value
+
         $targetInput.val('');
         $source.parent().removeClass("has-error");
         conversions[base] = 0;
@@ -163,19 +211,27 @@ function convertCash($source, base, target) {
     updateCashTable();
 }
 
+/**
+ * Update the cash table calculating opening, total buys, sells, conversions
+ * net and closing balances for all currencies. Displays and cash related
+ * errors or warnings.
+ */
 function updateCashTable() {
 
+    cash_error = "";
+    cash_warning = "";
     var $cash_recap = $("#cash_recap");
 
     for (var currency in cash) {
         if (!cash.hasOwnProperty(currency)) continue;
 
-        var $currency_row = $cash_recap.find("[id*='"+currency+"']");
+        var $currency_row = $cash_recap.find("[id*='" + currency + "']");
 
-        $currency_row.find("[data-th='Buys']")
-                .text((-cash[currency]["BUY"]).toLocaleString("en-US", {style: "currency", currency: "USD"}));
+        var buys = $currency_row.find("[data-th='Buys']");
+        buys.text((-cash[currency]["BUY"]).toLocaleString("en-US", {style: "currency", currency: "USD"}));
+
         $currency_row.find("[data-th='Sells']")
-                .text(cash[currency]["SELL"].toLocaleString("en-US", {style: "currency", currency: "USD"}));
+            .text(cash[currency]["SELL"].toLocaleString("en-US", {style: "currency", currency: "USD"}));
 
         var net = (-cash[currency]["BUY"] + cash[currency]["SELL"] + conversions[currency]);
         $currency_row.find("[data-th*='Net']").text(
@@ -183,8 +239,50 @@ function updateCashTable() {
         );
 
         var closing = cash[currency]["open"] + net;
-        $currency_row.find("[data-th='Closing']").text(
+        var closing_cell = $currency_row.find("[data-th='Closing']");
+
+        closing_cell.text(
             closing.toLocaleString("en-US", {style: "currency", currency: "USD"})
         );
+
+        // Check for negative or low balance
+        if (closing < 0) {
+
+            closing_cell.attr("class", "text-danger");
+            cash_error += "Cannot have negative " + currency + " balance. ";
+
+        } else if (closing < CASH_WARNING_THRESH * cash[currency]["open"]) {
+
+            closing_cell.attr("class", "text-warning");
+            cash_warning += "Low on " + currency + ". ";
+
+        } else {
+            closing_cell.removeClass("text-danger text-warning")
+        }
+
+        // Check if enough cash to cover buys
+        if (cash[currency]["BUY"] > cash[currency]["open"] + conversions[currency] && closing > 0) {
+
+            buys.addClass("text-warning");
+            cash_warning += "Insufficient opening " + currency + " to cover buys. Consider a conversion or executing " +
+                "and confirming a sell order(s) before buying. "
+
+        } else {
+            buys.removeClass("text-warning")
+        }
+
+    }
+
+    // Update cash errors or warnings if present
+    if (cash_error.length > 0 || securities_error.length > 0) {
+        $("#preview_error").text(securities_error + "\n" + cash_error).parent().show();
+    } else {
+        $("#preview_error").parent().hide();
+    }
+
+    if (cash_warning.length > 0) {
+        $("#preview_warning").text(cash_warning).parent().show();
+    } else {
+        $("#preview_warning").parent().hide();
     }
 }

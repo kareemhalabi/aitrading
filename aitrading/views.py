@@ -1,6 +1,6 @@
 import re
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse, HttpResponseNotFound, HttpResponseBadRequest ,JsonResponse
+from django.http import HttpResponse, HttpResponseNotFound, HttpResponseBadRequest, JsonResponse
 from django.shortcuts import render
 from markupsafe import Markup
 
@@ -9,6 +9,7 @@ from django.contrib.auth.models import User
 from aitrading.morningstar_crawler import find_by_isin, find_by_ticker
 
 from registration.backends.hmac.views import RegistrationView
+
 
 @login_required
 def trade(request):
@@ -19,16 +20,16 @@ def trade(request):
         members = User.objects.filter(email__in=member_emails)
         supervisor = User.objects.get(groups__name='supervisor')
         return render(request, 'trade/trade.html',
-                  {'title': 'AI Trading - %s %s' % (request.user.first_name, request.user.last_name),
-                   'supervisor': supervisor, 'group_number': group_number, 'group_account': group_account, 'members': members})
+                      {'title': 'AI Trading - %s %s' % (request.user.first_name, request.user.last_name),
+                       'supervisor': supervisor, 'group_number': group_number, 'group_account': group_account,
+                       'members': members})
 
     except AuthorizedUser.DoesNotExist:
-        return render(request, 'trade/unauthorized.html', {'title': 'Unauthorized'}, status=401)
+        return render(request, 'trade/unauthorized.html', {'title': 'AI Trading - Unauthorized'}, status=401)
 
     except User.MultipleObjectsReturned:
         return HttpResponse('Error: More than one trading supervisor exists. '
                             'Please remove supervisor status from all but one user using the admin page.', status=500)
-
 
 
 def no_script(request):
@@ -52,6 +53,7 @@ def security_search(request, method):
     else:
         return HttpResponseNotFound('<h1>Cannot search by "%s"</h1>' % method)
 
+
 def check_authorized_email(request):
     email = request.POST.get('email')
     if email is None or len(email) == 0:
@@ -63,8 +65,8 @@ def check_authorized_email(request):
         try:
             return HttpResponse(AuthorizedUser.objects.get(email=email).account)
         except AuthorizedUser.DoesNotExist:
-            return HttpResponseNotFound('This address has not been authorized to use AI Trading.'+
-                                          ' Please contact the supervisor to request access.')
+            return HttpResponseNotFound('This address has not been authorized to use AI Trading.' +
+                                        ' Please contact the supervisor to request access.')
 
 
 # Overrides default inactive user creator in registration.backends.hmac.views.RegistrationView
@@ -78,5 +80,6 @@ def create_inactive_user(self, form):
     self.send_activation_email(new_user)
 
     return new_user
+
 
 RegistrationView.create_inactive_user = create_inactive_user
