@@ -34,12 +34,14 @@ ALLOWED_HOSTS = ['localhost', '127.0.0.1', '[::1]', '.herokuapp.com', '.ngrok.io
 
 INSTALLED_APPS = [
     'aitrading',
+    'aitrading.templatetags.template_tags',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_premailer',
 ]
 
 MIDDLEWARE = [

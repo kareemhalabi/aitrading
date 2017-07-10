@@ -4,7 +4,7 @@
             <h2>Order Preview</h2>
         </div>
         <div class="panel-body">
-
+            {% csrf_token %}
             <div class="alert alert-dismissible alert-danger" style="display: none">
                 <button type="button" class="close" onclick="$(this).parent().hide(500)">&times;</button>
                 <h4>Oh snap!</h4>
@@ -19,8 +19,8 @@
             <h3 style="margin-top: 0">Securities</h3>
 
             <table class="rwd-table rwd-table-success table table-striped table-hover">
-                <tbody id="preview_table">
-                <tr>
+                <thead>
+                <tr class="success">
                     <th>Currency</th>
                     <th>Ticker</th>
                     <th>ISIN</th>
@@ -33,14 +33,16 @@
                     <th>Total</th>
                     <th></th>
                 </tr>
+                </thead>
+                <tbody id="preview_table">
                 </tbody>
             </table>
 
             <h3 style="margin-top: 30px">Cash</h3>
             <p id="fx_info"></p>
             <table class="rwd-table rwd-table-success table table-striped table-hover" style="table-layout: fixed">
-                <tbody id="cash_recap">
-                <tr>
+                <thead>
+                <tr class="success">
                     <th>Currency</th>
                     <th>Opening</th>
                     <th>Total Buy</th>
@@ -55,6 +57,8 @@
                     <th>Net Change</th>
                     <th>Closing Balance</th>
                 </tr>
+                </thead>
+                <tbody id="cash_recap">
                 <tr id="CAD_recap">
                     <td data-th="Currency">CAD</td>
                     <td data-th="Opening"></td>
@@ -99,6 +103,14 @@
                 </tr>
                 </tbody>
             </table>
+
+            <h3 style="margin-top: 30px">Additional Notes</h3>
+            <textarea id="order_notes" class="form-control" rows="2" style="width: 100%"></textarea>
+
+            <button id="submit_order" class="btn btn-success btn-block" style="margin-top: 30px"
+                    disabled onclick="submitOrder()">
+                        Submit Order
+            </button>
         </div>
     </div>
 </div>

@@ -1,7 +1,11 @@
+import json
 import re
+
 from django.contrib.auth.decorators import login_required
+from django.core.mail import EmailMessage
 from django.http import HttpResponse, HttpResponseNotFound, HttpResponseBadRequest, JsonResponse
 from django.shortcuts import render
+from django.template.loader import render_to_string
 from markupsafe import Markup
 
 from aitrading.models import AuthorizedUser
@@ -11,18 +15,25 @@ from aitrading.morningstar_crawler import find_by_isin, find_by_ticker
 from registration.backends.hmac.views import RegistrationView
 
 
+def get_group(email):
+    group_account = AuthorizedUser.objects.get(email=email).account
+    group_number = int(group_account[6:8])
+
+    member_emails = AuthorizedUser.objects.filter(account=group_account).values_list('email', flat=True)
+    members = User.objects.filter(email__in=member_emails)
+
+    supervisor = User.objects.get(groups__name='supervisor')
+
+    return {'supervisor': supervisor, 'group_number': group_number, 'group_account': group_account, 'members': members}
+
+
 @login_required
 def trade(request):
     try:
-        group_account = AuthorizedUser.objects.get(email=request.user.email).account
-        group_number = int(group_account[6:8])
-        member_emails = AuthorizedUser.objects.filter(account=group_account).values_list('email', flat=True)
-        members = User.objects.filter(email__in=member_emails)
-        supervisor = User.objects.get(groups__name='supervisor')
+
         return render(request, 'trade/trade.html',
                       {'title': 'AI Trading - %s %s' % (request.user.first_name, request.user.last_name),
-                       'supervisor': supervisor, 'group_number': group_number, 'group_account': group_account,
-                       'members': members})
+                       'group': get_group(request.user.email)})
 
     except AuthorizedUser.DoesNotExist:
         return render(request, 'trade/unauthorized.html', {'title': 'AI Trading - Unauthorized'}, status=401)
@@ -30,6 +41,47 @@ def trade(request):
     except User.MultipleObjectsReturned:
         return HttpResponse('Error: More than one trading supervisor exists. '
                             'Please remove supervisor status from all but one user using the admin page.', status=500)
+
+
+@login_required
+def submit_order(request):
+    json_request = json.loads(request.body)
+    trades = json_request.get('trades')
+    cash = json_request.get('cash')
+    notes = json_request.get('notes')
+
+    if trades is None or cash is None:
+        return HttpResponseBadRequest('Error: missing trade information')
+
+    group = get_group(request.user.email)
+
+    try:
+        sender = '%s %s <%s>' % (request.user.first_name, request.user.last_name, request.user.email)
+        other_members = group.get('members').exclude(email=request.user.email)
+        other_members_emails = []
+
+        content = render_to_string('trade/email_template.html', {'trades': trades, 'cash': cash, 'notes': notes,
+                                                                'group_account': group.get('group_account'),
+                                                                'group_number': group.get('group_number')}, request)
+
+        for member in other_members:
+            other_members_emails.append(
+                '%s %s <%s>' % (member.first_name, member.last_name, member.email))
+
+        msg = EmailMessage(
+            from_email=sender,
+            to=['%s %s <%s>' % (group.get('supervisor').first_name, group.get('supervisor').last_name,
+                                group.get('supervisor').email)],
+            bcc=[sender],
+            cc=other_members_emails,
+            subject='Applied Investments Trade Request - Group %s (%s)' % (group.get('group_number'), group.get('group_account')),
+            body=str(content)
+        )
+        msg.content_subtype = 'html'
+        msg.send()
+
+    except Exception as e:
+        return HttpResponse('Error: ' + str(e), status=500)
 
 
 def no_script(request):

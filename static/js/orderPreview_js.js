@@ -2,22 +2,24 @@
  * Created by KareemHalabi on 6/11/2017.
  */
 
+// JSON representation of cash table
 var cash = {
   "CAD": {
       "open": 10000.00,
       "BUY": 0.00,
-      "SELL": 0.00
+      "SELL": 0.00,
+      "conversion": 0.00,
+      "net": 0.00,
+      "closing": 0.00
   },
   "USD": {
       "open": 10000.00,
       "BUY": 0.00,
-      "SELL": 0.00
+      "SELL": 0.00,
+      "conversion": 0.00,
+      "net": 0.00,
+      "closing": 0.00
   }
-};
-
-var conversions = {
-    "CAD": 0.00,
-    "USD": 0.00
 };
 
 var fxRate = {
@@ -84,7 +86,7 @@ function updatePreview(trade) {
                 '<td data-th="Security Name">' + trade.sec_name + '</td>' +
                 '<td data-th="Buy/Sell">' + trade.buy_sell + '</td>' +
                 '<td data-th="Shares">' + trade.shares + '</td>' +
-                '<td data-th="Price">$' + trade.price + '</td>' +
+                '<td data-th="Price">' + trade.price.toLocaleString("en-US", {style: "currency", currency: "USD"}) + '</td>' +
                 '<td data-th="MKT/LIMIT">' + trade.mkt_limit + '</td>' +
                 '<td data-th="Order Type">' + trade.order_type + '</td>' +
                 '<td data-th="Total">' + trade.total.toLocaleString("en-US", {style: "currency", currency: "USD"}) + '</td>' +
@@ -116,7 +118,7 @@ function updatePreview(trade) {
  */
 function editTrade($row) {
     // Find index in trade list and remove
-    var index = $row.index() - 1;
+    var index = $row.index();
     var trade = pending_trades[index];
     pending_trades.splice(index, 1);
 
@@ -145,7 +147,7 @@ function editTrade($row) {
  */
 function deleteTrade($row) {
     // Find index in trade list and remove
-    var index = $row.index() - 1;
+    var index = $row.index();
     var trade = pending_trades[index];
     pending_trades.splice(index, 1);
 
@@ -181,12 +183,12 @@ function convertCash($source, base, target) {
         if((/^-?\d+\.?\d{0,2}$/).test(sourceString)) {
             // Non-empty and valid conversion value
 
-            conversions[base] = parseFloat(sourceString);
+            cash[base]["conversion"] = parseFloat(sourceString);
 
             // Only modify target input if auto-convert is enabled
             if(autoConvertEnabled) {
-                conversions[target] = -1 * conversions[base] * fxRate["" + base + "/" + target];
-                $targetInput.val(conversions[target].toFixed(2));
+                cash[target]["conversion"]  = -1 * cash[base]["conversion"] * fxRate["" + base + "/" + target];
+                $targetInput.val(cash[target]["conversion"].toFixed(2));
             }
 
             $source.parent().removeClass("has-error");
@@ -196,16 +198,16 @@ function convertCash($source, base, target) {
 
             $targetInput.val('');
             $source.parent().addClass("has-error");
-            conversions[base] = 0;
-            conversions[target] = 0;
+            cash[base]["conversion"] = 0;
+            cash[target]["conversion"] = 0;
         }
     } else {
         // Empty conversion value
 
         $targetInput.val('');
         $source.parent().removeClass("has-error");
-        conversions[base] = 0;
-        conversions[target] = 0;
+        cash[base]["conversion"] = 0;
+        cash[target]["conversion"] = 0;
     }
 
     updateCashTable();
@@ -233,25 +235,25 @@ function updateCashTable() {
         $currency_row.find("[data-th='Sells']")
             .text(cash[currency]["SELL"].toLocaleString("en-US", {style: "currency", currency: "USD"}));
 
-        var net = (-cash[currency]["BUY"] + cash[currency]["SELL"] + conversions[currency]);
+        cash[currency]["net"] = (-cash[currency]["BUY"] + cash[currency]["SELL"] + cash[currency]["conversion"]);
         $currency_row.find("[data-th*='Net']").text(
-            net.toLocaleString("en-US", {style: "currency", currency: "USD"})
+            cash[currency]["net"].toLocaleString("en-US", {style: "currency", currency: "USD"})
         );
 
-        var closing = cash[currency]["open"] + net;
+        cash[currency]["closing"] = cash[currency]["open"] + cash[currency]["net"];
         var closing_cell = $currency_row.find("[data-th='Closing']");
 
         closing_cell.text(
-            closing.toLocaleString("en-US", {style: "currency", currency: "USD"})
+            cash[currency]["closing"].toLocaleString("en-US", {style: "currency", currency: "USD"})
         );
 
         // Check for negative or low balance
-        if (closing < 0) {
+        if (cash[currency]["closing"] < 0) {
 
             closing_cell.attr("class", "text-danger");
             cash_error += "Cannot have negative " + currency + " balance. ";
 
-        } else if (closing < CASH_WARNING_THRESH * cash[currency]["open"]) {
+        } else if (cash[currency]["closing"] < CASH_WARNING_THRESH * cash[currency]["open"]) {
 
             closing_cell.attr("class", "text-warning");
             cash_warning += "Low on " + currency + ". ";
@@ -261,7 +263,7 @@ function updateCashTable() {
         }
 
         // Check if enough cash to cover buys
-        if (cash[currency]["BUY"] > cash[currency]["open"] + conversions[currency] && closing > 0) {
+        if (cash[currency]["BUY"] > cash[currency]["open"] + cash[currency]["conversion"] && cash[currency]["closing"] > 0) {
 
             buys.addClass("text-warning");
             cash_warning += "Insufficient opening " + currency + " to cover buys. Consider a conversion or executing " +
@@ -285,4 +287,49 @@ function updateCashTable() {
     } else {
         $("#preview_warning").parent().hide();
     }
+    
+    orderSubmitCheck();
+}
+
+/**
+ * Check if errors present and disable submit, otherwise enable 
+ */
+function orderSubmitCheck() {
+
+    if (cash_error.length > 0 || securities_error.length > 0 ||
+        $("[data-th='Conversion']").children(".has-error").length > 0) {
+
+        $("#submit_order").prop("disabled", true);
+    } else {
+        $("#submit_order").prop("disabled", false);
+    }
+
+}
+
+function submitOrder() {
+
+    var request = {
+        trades: pending_trades,
+        cash: cash,
+        notes: $("#order_notes").val()
+    };
+    
+    $.ajax({
+        url: "submit_order/",
+        method: "POST",
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        data: JSON.stringify(request),
+        timeout: 20000,
+        headers: {"X-CSRFToken": $("[name=csrfmiddlewaretoken]").val()},
+        success: function (response) {
+            console.log(response)
+        },
+        error: function (error, errorType) {
+            
+        },
+        complete: function () {
+            
+        }
+    });
 }
