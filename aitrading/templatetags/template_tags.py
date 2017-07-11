@@ -9,4 +9,7 @@ def currency(value):
     if isinstance(value, str):
         value = float(value)
 
+    if round(value, 2) == 0:
+        return "$ --"
+
     return locale.currency(value, grouping=True)

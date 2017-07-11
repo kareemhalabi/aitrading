@@ -57,7 +57,7 @@ $(document).ready( function () {
     for (currency in cash) {
         if(cash.hasOwnProperty(currency)) {
             $("#cash_recap").find("[id*='"+currency+"']").find("[data-th='Opening']")
-                .text(cash[currency]["open"].toLocaleString("en-US", {style: "currency", currency: "USD"}));
+                .text(accounting.formatMoney(cash[currency]["open"]));
         }
     }
 });
@@ -86,10 +86,10 @@ function updatePreview(trade) {
                 '<td data-th="Security Name">' + trade.sec_name + '</td>' +
                 '<td data-th="Buy/Sell">' + trade.buy_sell + '</td>' +
                 '<td data-th="Shares">' + trade.shares + '</td>' +
-                '<td data-th="Price">' + trade.price.toLocaleString("en-US", {style: "currency", currency: "USD"}) + '</td>' +
+                '<td data-th="Price">' + accounting.formatMoney(trade.price) + '</td>' +
                 '<td data-th="MKT/LIMIT">' + trade.mkt_limit + '</td>' +
                 '<td data-th="Order Type">' + trade.order_type + '</td>' +
-                '<td data-th="Total">' + trade.total.toLocaleString("en-US", {style: "currency", currency: "USD"}) + '</td>' +
+                '<td data-th="Total">' + accounting.formatMoney(trade.total) + '</td>' +
                 '<td data-th="Edit/Delete">' +
                     '<button type="button" class="btn btn-xs btn-success" onclick="editTrade($(this).closest(\'tr\'))">' +
                         '<span class="glyphicon glyphicon-pencil"></span>' +
@@ -230,21 +230,21 @@ function updateCashTable() {
         var $currency_row = $cash_recap.find("[id*='" + currency + "']");
 
         var buys = $currency_row.find("[data-th='Buys']");
-        buys.text((-cash[currency]["BUY"]).toLocaleString("en-US", {style: "currency", currency: "USD"}));
+        buys.text(accounting.formatMoney(-cash[currency]["BUY"]));
 
         $currency_row.find("[data-th='Sells']")
-            .text(cash[currency]["SELL"].toLocaleString("en-US", {style: "currency", currency: "USD"}));
+            .text(accounting.formatMoney(cash[currency]["SELL"]));
 
         cash[currency]["net"] = (-cash[currency]["BUY"] + cash[currency]["SELL"] + cash[currency]["conversion"]);
         $currency_row.find("[data-th*='Net']").text(
-            cash[currency]["net"].toLocaleString("en-US", {style: "currency", currency: "USD"})
+            accounting.formatMoney(cash[currency]["net"])
         );
 
         cash[currency]["closing"] = cash[currency]["open"] + cash[currency]["net"];
         var closing_cell = $currency_row.find("[data-th='Closing']");
 
         closing_cell.text(
-            cash[currency]["closing"].toLocaleString("en-US", {style: "currency", currency: "USD"})
+            accounting.formatMoney(cash[currency]["closing"])
         );
 
         // Check for negative or low balance
