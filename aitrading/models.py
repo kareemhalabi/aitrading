@@ -2,7 +2,7 @@ from django.db import models
 
 
 class AuthorizedUser(models.Model):
-    email = models.EmailField(primary_key=True)
+    email = models.EmailField()
     account = models.CharField(max_length=12)
 
     def __str__(self):
