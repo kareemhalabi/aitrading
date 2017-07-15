@@ -79,6 +79,7 @@ def submit_order(request):
         )
         msg.content_subtype = 'html'
         msg.send()
+        return JsonResponse(data={})
 
     except Exception as e:
         return HttpResponse('Error: ' + str(e), status=500)

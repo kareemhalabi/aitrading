@@ -1,11 +1,28 @@
 {% load template_tags %}
-{% load premailer %}
-{% premailer "http://localhost:8000" %}
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        {#   CSS minimized using https://uncss-online.com/ #}
-        <style>@import url("https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700");
+{# CSS Inlined using https://putsmail.com/inliner #}
+<!DOCTYPE html>
+<html style="font-family:sans-serif;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%;font-size:10px;-webkit-tap-highlight-color:rgba(0, 0, 0, 0);">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <style>
+        *:before {
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box
+        }
+
+        *:after {
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box
+        }
+
+        .table-hover > tbody > tr:hover {
+            background-color: #f5f5f5
+        }
+    </style>
+    <style type="text/css">
+        @import url("https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700");
 
         /*!
          * bootswatch v3.3.7
@@ -17,26 +34,7 @@
          * Bootstrap v3.3.7 (http://getbootstrap.com)
          * Copyright 2011-2016 Twitter, Inc.
          * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
-         *//*! normalize.css v3.0.3 | MIT License | github.com/necolas/normalize.css */
-        html {
-            font-family: sans-serif;
-            -ms-text-size-adjust: 100%;
-            -webkit-text-size-adjust: 100%
-        }
-
-        body {
-            margin: 0
-        }
-
-        table {
-            border-collapse: collapse;
-            border-spacing: 0
-        }
-
-        td, th {
-            padding: 0
-        }
-
+         */
         /*! Source: https://github.com/h5bp/html5-boilerplate/blob/master/src/css/main.css */
         @media print {
             *, *:before, *:after {
@@ -79,184 +77,153 @@
             src: url('../fonts/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'), url('../fonts/glyphicons-halflings-regular.woff2') format('woff2'), url('../fonts/glyphicons-halflings-regular.woff') format('woff'), url('../fonts/glyphicons-halflings-regular.ttf') format('truetype'), url('../fonts/glyphicons-halflings-regular.svg#glyphicons_halflingsregular') format('svg')
         }
 
-        * {
-            -webkit-box-sizing: border-box;
-            -moz-box-sizing: border-box;
-            box-sizing: border-box
-        }
-
-        *:before, *:after {
-            -webkit-box-sizing: border-box;
-            -moz-box-sizing: border-box;
-            box-sizing: border-box
-        }
-
-        html {
-            font-size: 10px;
-            -webkit-tap-highlight-color: rgba(0, 0, 0, 0)
-        }
-
-        body {
-            font-family: "Segoe UI", "Source Sans Pro", Calibri, Candara, Arial, sans-serif;
-            font-size: 15px;
-            line-height: 1.42857143;
-            color: #333333;
-            background-color: #ffffff
-        }
-
-        h3 {
-            font-family: "Segoe UI", "Source Sans Pro", Calibri, Candara, Arial, sans-serif;
-            font-weight: 300;
-            line-height: 1.1;
-            color: inherit
-        }
-
-        h3 {
-            margin-top: 21px;
-            margin-bottom: 10.5px
-        }
-
-        h3 {
-            font-size: 26px
-        }
-
-        p {
-            margin: 0 0 10.5px
-        }
-
-        table {
-            background-color: transparent
-        }
-
-        th {
-            text-align: left
-        }
-
-        .table {
-            width: 100%;
-            max-width: 100%;
-            margin-bottom: 21px
-        }
-
-        .table > thead > tr > th, .table > tbody > tr > td {
-            padding: 8px;
-            line-height: 1.42857143;
-            vertical-align: top;
-            border-top: 1px solid #dddddd
-        }
-
-        .table > thead > tr > th {
-            vertical-align: bottom;
-            border-bottom: 2px solid #dddddd
-        }
-
-        .table > thead:first-child > tr:first-child > th {
-            border-top: 0
-        }
-
-        .table-striped > tbody > tr:nth-of-type(odd) {
-            background-color: #f9f9f9
-        }
-
-        .table-hover > tbody > tr:hover {
-            background-color: #f5f5f5
-        }
-
-        .table > thead > tr.success > th {
-            background-color: #3fb618
-        }
-
         @-ms-viewport {
             width: device-width
         }
+    </style>
+</head>
+<body style='-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;margin:0;font-family:"Segoe UI", "Source Sans Pro", Calibri, Candara, Arial, sans-serif;font-size:15px;line-height:1.42857143;color:#333333;background-color:#ffffff;-webkit-font-smoothing:antialiased;'>
+<p style="-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;margin:0 0 10.5px;">
+</p>
 
-        body {
-            -webkit-font-smoothing: antialiased
-        }
+<p style="-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;margin:0 0 10.5px;">{{ user.first_name }} {{ user.last_name }}
+    on behalf of Group {{ group_number }} has requested the following
+    trade(s):</p>
+<h3 style='-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;font-family:"Segoe UI", "Source Sans Pro", Calibri, Candara, Arial, sans-serif;font-weight:300;line-height:1.1;color:inherit;margin-top:21px;margin-bottom:10.5px;font-size:26px;'>
+    Securities</h3>
+<table class="table table-striped table-hover"
+       style="-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;border-collapse:collapse;border-spacing:0;background-color:transparent;width:100%;max-width:100%;margin-bottom:21px;">
+    <thead style="-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;">
+    <tr class="success"
+        style="-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;color:#fff;">
+        <th style="-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;padding:0;text-align:left;padding:8px;line-height:1.42857143;vertical-align:top;border-top:1px solid #dddddd;vertical-align:bottom;border-bottom:2px solid #dddddd;background-color:#3fb618;border-top:0;">
+            Currency
+        </th>
+        <th style="-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;padding:0;text-align:left;padding:8px;line-height:1.42857143;vertical-align:top;border-top:1px solid #dddddd;vertical-align:bottom;border-bottom:2px solid #dddddd;background-color:#3fb618;border-top:0;">
+            Ticker
+        </th>
+        <th style="-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;padding:0;text-align:left;padding:8px;line-height:1.42857143;vertical-align:top;border-top:1px solid #dddddd;vertical-align:bottom;border-bottom:2px solid #dddddd;background-color:#3fb618;border-top:0;">
+            ISIN
+        </th>
+        <th style="-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;padding:0;text-align:left;padding:8px;line-height:1.42857143;vertical-align:top;border-top:1px solid #dddddd;vertical-align:bottom;border-bottom:2px solid #dddddd;background-color:#3fb618;border-top:0;">
+            Security Name
+        </th>
+        <th style="-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;padding:0;text-align:left;padding:8px;line-height:1.42857143;vertical-align:top;border-top:1px solid #dddddd;vertical-align:bottom;border-bottom:2px solid #dddddd;background-color:#3fb618;border-top:0;">
+            Buy/Sell
+        </th>
+        <th style="-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;padding:0;text-align:left;padding:8px;line-height:1.42857143;vertical-align:top;border-top:1px solid #dddddd;vertical-align:bottom;border-bottom:2px solid #dddddd;background-color:#3fb618;border-top:0;">
+            Shares
+        </th>
+        <th style="-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;padding:0;text-align:left;padding:8px;line-height:1.42857143;vertical-align:top;border-top:1px solid #dddddd;vertical-align:bottom;border-bottom:2px solid #dddddd;background-color:#3fb618;border-top:0;">
+            Price
+        </th>
+        <th style="-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;padding:0;text-align:left;padding:8px;line-height:1.42857143;vertical-align:top;border-top:1px solid #dddddd;vertical-align:bottom;border-bottom:2px solid #dddddd;background-color:#3fb618;border-top:0;">
+            MKT/LIMIT
+        </th>
+        <th style="-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;padding:0;text-align:left;padding:8px;line-height:1.42857143;vertical-align:top;border-top:1px solid #dddddd;vertical-align:bottom;border-bottom:2px solid #dddddd;background-color:#3fb618;border-top:0;">
+            Order Type
+        </th>
+        <th style="-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;padding:0;text-align:left;padding:8px;line-height:1.42857143;vertical-align:top;border-top:1px solid #dddddd;vertical-align:bottom;border-bottom:2px solid #dddddd;background-color:#3fb618;border-top:0;">
+            Total
+        </th>
+        <th style="-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;padding:0;text-align:left;padding:8px;line-height:1.42857143;vertical-align:top;border-top:1px solid #dddddd;vertical-align:bottom;border-bottom:2px solid #dddddd;background-color:#3fb618;border-top:0;">
+            Account
+        </th>
+    </tr>
+    </thead>
+    <tbody style="-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;">
+    {% for trade in trades %}
 
-        table .success, .table .success {
-            color: #fff
-        }</style>
-    </head>
-    <body>
-
-    <p>{{ user.first_name }} {{ user.last_name }} on behalf of Group {{ group_number }} has requested the following
-        trade(s):</p>
-
-    <h3>Securities</h3>
-    <table class="table table-striped table-hover">
-        <thead>
-        <tr class="success">
-            <th>Currency</th>
-            <th>Ticker</th>
-            <th>ISIN</th>
-            <th>Security Name</th>
-            <th>Buy/Sell</th>
-            <th>Shares</th>
-            <th>Price</th>
-            <th>MKT/LIMIT</th>
-            <th>Order Type</th>
-            <th>Total</th>
-            <th>Account</th>
+        <tr style="-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;background-color:#f9f9f9;">
+            <td data-th="Currency"
+                style="-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;padding:0;padding:8px;line-height:1.42857143;vertical-align:top;border-top:1px solid #dddddd;">{{ trade.currency }}</td>
+            <td data-th="Ticker"
+                style="-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;padding:0;padding:8px;line-height:1.42857143;vertical-align:top;border-top:1px solid #dddddd;">{{ trade.ticker }}</td>
+            <td data-th="ISIN"
+                style="-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;padding:0;padding:8px;line-height:1.42857143;vertical-align:top;border-top:1px solid #dddddd;">{{ trade.isin }}</td>
+            <td data-th="Security Name"
+                style="-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;padding:0;padding:8px;line-height:1.42857143;vertical-align:top;border-top:1px solid #dddddd;">{{ trade.sec_name }}</td>
+            <td data-th="Buy/Sell"
+                style="-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;padding:0;padding:8px;line-height:1.42857143;vertical-align:top;border-top:1px solid #dddddd;">{{ trade.buy_sell }}</td>
+            <td data-th="Shares"
+                style="-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;padding:0;padding:8px;line-height:1.42857143;vertical-align:top;border-top:1px solid #dddddd;">{{ trade.shares }}</td>
+            <td data-th="Price"
+                style="-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;padding:0;padding:8px;line-height:1.42857143;vertical-align:top;border-top:1px solid #dddddd;">{{ trade.price|currency }}</td>
+            <td data-th="MKT/LIMIT"
+                style="-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;padding:0;padding:8px;line-height:1.42857143;vertical-align:top;border-top:1px solid #dddddd;">{{ trade.mkt_limit }}</td>
+            <td data-th="Order Type"
+                style="-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;padding:0;padding:8px;line-height:1.42857143;vertical-align:top;border-top:1px solid #dddddd;">{{ trade.order_type }}</td>
+            <td data-th="Total"
+                style="-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;padding:0;padding:8px;line-height:1.42857143;vertical-align:top;border-top:1px solid #dddddd;">{{ trade.total|currency }}</td>
+            <td data-th="Account"
+                style="-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;padding:0;padding:8px;line-height:1.42857143;vertical-align:top;border-top:1px solid #dddddd;">{{ group_account }}</td>
         </tr>
-        </thead>
-        <tbody>
-        {% for trade in trades %}
-            <tr>
-                <td data-th="Currency">{{ trade.currency }}</td>
-                <td data-th="Ticker">{{ trade.ticker }}</td>
-                <td data-th="ISIN">{{ trade.isin }}</td>
-                <td data-th="Security Name">{{ trade.sec_name }}</td>
-                <td data-th="Buy/Sell">{{ trade.buy_sell }}</td>
-                <td data-th="Shares">{{ trade.shares }}</td>
-                <td data-th="Price">{{ trade.price|currency }}</td>
-                <td data-th="MKT/LIMIT">{{ trade.mkt_limit }}</td>
-                <td data-th="Order Type">{{ trade.order_type }}</td>
-                <td data-th="Total">{{ trade.total|currency }}</td>
-                <td data-th="Account">{{ group_account }}</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+    {% endfor %}
+    </tbody>
+</table>
+<h3 style='-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;font-family:"Segoe UI", "Source Sans Pro", Calibri, Candara, Arial, sans-serif;font-weight:300;line-height:1.1;color:inherit;margin-top:21px;margin-bottom:10.5px;font-size:26px;'>
+    Cash</h3>
+<table class="table table-striped table-hover"
+       style="-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;border-collapse:collapse;border-spacing:0;background-color:transparent;width:100%;max-width:100%;margin-bottom:21px;">
+    <thead style="-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;">
+    <tr class="success"
+        style="-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;color:#fff;">
+        <th style="-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;padding:0;text-align:left;padding:8px;line-height:1.42857143;vertical-align:top;border-top:1px solid #dddddd;vertical-align:bottom;border-bottom:2px solid #dddddd;background-color:#3fb618;border-top:0;">
+            Currency
+        </th>
+        <th style="-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;padding:0;text-align:left;padding:8px;line-height:1.42857143;vertical-align:top;border-top:1px solid #dddddd;vertical-align:bottom;border-bottom:2px solid #dddddd;background-color:#3fb618;border-top:0;">
+            Opening
+        </th>
+        <th style="-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;padding:0;text-align:left;padding:8px;line-height:1.42857143;vertical-align:top;border-top:1px solid #dddddd;vertical-align:bottom;border-bottom:2px solid #dddddd;background-color:#3fb618;border-top:0;">
+            Total Buy
+        </th>
+        <th style="-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;padding:0;text-align:left;padding:8px;line-height:1.42857143;vertical-align:top;border-top:1px solid #dddddd;vertical-align:bottom;border-bottom:2px solid #dddddd;background-color:#3fb618;border-top:0;">
+            Total Sell
+        </th>
+        <th style="-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;padding:0;text-align:left;padding:8px;line-height:1.42857143;vertical-align:top;border-top:1px solid #dddddd;vertical-align:bottom;border-bottom:2px solid #dddddd;background-color:#3fb618;border-top:0;">
+            Conversion
+            <span title="A negative value indicates the source currency. A positive value indicates the target currency"
+                  style="-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;">(?)</span>
+        </th>
+        <th style="-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;padding:0;text-align:left;padding:8px;line-height:1.42857143;vertical-align:top;border-top:1px solid #dddddd;vertical-align:bottom;border-bottom:2px solid #dddddd;background-color:#3fb618;border-top:0;">
+            Net Change
+        </th>
+        <th style="-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;padding:0;text-align:left;padding:8px;line-height:1.42857143;vertical-align:top;border-top:1px solid #dddddd;vertical-align:bottom;border-bottom:2px solid #dddddd;background-color:#3fb618;border-top:0;">
+            Closing Balance
+        </th>
+    </tr>
+    </thead>
+    <tbody style="-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;">
+    {% for currency, currency_data in cash.items %}
 
-    <h3>Cash</h3>
-
-    <table class="table table-striped table-hover">
-        <thead>
-        <tr class="success">
-            <th>Currency</th>
-            <th>Opening</th>
-            <th>Total Buy</th>
-            <th>Total Sell</th>
-            <th>Conversion
-                <span title="A negative value indicates the source currency. A positive value indicates the target currency">(?)</span>
-            </th>
-            <th>Net Change</th>
-            <th>Closing Balance</th>
+        <tr style="-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;background-color:#f9f9f9;">
+            <td data-th="Currency"
+                style="-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;padding:0;padding:8px;line-height:1.42857143;vertical-align:top;border-top:1px solid #dddddd;">{{ currency }}</td>
+            <td data-th="Opening"
+                style="-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;padding:0;padding:8px;line-height:1.42857143;vertical-align:top;border-top:1px solid #dddddd;">{{ currency_data.open|currency }}</td>
+            <td data-th="Buys"
+                style="-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;padding:0;padding:8px;line-height:1.42857143;vertical-align:top;border-top:1px solid #dddddd;">{{ currency_data.BUY|currency }}</td>
+            <td data-th="Sells"
+                style="-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;padding:0;padding:8px;line-height:1.42857143;vertical-align:top;border-top:1px solid #dddddd;">{{ currency_data.SELL|currency }}</td>
+            <td data-th="Conversion"
+                style="-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;padding:0;padding:8px;line-height:1.42857143;vertical-align:top;border-top:1px solid #dddddd;">{{ currency_data.conversion|currency }}</td>
+            <td data-th="Net"
+                style="-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;padding:0;padding:8px;line-height:1.42857143;vertical-align:top;border-top:1px solid #dddddd;">{{ currency_data.net|currency }}</td>
+            <td data-th="Closing"
+                style="-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;padding:0;padding:8px;line-height:1.42857143;vertical-align:top;border-top:1px solid #dddddd;">{{ currency_data.closing|currency }}</td>
         </tr>
-        </thead>
-        <tbody>
-        {% for currency, currency_data in cash.items %}
-            <tr>
-                <td data-th="Currency">{{ currency }}</td>
-                <td data-th="Opening">{{ currency_data.open|currency }}</td>
-                <td data-th="Buys">{{ currency_data.BUY|currency }}</td>
-                <td data-th="Sells">{{ currency_data.SELL|currency }}</td>
-                <td data-th="Conversion">{{ currency_data.conversion|currency }}</td>
-                <td data-th="Net">{{ currency_data.net|currency }}</td>
-                <td data-th="Closing">{{ currency_data.closing|currency }}</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+    {% endfor %}
+    </tbody>
+</table>
+{% if notes %}
 
-    {% if notes %}
-        <h3>Additional Notes</h3>
-        <p>{{ notes }}</p>
-        <br>
-    {% endif %}
+    <h3 style='-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;font-family:"Segoe UI", "Source Sans Pro", Calibri, Candara, Arial, sans-serif;font-weight:300;line-height:1.1;color:inherit;margin-top:21px;margin-bottom:10.5px;font-size:26px;'>
+        Additional Notes</h3>
+    <p style="-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;margin:0 0 10.5px;">{{ notes }}</p>
+    <br style="-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;">
+{% endif %}
 
-    <p>Sent via AI Trading</p>
-    </body>
-    </html>
-{% endpremailer %}
+<p style="-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;margin:0 0 10.5px;">Sent via AI
+    Trading</p>
+</body>
+</html>

@@ -313,6 +313,11 @@ function submitOrder() {
         cash: cash,
         notes: $("#order_notes").val()
     };
+
+    $("#submit_label").css("display", "none");
+    $("#submit_loader").css("display", "inline-block");
+
+    var $modal = $("#submit_modal");
     
     $.ajax({
         url: "submit_order/",
@@ -323,13 +328,26 @@ function submitOrder() {
         timeout: 20000,
         headers: {"X-CSRFToken": $("[name=csrfmiddlewaretoken]").val()},
         success: function (response) {
-            console.log(response)
+            $modal.find(".modal-title").text("Success!");
+            $modal.find(".modal-body").html("<p>Your Order has been submitted and a confirmation email has been sent " +
+                "to the supervisor and all group members. <b>Please verify this email and notify the supervisor if any " +
+                "information is missing or incorrect.</b></p>" +
+                "<p>Thanks for using AI Trading!</p>");
+            $modal.on('hidden.bs.modal', function () {
+                $modal.modal("hide");
+                location.reload();
+            });
+            $modal.modal("show");
         },
-        error: function (error, errorType) {
-            
+        error: function (error) {
+            $modal.find(".modal-title").text("Oh Snap!");
+            $modal.find(".modal-body").html("<p>An error occurred: " + error.status + " " + error.statusText + "</p>" +
+                "<p>Please try again. Contact the supervisor if this issue persists.</p>");
+            $modal.modal("show");
         },
         complete: function () {
-            
+            $("#submit_label").css("display", "inline");
+            $("#submit_loader").css("display", "none");
         }
     });
 }
