@@ -55,3 +55,12 @@
         padding-left: 40px;
     }
 }
+
+@media screen and (max-width: 768px) {
+    .user-box p {
+        margin-bottom: 0 !important;
+    }
+    .user-box span {
+        float: none !important;
+    }
+}

@@ -3,6 +3,13 @@
     font-family: "Segoe UI", "Source Sans Pro", Calibri, Candara, Arial, sans-serif !important;
 }
 
+@media screen and (max-width: 767px) {
+    #container {
+        margin: 3% !important;
+        width: 94% !important;
+    }
+}
+
 #header {
     background: #121212;
     color: #ffffff;

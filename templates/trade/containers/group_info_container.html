@@ -11,7 +11,7 @@
             <h3 style="margin-top: 0">Supervisor</h3>
             <ul class="list-group">
                 <li class="list-group-item">
-                    <p>{{ group.supervisor.first_name }} {{ group.supervisor.last_name }}<span style="float: right">{{ group.supervisor.email }}</span></p>
+                    <p class="user-box">{{ group.supervisor.first_name }} {{ group.supervisor.last_name }}<br class="visible-xs"><span class="user-box" style="float: right">{{ group.supervisor.email }}</span></p>
                 </li>
             </ul>
             <h3>Account</h3>
@@ -25,11 +25,11 @@
                 {% for member in group.members %}
                     {% if user.email == member.email %}
                         <li class="list-group-item active">
-                            <p>{{ member.first_name }} {{ member.last_name }}<span class="hidden-xs"style="float: right">{{ member.email }}</span></p>
+                            <p class="user-box">{{ member.first_name }} {{ member.last_name }}<br class="visible-xs"><span class="user-box" style="float: right">{{ member.email }}</span></p>
                         </li>
                     {% else %}
                         <li class="list-group-item">
-                            <p>{{ member.first_name }} {{ member.last_name }}<span class="hidden-xs"style="float: right">{{ member.email }}</span></p>
+                            <p class="user-box">{{ member.first_name }} {{ member.last_name }}<br class="visible-xs"><span class="user-box" style="float: right">{{ member.email }}</span></p>
                         </li>
                     {% endif %}
                 {% endfor %}
