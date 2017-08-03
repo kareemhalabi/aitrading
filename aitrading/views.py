@@ -61,8 +61,8 @@ def submit_order(request):
         other_members_emails = []
 
         content = render_to_string('trade/email_template.html', {'trades': trades, 'cash': cash, 'notes': notes,
-                                                                'group_account': group.get('group_account'),
-                                                                'group_number': group.get('group_number')}, request)
+                                                                 'group_account': group.get('group_account'),
+                                                                 'group_number': group.get('group_number')}, request)
 
         for member in other_members:
             other_members_emails.append(
@@ -74,7 +74,8 @@ def submit_order(request):
                                 group.get('supervisor').email)],
             bcc=[sender],
             cc=other_members_emails,
-            subject='Applied Investments Trade Request - Group %s (%s)' % (group.get('group_number'), group.get('group_account')),
+            subject='Applied Investments Trade Request - Group %s (%s)' % (
+                group.get('group_number'), group.get('group_account')),
             body=str(content)
         )
         msg.content_subtype = 'html'

@@ -16,8 +16,9 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='AuthorizedUser',
             fields=[
-                ('email', models.EmailField(max_length=254, primary_key=True, serialize=False)),
+                ('id', models.AutoField(auto_created=True, default=1, primary_key=True, serialize=False, verbose_name='ID')),
+                ('email', models.EmailField(max_length=254, serialize=False)),
                 ('account', models.CharField(max_length=12)),
             ],
-        ),
+        )
     ]

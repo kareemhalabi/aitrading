@@ -50,9 +50,6 @@ $(document).ready( function () {
         }
     });
 
-
-    $("#fx_info").text("As of " + fxRate["date"] + " 11:00 AM, 1 CAD = " + fxRate["CAD/USD"] + " USD");
-
     // Set the opening balances
     for (currency in cash) {
         if(cash.hasOwnProperty(currency)) {
@@ -306,6 +303,9 @@ function orderSubmitCheck() {
 
 }
 
+/**
+ * Assembles the security and cash data to submit order by email
+ */
 function submitOrder() {
 
     var request = {
