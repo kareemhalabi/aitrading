@@ -13,7 +13,7 @@ def fetch_reports():
         return
 
     # Get the current list of reports and check if they are up to date
-
+    print("Checking reports in " + str(reports_dir))
     all_reports = os.listdir(reports_dir)
     date_string = '_' +  datetime.datetime.now().strftime("%Y%m%d") + '_'
     current_reports = list(filter(lambda file_name: date_string in file_name, all_reports))
@@ -47,7 +47,7 @@ def fetch_reports():
         sftp = paramiko.SFTPClient.from_transport(transport)
 
         reports_to_pull = list(filter(lambda file_name: date_string in file_name, sftp.listdir()))
-
+        print("Downloading: " + str(reports_to_pull))
         for file in reports_to_pull:
             sftp.get(file, os.path.join(reports_dir,file))
 
@@ -60,5 +60,6 @@ def fetch_reports():
         if len(reports_to_pull) != 0:
 
             old_files = list(filter(lambda file_name: date_string not in file_name, os.listdir(reports_dir)))
+            print("Deleting: " + str(old_files))
             for old_file in old_files:
                 os.remove(os.path.join(reports_dir, old_file))

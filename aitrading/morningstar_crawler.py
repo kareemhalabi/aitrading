@@ -8,7 +8,7 @@ import re, string
 from lxml import html
 import requests
 
-ALLOWED_EXCHANGES = {'CAD':['TSX', 'TSE'],'USD':['NASDAQ','NYSE','ARCA', 'AMEX']}
+ALLOWED_EXCHANGES = {'CAD':['TSX', 'TSE'],'USD':['NAS','NASDAQ','NYSE','ARCA', 'AMEX', 'PINX', 'BATS']}
 MORNINGSTAR_BASE_URL = 'http://www.morningstar.co.uk/uk/funds/SecuritySearchResults.aspx?type=ALL&search='
 
 _quote = {}
