@@ -189,7 +189,7 @@ function validateISIN(isin) {
     sum += parseInt(isin.charAt(isin.length-1));
 
     // Check if is mod 10
-    return sum % 10 == 0;
+    return sum % 10 === 0;
 }
 
 /**
@@ -213,7 +213,7 @@ function searchValidator($input, isValid) {
             $button.attr("class", "btn btn-success");
 
             // Enable search button only if currency is present as well
-            if($("#currency").val() != null) {
+            if($("#currency").val() !== null) {
                 $button.prop("disabled", false);
             } else {
                 $button.prop("disabled", true);
@@ -366,7 +366,7 @@ function updateTotal(reset) {
 
     var totalValue = $("#shares").val() * $("#price").val();
 
-    if(!(isNaN(totalValue) || totalValue == 0 || reset)) {
+    if(!(isNaN(totalValue) || totalValue === 0 || reset)) {
 
         // Set success and format with thousand separators
         $("#total").val(totalValue.toLocaleString("en-US", {style: "currency", currency: "USD"}).substring(1));
@@ -382,7 +382,37 @@ function updateTotal(reset) {
  */
 function submitCheck() {
 
-    if($("#trade_form").find(".form-group:not(.has-success)").length == 0) {
+    // Check if a sale is valid i.e you own the security and have enough shares to sell
+    if(portfolio.length > 0) {
+
+        if($("#buy_sell").val() === "SELL") {
+            var shares_owned = 0;
+
+            var isin = $("#isin").val();
+
+            for(var i = 0; i < portfolio.length; i++) {
+                var security = portfolio[i];
+                if(isin === security.isin) {
+                    shares_owned = security['shares'];
+                    break;
+                }
+            }
+
+            if (shares_owned === 0) {
+                $("#trade_error").text("You cannot sell a security that you do not own").parent().show();
+                $("#shares_group").attr("class","form-group has-error");
+            } else if ($("#shares").val() > shares_owned) {
+                $("#trade_error").text("You cannot sell more shares of this security than you own").parent().show();
+                $("#shares_group").attr("class","form-group has-error");
+            } else {
+                $("#trade_error").parent().hide();
+            }
+
+        }
+
+    }
+
+    if($("#trade_form").find(".form-group:not(.has-success)").length === 0) {
 
         $("#trade_details_panel").attr("class", "panel panel-success");
         $("#add_trade_btn").attr("class", "btn btn-success btn-block")

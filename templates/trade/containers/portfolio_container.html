@@ -7,7 +7,7 @@
             </span></h2>
         </div>
         <div id="portfolio_panel_body" class="panel-body collapse in">
-            <p id="portfolio-update-date">Last Updated:</p>
+            <div id="portfolio-update-date"><div id="#portfolio-loader" class="loader" style="float:right; border: 3px solid #9954bb; border-top: 3px solid rgba(0, 0, 0, 0);"></div><p style="float: left">Loading...</p><br></div>
             <h3>Securities</h3>
             <table class="rwd-table rwd-table-info table table-striped table-hover">
                 <thead>
@@ -23,27 +23,15 @@
                 </tr>
                 </thead>
                 <tbody id="portfolio-table">
-                <tr>
-                    <td>CAD</td>
-                    <td>ABCDE</td>
-                    <td>US1234567890</td>
-                    <td>A Fake Security Incorporated</td>
-                    <td>10,000</td>
-                    <td>$10.00</td>
-                    <td>$100,000</td>
-                    <td>
-                        <button type="button" class="btn btn-xs btn-info">Sell</button>
-                    </td>
-                </tr>
                 </tbody>
             </table>
             <h3>Cash</h3>
             <ul class="list-group">
                 <li class="list-group-item">
-                    <b>CAD: </b> <span style="float:right">$125,000.00</span>
+                    <b>CAD: </b> <span id="portfolio-CAD" style="float:right"></span>
                 </li>
                 <li class="list-group-item">
-                    <b>USD: </b> <span style="float:right">$125,000.00</span>
+                    <b>USD: </b> <span id="portfolio-USD" style="float:right"></span>
                 </li>
             </ul>
         </div>

@@ -5,7 +5,7 @@
 // JSON representation of cash table
 var cash = {
   "CAD": {
-      "open": 10000.00,
+      "open": Number.NaN, // Default to NaN in case portfolio is not pulled
       "BUY": 0.00,
       "SELL": 0.00,
       "conversion": 0.00,
@@ -13,7 +13,7 @@ var cash = {
       "closing": 0.00
   },
   "USD": {
-      "open": 10000.00,
+      "open": Number.NaN,
       "BUY": 0.00,
       "SELL": 0.00,
       "conversion": 0.00,
@@ -32,7 +32,7 @@ var autoConvertEnabled = true;
 
 var securities_error = "";
 var cash_error = "", cash_warning = "";
-var CASH_WARNING_THRESH = 0.05;
+var CASH_WARNING_THRESH = 0.1;
 
 $(document).ready( function () {
     // Get the fx Rate
@@ -96,6 +96,7 @@ function updatePreview(trade) {
                     '</button>' +
                 '</td>' +
         '</tr>';
+
 
     // Update cash
     cash[trade.currency][trade.buy_sell] += trade.total;
@@ -212,7 +213,7 @@ function convertCash($source, base, target) {
 
 /**
  * Update the cash table calculating opening, total buys, sells, conversions
- * net and closing balances for all currencies. Displays and cash related
+ * net and closing balances for all currencies. Displays trade and cash related
  * errors or warnings.
  */
 function updateCashTable() {
@@ -244,30 +245,38 @@ function updateCashTable() {
             accounting.formatMoney(cash[currency]["closing"])
         );
 
-        // Check for negative or low balance
-        if (cash[currency]["closing"] < 0) {
+        // Disable checks if cash not pulled
+        if (isNaN(cash[currency]["open"])) {
 
-            closing_cell.attr("class", "text-danger");
-            cash_error += "Cannot have negative " + currency + " balance. ";
-
-        } else if (cash[currency]["closing"] < CASH_WARNING_THRESH * cash[currency]["open"]) {
-
-            closing_cell.attr("class", "text-warning");
-            cash_warning += "Low on " + currency + ". ";
+            cash_warning = "Could not get cash balances. Error checks have been disabled"
 
         } else {
-            closing_cell.removeClass("text-danger text-warning")
-        }
 
-        // Check if enough cash to cover buys
-        if (cash[currency]["BUY"] > cash[currency]["open"] + cash[currency]["conversion"] && cash[currency]["closing"] > 0) {
+            // Check for negative or low balance
+            if (cash[currency]["closing"] < 0) {
 
-            buys.addClass("text-warning");
-            cash_warning += "Insufficient opening " + currency + " to cover buys. Consider a conversion or executing " +
-                "and confirming a sell order(s) before buying. "
+                closing_cell.attr("class", "text-danger");
+                cash_error += "Cannot have negative " + currency + " balance. ";
 
-        } else {
-            buys.removeClass("text-warning")
+            } else if (cash[currency]["closing"] < CASH_WARNING_THRESH * cash[currency]["open"]) {
+
+                closing_cell.attr("class", "text-warning");
+                cash_warning += "Low on " + currency + ". ";
+
+            } else {
+                closing_cell.removeClass("text-danger text-warning")
+            }
+
+            // Check if enough cash to cover buys
+            if (cash[currency]["BUY"] > cash[currency]["open"] + cash[currency]["conversion"] && cash[currency]["closing"] > 0) {
+
+                buys.addClass("text-warning");
+                cash_warning += "Insufficient opening " + currency + " to cover buys. Consider a conversion or executing " +
+                    "and confirming a sell order(s) before buying. "
+
+            } else {
+                buys.removeClass("text-warning")
+            }
         }
 
     }

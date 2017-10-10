@@ -26,6 +26,7 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^$', views.trade, name='trade'),
     url(r'^noscript/$', views.no_script, name='no_script'),
+    url(r'^get_portfolio/$', views.get_portfolio, name='get_portfolio'),
     url(r'^search_by_(?P<method>[a-z]+)/$', views.security_search, name='security_search'),
     url(r'^submit_order/', views.submit_order, name='order_submission')
 ]

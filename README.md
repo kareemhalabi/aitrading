@@ -26,6 +26,7 @@ A few environment variables are needed to ensure proper functionality. (Includes
 2. **DEBUG** : Set to True if on development, ignore or set to false on production
 3. **DATABASE_URL** : URL of PostgreSQL database
 4. **SENDGRID_API_KEY** : The API key used to send emails via SMTP
+5. **QUOTAGUARDSTATIC_URL** : The proxy url given by QuotaGuard (a Heroku add on). Not required if the server hosting this application has a static IP
 
 ### Database and Superuser Setup
 
