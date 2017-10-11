@@ -11,7 +11,7 @@ def get_col_num(col):
 def get_portfolio(group_account):
 
     # Get the latest portfolio filename
-    latest_list = sorted(list(filter(lambda filename: 'TRDSHT' in filename, os.listdir(reports_dir))))
+    latest_list = sorted(list(filter(lambda filename: 'TRDSHT' in filename and '.csv' in filename, os.listdir(reports_dir))))
 
     # No files exist
     if len(latest_list) == 0:
@@ -19,7 +19,8 @@ def get_portfolio(group_account):
 
     portfolio = {}
 
-    with open(os.path.join(reports_dir, latest_list[0]), 'r') as csvfile:
+    with open(os.path.join(reports_dir, latest_list[-1]), 'r') as csvfile:
+        print("Processing file: " + str(os.path.join(reports_dir, latest_list[-1])))
         reader = csv.reader(csvfile)
 
         # Filter by account number
