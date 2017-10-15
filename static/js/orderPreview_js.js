@@ -71,7 +71,7 @@ function updatePreview(trade) {
 
 
     // Show the panel
-    if (pending_trades.length == 1) {
+    if (pending_trades.length === 1) {
         $("#order_preview_container").slideDown();
     }
 
@@ -124,7 +124,7 @@ function editTrade($row) {
     $row.hide("slow", function (){$row.remove()});
 
     // Hide preview if no trades remain
-    if(pending_trades.length == 0) {
+    if(pending_trades.length === 0) {
         $("#order_preview_container").slideUp();
     }
 
@@ -150,7 +150,7 @@ function deleteTrade($row) {
     pending_trades.splice(index, 1);
 
     $row.hide("slow", function (){$row.remove()});
-    if(pending_trades.length == 0) {
+    if(pending_trades.length === 0) {
         $("#order_preview_container").slideUp();
     }
 

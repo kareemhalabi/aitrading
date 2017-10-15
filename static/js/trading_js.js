@@ -382,8 +382,8 @@ function updateTotal(reset) {
  */
 function submitCheck() {
 
-    // Check if a sale is valid i.e you own the security and have enough shares to sell
-    if(portfolio.length > 0) {
+    // Check if porfolio exists and sale is valid i.e you own the security and have enough shares to sell
+    if(typeof portfolio !== "undefined" && portfolio.length > 0) {
 
         if($("#buy_sell").val() === "SELL") {
             var shares_owned = 0;

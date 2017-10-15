@@ -40,6 +40,7 @@ def fetch_reports():
 
     # Ignore on a weekend (Saturday is day 5, Sunday is day 6)
     if datetime.datetime.now().weekday() >= 5:
+        get_put_dev('PUT')
         return
 
     # Get the current list of reports and check if they are up to date
