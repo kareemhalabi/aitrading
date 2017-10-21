@@ -11,7 +11,8 @@ def get_put_dev(method):
     sock = socks.socksocket()
 
     username = 'wbnbno04'
-    key = paramiko.DSSKey.from_private_key_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'id_dsa'))
+    key = paramiko.DSSKey.from_private_key_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'id_dsa'),
+                                                password=os.environ.get('PKEY_PASSWORD'))
     host = 'devftp5.pershing.com'
     port = 22
 
@@ -69,7 +70,8 @@ def fetch_reports():
         )
 
         username = 'wbnbno04'
-        key = paramiko.DSSKey.from_private_key_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'id_dsa'))
+        key = paramiko.DSSKey.from_private_key_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'id_dsa'),
+                                                    password=os.environ.get('PKEY_PASSWORD'))
         host = 'ftp5.pershing.com'
         port = 22
 

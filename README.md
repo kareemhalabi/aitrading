@@ -27,6 +27,7 @@ A few environment variables are needed to ensure proper functionality. (Includes
 3. **DATABASE_URL** : URL of PostgreSQL database
 4. **SENDGRID_API_KEY** : The API key used to send emails via SMTP
 5. **QUOTAGUARDSTATIC_URL** : The proxy url given by QuotaGuard (a Heroku add on). Not required if the server hosting this application has a static IP
+6. **PKEY_PASSWORD** : The password to decrypt the private DSA key for SFTP access to Pershing server
 
 ### Database and Superuser Setup
 
@@ -52,3 +53,6 @@ Now you can begin adding in the new group members by clicking on "Add Authorized
 
 #### Registration
 Registering an account can be done at /accounts/register. Enter your McGill email and follow the steps
+
+#### Trading Bonds
+Bond information must all be entered manually as this data is not available on Morningstar UK. For the price, use a par value of 1, not 100
