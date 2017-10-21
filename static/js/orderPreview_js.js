@@ -316,9 +316,9 @@ function orderSubmitCheck() {
     if (cash_error.length > 0 || securities_error.length > 0 ||
         $("[data-th='Conversion']").children(".has-error").length > 0) {
 
-        $("#submit_order").prop("disabled", true);
+        $("#pre_submit_order").prop("disabled", true);
     } else {
-        $("#submit_order").prop("disabled", false);
+        $("#pre_submit_order").prop("disabled", false);
     }
 
 }

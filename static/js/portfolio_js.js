@@ -70,6 +70,7 @@ function populatePortfolio() {
         // Add to appropriate total
         security_totals[security["currency"]] += security["total"];
     }
+    $table.show("slow");
 
     // Update security totals
     $("#security-CAD").text(accounting.formatMoney(security_totals["CAD"]));
