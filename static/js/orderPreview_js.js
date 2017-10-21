@@ -28,11 +28,12 @@ var fxRate = {
     "date": ""
 };
 
-var autoConvertEnabled = true;
+var autoFXConvertEnabled = true;
 
 var securities_error = "";
 var cash_error = "", cash_warning = "";
 var CASH_WARNING_THRESH = 0.1;
+var OVERWEIGHT_WARNGING_THRESH = 0.1;
 
 $(document).ready( function () {
     // Get the fx Rate
@@ -46,7 +47,7 @@ $(document).ready( function () {
         },
         error: function(error) {
             $("#fx_info").text("Could not get exchange rate, input conversions manually: " + error.status + ": " + error.statusText);
-            autoConvertEnabled = false;
+            autoFXConvertEnabled = false;
         }
     });
 
@@ -95,16 +96,27 @@ function updatePreview(trade) {
                         '<span class="glyphicon glyphicon-remove"></span>' +
                     '</button>' +
                 '</td>' +
-        '</tr>';
+    '</tr>';
 
+    var $row = $.parseHTML(tr)[0];
+
+    // Check for overweight buy trade
+    var overweight_error;
+    if (autoFXConvertEnabled && trade.buy_sell === "BUY" &&
+    ((trade.currency === "CAD" && trade.total / portfolio_total_value > OVERWEIGHT_WARNGING_THRESH) ||
+    (trade.currency === "USD" && trade.total * fxRate["USD/CAD"] / portfolio_total_value > OVERWEIGHT_WARNGING_THRESH))) {
+        overweight_error = trade.sec_name + " ("+ trade.isin + ") accounts for more than " + (OVERWEIGHT_WARNGING_THRESH*100).toFixed(0) +
+        "% of your total portfolio value. You must have prior authorization to execute this trade. ";
+        $row.className += "warning";
+    }
 
     // Update cash
     cash[trade.currency][trade.buy_sell] += trade.total;
-    updateCashTable();
+    updateCashTable(overweight_error);
 
     // Add and show the row
     var $table = $("#preview_table");
-    $table.append(tr);
+    $table.append($row);
     $table.find("tr").show("slow");
 }
 
@@ -184,7 +196,7 @@ function convertCash($source, base, target) {
             cash[base]["conversion"] = parseFloat(sourceString);
 
             // Only modify target input if auto-convert is enabled
-            if(autoConvertEnabled) {
+            if(autoFXConvertEnabled) {
                 cash[target]["conversion"]  = -1 * cash[base]["conversion"] * fxRate["" + base + "/" + target];
                 $targetInput.val(cash[target]["conversion"].toFixed(2));
             }
@@ -216,10 +228,9 @@ function convertCash($source, base, target) {
  * net and closing balances for all currencies. Displays trade and cash related
  * errors or warnings.
  */
-function updateCashTable() {
-
+function updateCashTable(cashWarning) {
+    cash_warning = cashWarning || "";
     cash_error = "";
-    cash_warning = "";
     var $cash_recap = $("#cash_recap");
 
     for (var currency in cash) {
@@ -272,7 +283,7 @@ function updateCashTable() {
 
                 buys.addClass("text-warning");
                 cash_warning += "Insufficient opening " + currency + " to cover buys. Consider a conversion or executing " +
-                    "and confirming a sell order(s) before buying. "
+                    "and confirming a sell order before buying. "
 
             } else {
                 buys.removeClass("text-warning")

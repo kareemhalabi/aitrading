@@ -2,12 +2,16 @@
     <div id="portfolio_panel" class="panel panel-info">
         <div class="panel-heading">
             <h2>Your Portfolio <span style="float: right">
-                <button class="btn btn-info no-focus-outline" data-toggle="collapse" data-target="#portfolio_panel_body">Show/Hide
+                <button class="btn btn-info no-focus-outline" data-toggle="collapse"
+                        data-target="#portfolio_panel_body">Show/Hide
                 </button>
             </span></h2>
         </div>
         <div id="portfolio_panel_body" class="panel-body collapse in">
-            <div id="portfolio-update-date"><div id="#portfolio-loader" class="loader" style="float:right; border: 3px solid #9954bb; border-top: 3px solid rgba(0, 0, 0, 0);"></div><p style="float: left">Loading...</p><br></div>
+            <div id="portfolio-update-date">
+                <div id="#portfolio-loader" class="loader"
+                     style="float:right; border: 3px solid #9954bb; border-top: 3px solid rgba(0, 0, 0, 0);"></div>
+                <p style="float: left">Loading...</p><br></div>
             <h3>Securities</h3>
             <table class="rwd-table rwd-table-info table table-striped table-hover">
                 <thead>
@@ -25,6 +29,15 @@
                 <tbody id="portfolio-table">
                 </tbody>
             </table>
+            <h3>Security Totals</h3>
+            <ul class="list-group">
+                <li class="list-group-item">
+                    <b>CAD: </b> <span id="security-CAD" style="float:right"></span>
+                </li>
+                <li class="list-group-item">
+                    <b>USD: </b> <span id="security-USD" style="float:right"></span>
+                </li>
+            </ul>
             <h3>Cash</h3>
             <ul class="list-group">
                 <li class="list-group-item">
@@ -34,6 +47,23 @@
                     <b>USD: </b> <span id="portfolio-USD" style="float:right"></span>
                 </li>
             </ul>
+            <h3>Portfolio Value and Distribution</h3>
+            <ul class="list-group">
+                <li class="list-group-item">
+                    <b>Total Value (CAD): </b> <span id="portfolio-total" style="float:right"></span>
+                </li>
+            </ul>
+            <p>(Hover or tap for percentage)</p>
+            <div class="progress" style="height:16px">
+                <div id="security-CAD-portion" class="progress-bar progress-bar-danger"
+                     data-toggle="tooltip" data-placement="top" title="" data-original-title="Tooltip on top"></div>
+                <div id="security-USD-portion" class="progress-bar progress-bar-info"
+                     data-toggle="tooltip" data-placement="top" title=""></div>
+                <div id="cash-CAD-portion" class="progress-bar progress-bar-success"
+                     data-toggle="tooltip" data-placement="top" title=""></div>
+                <div id="cash-USD-portion" class="progress-bar"
+                     data-toggle="tooltip" data-placement="top" title=""></div>
+            </div>
         </div>
     </div>
 </div>

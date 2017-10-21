@@ -6,6 +6,7 @@
 
 var portfolio;
 var as_of_date;
+var portfolio_total_value;
 
 $(document).ready( function () {
     $.ajax({url: "get_portfolio/", timeout: 30000,
@@ -43,6 +44,10 @@ $(document).ready( function () {
 function populatePortfolio() {
 
     var $table = $("#portfolio-table");
+    var security_totals = {
+        "CAD": 0.00,
+        "USD": 0.00
+    };
 
     // Update portfolio table
     for(var i = 0; i < portfolio.length; i++) {
@@ -61,11 +66,40 @@ function populatePortfolio() {
                     '</td>' +
                 '</tr>';
         $table.append(tr);
+
+        // Add to appropriate total
+        security_totals[security["currency"]] += security["total"];
     }
+
+    // Update security totals
+    $("#security-CAD").text(accounting.formatMoney(security_totals["CAD"]));
+    $("#security-USD").text(accounting.formatMoney(security_totals["USD"]));
 
     // Update cash
     $("#portfolio-CAD").text(accounting.formatMoney(cash["CAD"]["open"]));
     $("#portfolio-USD").text(accounting.formatMoney(cash["USD"]["open"]));
+
+    // Update total and weights if currency conversion successful
+    if (autoFXConvertEnabled) {
+
+        portfolio_total_value = security_totals["CAD"] + cash["CAD"]["open"] +
+                                (security_totals["USD"] + cash["USD"]["open"])*fxRate["USD/CAD"];
+
+        $("#portfolio-total").text(accounting.formatMoney(portfolio_total_value));
+
+        var weight;
+        weight = (security_totals["CAD"] / portfolio_total_value) * 100;
+        $("#security-CAD-portion").attr("data-original-title", "CAD Securities: " + weight.toFixed(2) + "%").width(weight + "%");
+
+        weight = (security_totals["USD"]*fxRate["USD/CAD"] / portfolio_total_value) * 100;
+        $("#security-USD-portion").attr("data-original-title", "USD Securities: " + weight.toFixed(2) + "%").width(weight + "%");
+
+        weight = (cash["CAD"]["open"] / portfolio_total_value) * 100;
+        $("#cash-CAD-portion").attr("data-original-title", "CAD Cash: " + weight.toFixed(2) + "%").width(weight + "%");
+
+        weight = (cash["USD"]["open"]*fxRate["USD/CAD"] / portfolio_total_value) * 100;
+        $("#cash-USD-portion").attr("data-original-title", "USD Cash: " + weight.toFixed(2) + "%").width(weight + "%");
+    }
 }
 
 /**
