@@ -11,7 +11,6 @@ from markupsafe import Markup
 from aitrading.models import AuthorizedUser
 from django.contrib.auth.models import User
 from aitrading.morningstar_crawler import find_by_isin, find_by_ticker
-from aitrading.sftp.sftp_pull import fetch_reports
 from aitrading.sftp import portfolio_scraper
 
 from registration.backends.hmac.views import RegistrationView
@@ -48,7 +47,6 @@ def trade(request):
 @login_required
 def get_portfolio(request):
     group = get_group(request.user.email)
-    fetch_reports()
     portfolio = portfolio_scraper.get_portfolio(group.get('group_account'))
     if portfolio is None:
         return HttpResponseNotFound('No data available on server')

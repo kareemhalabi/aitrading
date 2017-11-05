@@ -1,51 +1,45 @@
 import csv
 import re
-import os
-from aitrading.sftp.sftp_pull import reports_dir
-
-# Convert upper case single character excel column to 0 based index
-def get_col_num(col):
-    return int(ord(col) - ord('A'))
+import psycopg2, psycopg2.extras
+from aitrading.sftp.pull_reports import get_db_conn
 
 
 def get_portfolio(group_account):
 
-    # Get the latest portfolio filename
-    latest_list = sorted(list(filter(lambda filename: 'TRDSHT' in filename and '.csv' in filename, os.listdir(reports_dir))))
+    conn = get_db_conn()
 
-    # No files exist
-    if len(latest_list) == 0:
-        return None
+    dict_cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+
+    # Filter by account number
+    dict_cur.execute("""SELECT "As Of Date", "Local Currency Code", "Ticker", "ISIN", "Security Description 1",
+                        "Security Description 2", "Shares/Par", "Local Price", "Local Market Value"
+                        FROM report_trdsht_asset_and_accrual_detail WHERE "Reporting Account Number" = '%s' """ % group_account)
+
+    # Get all rows
+    portfolio_rows = dict_cur.fetchall()
 
     portfolio = {}
 
-    with open(os.path.join(reports_dir, latest_list[-1]), 'r') as csvfile:
-        print("Processing file: " + str(os.path.join(reports_dir, latest_list[-1])))
-        reader = csv.reader(csvfile)
+    # Get As of date (Column E)
+    portfolio["as_of_date"] = portfolio_rows[0]["As Of Date"]
 
-        # Filter by account number
-        portfolio_rows = list(filter(lambda asset: asset[0] == group_account, reader))
+    # First two rows are CAD and USD cash balances
+    portfolio["CAD_cash"] = float(re.sub(',', '', portfolio_rows[0]["Local Market Value"]))
+    del portfolio_rows[0]
+    portfolio["USD_cash"] = float(re.sub(',', '', portfolio_rows[0]["Local Market Value"]))
+    del portfolio_rows[0]
 
-        # Get As of date (Column E)
-        portfolio["as_of_date"] = portfolio_rows[0][get_col_num('E')]
-
-        # First two rows are CAD and USD cash balances
-        portfolio["CAD_cash"] = float(re.sub(',', '', portfolio_rows[0][get_col_num('Z')]))
-        del portfolio_rows[0]
-        portfolio["USD_cash"] = float(re.sub(',', '', portfolio_rows[0][get_col_num('Z')]))
-        del portfolio_rows[0]
-
-        # Get security info from specific cells
-        portfolio["securities"] = []
-        for row in portfolio_rows:
-            portfolio["securities"].append({
-                'currency': row[get_col_num('N')],
-                'ticker': row[26 + get_col_num('X')],  # For column AX
-                'isin': row[26 + get_col_num('Y')],  # For column AY
-                'sec_name': row[get_col_num('F')] + " " + row[get_col_num('G')],
-                'shares': int(re.sub(',|(\.\d*)?', '', row[get_col_num('R')])),  # Removes decimal or thousand separator
-                'price': float(re.sub(',', '', row[get_col_num('V')])),
-                'total': float(re.sub(',', '', row[get_col_num('Z')]))
-            })
+    # Format security info from string rows
+    portfolio["securities"] = []
+    for row in portfolio_rows:
+        portfolio["securities"].append({
+            'currency': row["Local Currency Code"],
+            'ticker': row["Ticker"],
+            'isin': row["ISIN"],
+            'sec_name': row["Security Description 1"] + " " + row["Security Description 2"],
+            'shares': int(re.sub(',|(\.\d*)?', '', row["Shares/Par"])),  # Removes decimal or thousand separator
+            'price': float(re.sub(',', '', row["Local Price"])),
+            'total': float(re.sub(',', '', row["Local Market Value"]))
+        })
 
     return portfolio
