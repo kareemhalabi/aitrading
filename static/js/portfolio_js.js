@@ -23,8 +23,18 @@ $(document).ready( function () {
                 // Set fields
                 as_of_date = response["as_of_date"];
                 $("#portfolio-update-date").html("<b> Data as of: " + as_of_date + "</b>");
-                $("#CAD_recap").find("[data-th=Opening]").text(accounting.formatMoney(cash["CAD"]["open"]));
-                $("#USD_recap").find("[data-th=Opening]").text(accounting.formatMoney(cash["USD"]["open"]));
+
+                // Set the opening balances
+                for (currency in cash) {
+                    if(cash.hasOwnProperty(currency)) {
+
+                        $("#cash_recap").find("[id*='"+currency+"']").find("[data-th='Opening']")
+                            .text(accounting.formatMoney(cash[currency]["open"]));
+
+                        $("#%s_recap" % currency).find("[data-th=Opening]")
+                            .text(accounting.formatMoney(cash[currency]["open"]));
+                    }
+                }
 
             } else {
                 $("#portfolio-update-date").text("Could not get portfolio data");
@@ -33,9 +43,35 @@ $(document).ready( function () {
         },
         error: function (error) {
             $("#portfolio-update-date").text("Could not get portfolio data. Error "+ error.status + ": " + error.statusText);
+        }, complete: function() {
+            getForexData();
         }
-        });
+    });
+
 });
+
+/**
+ * Obtains exchange rate then updates portfolio totals with total CAD converted value
+ */
+function getForexData() {
+    $.ajax("https://api.fixer.io/latest?base=CAD&symbols=USD",{
+        success: function (response) {
+            fxRate["CAD/USD"] = response.rates.USD;
+            fxRate["USD/CAD"] = parseFloat((1/response.rates.USD).toFixed(5));
+            fxRate["date"] = response.date;
+            $("#fx_info").html("As of " + fxRate["date"] + " 11:00 AM EST, " +
+                "<b>1 CAD= " + fxRate["CAD/USD"] + " USD</b> and <b>1 USD = " + fxRate["USD/CAD"] + " CAD</b>")
+        },
+        error: function(error) {
+            $("#fx_info").text("Could not get exchange rate, input conversions manually: " + error.status + ": " + error.statusText);
+            autoFXConvertEnabled = false;
+        },
+        complete: function() {
+            // Need to wait for Forex data before updating portfolio totals
+            populatePortfolio();
+        }
+    });
+}
 
 /**
  * Populates the portfolio container with data from BNY Mellon

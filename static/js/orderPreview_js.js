@@ -35,35 +35,6 @@ var cash_error = "", cash_warning = "";
 var CASH_WARNING_THRESH = 0.1;
 var OVERWEIGHT_WARNGING_THRESH = 0.1;
 
-$(document).ready( function () {
-    // Get the fx Rate
-    $.ajax("https://api.fixer.io/latest?base=CAD&symbols=USD",{
-        success: function (response) {
-            fxRate["CAD/USD"] = response.rates.USD;
-            fxRate["USD/CAD"] = parseFloat((1/response.rates.USD).toFixed(5));
-            fxRate["date"] = response.date;
-            $("#fx_info").html("As of " + fxRate["date"] + " 11:00 AM EST, " +
-                "<b>1 CAD= " + fxRate["CAD/USD"] + " USD</b> and <b>1 USD = " + fxRate["USD/CAD"] + " CAD</b>")
-        },
-        error: function(error) {
-            $("#fx_info").text("Could not get exchange rate, input conversions manually: " + error.status + ": " + error.statusText);
-            autoFXConvertEnabled = false;
-        },
-        complete: function() {
-            // Need to wait for Forex data before updating portfolio totals
-            populatePortfolio();
-        }
-    });
-
-    // Set the opening balances
-    for (currency in cash) {
-        if(cash.hasOwnProperty(currency)) {
-            $("#cash_recap").find("[id*='"+currency+"']").find("[data-th='Opening']")
-                .text(accounting.formatMoney(cash[currency]["open"]));
-        }
-    }
-});
-
 /**
  * Update the preview table when a new trade has been added.
  *
