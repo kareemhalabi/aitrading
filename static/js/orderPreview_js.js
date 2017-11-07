@@ -48,6 +48,10 @@ $(document).ready( function () {
         error: function(error) {
             $("#fx_info").text("Could not get exchange rate, input conversions manually: " + error.status + ": " + error.statusText);
             autoFXConvertEnabled = false;
+        },
+        complete: function() {
+            // Need to wait for Forex data before updating portfolio totals
+            populatePortfolio();
         }
     });
 

@@ -25,7 +25,6 @@ $(document).ready( function () {
                 $("#portfolio-update-date").html("<b> Data as of: " + as_of_date + "</b>");
                 $("#CAD_recap").find("[data-th=Opening]").text(accounting.formatMoney(cash["CAD"]["open"]));
                 $("#USD_recap").find("[data-th=Opening]").text(accounting.formatMoney(cash["USD"]["open"]));
-                populatePortfolio();
 
             } else {
                 $("#portfolio-update-date").text("Could not get portfolio data");
