@@ -27,6 +27,9 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG')
 
+# Need to be disabled if run in debug or localhost
+SECURE_SSL_REDIRECT = False if DEBUG == 'True' else True
+
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', '[::1]', '.herokuapp.com', '.ngrok.io']
 
 
