@@ -1,5 +1,6 @@
 import json
 import re
+import keen
 
 from django.contrib.auth.decorators import login_required
 from django.core.mail import EmailMessage
@@ -31,10 +32,12 @@ def get_group(email):
 @login_required
 def trade(request):
     try:
+        group = get_group(request.user.email)
+        keen.add_event("visits", {'group': group.get('group_account'), 'email': request.user.email})
 
         return render(request, 'trade/trade.html',
                       {'title': 'AI Trading - %s %s' % (request.user.first_name, request.user.last_name),
-                       'group': get_group(request.user.email)})
+                       'group': group})
 
     except AuthorizedUser.DoesNotExist:
         return render(request, 'trade/unauthorized.html', {'title': 'AI Trading - Unauthorized'}, status=401)
@@ -65,6 +68,8 @@ def submit_order(request):
         return HttpResponseBadRequest('Error: missing trade information')
 
     group = get_group(request.user.email)
+
+    keen.add_events({'trades':trades, 'orders':[{'group':group.get('group_account'), 'email':request.user.email}]})
 
     try:
         sender = '%s %s <%s>' % (request.user.first_name, request.user.last_name, request.user.email)
@@ -111,6 +116,9 @@ def no_script(request):
 
 @login_required
 def security_search(request, method):
+    keen.add_event("security_searches", {'email':request.user.email, 'method': method,
+                                         'isin': request.GET.get('isin'), 'ticker': request.GET.get('ticker'),
+                                         'currency': request.GET.get('currency')})
     if method == 'isin':
         return JsonResponse(find_by_isin(request.GET.get('isin'), request.GET.get('currency')))
     elif method == 'ticker':
