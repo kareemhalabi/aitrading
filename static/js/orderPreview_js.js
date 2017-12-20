@@ -22,14 +22,6 @@ var cash = {
   }
 };
 
-var fxRate = {
-    "CAD/USD": 0,
-    "USD/CAD": 0,
-    "date": ""
-};
-
-var autoFXConvertEnabled = true;
-
 var securities_error = "";
 var cash_error = "", cash_warning = "";
 var CASH_WARNING_THRESH = 0.1;
@@ -77,9 +69,9 @@ function updatePreview(trade) {
 
     // Check for overweight buy trade
     var overweight_error;
-    if (autoFXConvertEnabled && trade.buy_sell === "BUY" &&
+    if (trade.buy_sell === "BUY" &&
     ((trade.currency === "CAD" && trade.total / portfolio_total_value > OVERWEIGHT_WARNGING_THRESH) ||
-    (trade.currency === "USD" && trade.total * fxRate["USD/CAD"] / portfolio_total_value > OVERWEIGHT_WARNGING_THRESH))) {
+    (trade.currency === "USD" && trade.total * fxRate["USD->CAD"] / portfolio_total_value > OVERWEIGHT_WARNGING_THRESH))) {
         overweight_error = trade.sec_name + " ("+ trade.isin + ") accounts for more than " + (OVERWEIGHT_WARNGING_THRESH*100).toFixed(0) +
         "% of your total portfolio value. You must have prior authorization to execute this trade. ";
         $row.className += "warning";
@@ -170,11 +162,8 @@ function convertCash($source, base, target) {
 
             cash[base]["conversion"] = parseFloat(sourceString);
 
-            // Only modify target input if auto-convert is enabled
-            if(autoFXConvertEnabled) {
-                cash[target]["conversion"]  = -1 * cash[base]["conversion"] * fxRate["" + base + "/" + target];
-                $targetInput.val(cash[target]["conversion"].toFixed(2));
-            }
+            cash[target]["conversion"]  = -1 * cash[base]["conversion"] * fxRate["" + base + "->" + target];
+            $targetInput.val(cash[target]["conversion"].toFixed(2));
 
             $source.parent().removeClass("has-error");
 

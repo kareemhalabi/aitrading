@@ -7,6 +7,10 @@
 var portfolio;
 var as_of_date;
 var portfolio_total_value;
+var fxRate = {
+    "CAD->USD": 0,
+    "USD->CAD": 0
+};
 
 $(document).ready( function () {
     $.ajax({url: "get_portfolio/", timeout: 30000,
@@ -20,8 +24,15 @@ $(document).ready( function () {
                 cash["CAD"]["open"] = response["CAD_cash"];
                 cash["USD"]["open"] = response["USD_cash"];
 
-                // Set fields
+                fxRate["USD->CAD"] = response["fx_rate"];
+                fxRate["CAD->USD"] = parseFloat((1/fxRate["USD->CAD"]).toFixed(5));
+
                 as_of_date = response["as_of_date"];
+
+                // Set fields
+                $(".fx_info").html("As of " + as_of_date +
+                    ", <b>1 CAD= " + fxRate["USD->CAD"] + " USD</b> and <b>1 USD = " + fxRate["CAD->USD"] + " CAD</b>");
+
                 $("#portfolio-update-date").html("<b> Data as of: " + as_of_date + "</b>");
 
                 // Set the opening balances
@@ -44,34 +55,12 @@ $(document).ready( function () {
         error: function (error) {
             $("#portfolio-update-date").text("Could not get portfolio data. Error "+ error.status + ": " + error.statusText);
         }, complete: function() {
-            getForexData();
+            populatePortfolio();
         }
     });
 
 });
 
-/**
- * Obtains exchange rate then updates portfolio totals with total CAD converted value
- */
-function getForexData() {
-    $.ajax("https://api.fixer.io/latest?base=CAD&symbols=USD",{
-        success: function (response) {
-            fxRate["CAD/USD"] = response.rates.USD;
-            fxRate["USD/CAD"] = parseFloat((1/response.rates.USD).toFixed(5));
-            fxRate["date"] = response.date;
-            $("#fx_info").html("As of " + fxRate["date"] + " 11:00 AM EST, " +
-                "<b>1 CAD= " + fxRate["CAD/USD"] + " USD</b> and <b>1 USD = " + fxRate["USD/CAD"] + " CAD</b>")
-        },
-        error: function(error) {
-            $("#fx_info").text("Could not get exchange rate, input conversions manually: " + error.status + ": " + error.statusText);
-            autoFXConvertEnabled = false;
-        },
-        complete: function() {
-            // Need to wait for Forex data before updating portfolio totals
-            populatePortfolio();
-        }
-    });
-}
 
 /**
  * Populates the portfolio container with data from BNY Mellon
@@ -115,27 +104,26 @@ function populatePortfolio() {
     $("#portfolio-CAD").text(accounting.formatMoney(cash["CAD"]["open"]));
     $("#portfolio-USD").text(accounting.formatMoney(cash["USD"]["open"]));
 
-    // Update total and weights if currency conversion successful
-    if (autoFXConvertEnabled) {
+    // Update total and weights
 
-        portfolio_total_value = security_totals["CAD"] + cash["CAD"]["open"] +
-                                (security_totals["USD"] + cash["USD"]["open"])*fxRate["USD/CAD"];
+    portfolio_total_value = security_totals["CAD"] + cash["CAD"]["open"] +
+                            (security_totals["USD"] + cash["USD"]["open"])*fxRate["USD->CAD"];
 
-        $("#portfolio-total").text(accounting.formatMoney(portfolio_total_value));
+    $("#portfolio-total").text(accounting.formatMoney(portfolio_total_value));
 
-        var weight;
-        weight = (security_totals["CAD"] / portfolio_total_value) * 100;
-        $("#security-CAD-portion").attr("data-original-title", "CAD Securities: " + weight.toFixed(2) + "%").width(weight + "%");
+    var weight;
+    weight = (security_totals["CAD"] / portfolio_total_value) * 100;
+    $("#security-CAD-portion").attr("data-original-title", "CAD Securities: " + weight.toFixed(2) + "%").width(weight + "%");
 
-        weight = (security_totals["USD"]*fxRate["USD/CAD"] / portfolio_total_value) * 100;
-        $("#security-USD-portion").attr("data-original-title", "USD Securities: " + weight.toFixed(2) + "%").width(weight + "%");
+    weight = (security_totals["USD"]*fxRate["USD->CAD"] / portfolio_total_value) * 100;
+    $("#security-USD-portion").attr("data-original-title", "USD Securities: " + weight.toFixed(2) + "%").width(weight + "%");
 
-        weight = (cash["CAD"]["open"] / portfolio_total_value) * 100;
-        $("#cash-CAD-portion").attr("data-original-title", "CAD Cash: " + weight.toFixed(2) + "%").width(weight + "%");
+    weight = (cash["CAD"]["open"] / portfolio_total_value) * 100;
+    $("#cash-CAD-portion").attr("data-original-title", "CAD Cash: " + weight.toFixed(2) + "%").width(weight + "%");
 
-        weight = (cash["USD"]["open"]*fxRate["USD/CAD"] / portfolio_total_value) * 100;
-        $("#cash-USD-portion").attr("data-original-title", "USD Cash: " + weight.toFixed(2) + "%").width(weight + "%");
-    }
+    weight = (cash["USD"]["open"]*fxRate["USD->CAD"] / portfolio_total_value) * 100;
+    $("#cash-USD-portion").attr("data-original-title", "USD Cash: " + weight.toFixed(2) + "%").width(weight + "%");
+
 }
 
 /**
