@@ -218,6 +218,18 @@
     </tbody>
 </table>
 
+{% if cash.USD.conversion < 0 %}
+
+    <h3>Conversion</h3>
+    <p>We would like to convert {{ cash.USD.conversion|negate|currency }} USD into approximately {{ cash.CAD.conversion|currency }} CAD</p>
+
+{% elif cash.CAD.conversion < 0 %}
+
+    <h3>Conversion</h3>
+    <p>We would like to convert {{ cash.CAD.conversion|negate|currency }} CAD into approximately {{ cash.USD.conversion|currency }} USD</p>
+
+{% endif %}
+
 <h3>Cash</h3>
 
 <table class="table table-striped table-hover">
@@ -227,9 +239,7 @@
         <th>Opening</th>
         <th>Total Buy</th>
         <th>Total Sell</th>
-        <th>Conversion
-            <span title="A negative value indicates the source currency. A positive value indicates the target currency">(?)</span>
-        </th>
+        <th>Conversion</th>
         <th>Net Change</th>
         <th>Closing Balance</th>
     </tr>

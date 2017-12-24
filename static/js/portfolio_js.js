@@ -31,7 +31,7 @@ $(document).ready( function () {
 
                 // Set fields
                 $(".fx_info").html("As of " + as_of_date +
-                    ", <b>1 CAD= " + fxRate["USD->CAD"] + " USD</b> and <b>1 USD = " + fxRate["CAD->USD"] + " CAD</b>");
+                    ", <b>1 USD= " + fxRate["USD->CAD"] + " CAD</b> and <b>1 CAD = " + fxRate["CAD->USD"] + " USD</b>");
 
                 $("#portfolio-update-date").html("<b> Data as of: " + as_of_date + "</b>");
 

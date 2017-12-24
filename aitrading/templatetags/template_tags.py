@@ -13,3 +13,7 @@ def currency(value):
         return "$ --"
 
     return locale.currency(value, grouping=True)
+
+@register.filter
+def negate(value):
+    return -value

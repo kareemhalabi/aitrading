@@ -139,49 +139,65 @@ function deleteTrade($row) {
 }
 
 /**
- * Input handler for a conversion request.
- *
- * @param $source The input field triggering the handler
- * @param base The base currency
- * @param target The target currency
+ * Input handler for a conversion request. Triggered on both value and currency change
  */
-function convertCash($source, base, target) {
+function convertCash() {
+
+    var $baseCurrency = $("#base_currency");
+    var $baseVal = $("#base_val");
 
     // Strip non-numeric for browsers without "tel" support
-    $source.val(function (i, oldval) {
-        return oldval.replace(/[^\-0-9.]/,"");
+    $baseVal.val(function (i, oldval) {
+        return oldval.replace(/[^0-9.]/,"");
     });
 
-    var $targetInput = $("#cash_recap").find("input[id*='"+ target +"']");
-    var sourceString = $source.val();
+    var $targetVal = $("#target_val");
+    var $targetCurrency = $("#target_currency");
 
-    if (sourceString.length > 0) {
+    // Get base values and currency
+    var baseVal = $baseVal.val();
+    var baseCurrency = $baseCurrency.val();
 
-        if((/^-?\d+\.?\d{0,2}$/).test(sourceString)) {
-            // Non-empty and valid conversion value
+    // Determine and set the target currency
+    var targetCurrency;
 
-            cash[base]["conversion"] = parseFloat(sourceString);
-
-            cash[target]["conversion"]  = -1 * cash[base]["conversion"] * fxRate["" + base + "->" + target];
-            $targetInput.val(cash[target]["conversion"].toFixed(2));
-
-            $source.parent().removeClass("has-error");
-
-        } else {
-            // Non-empty and invalid conversion value
-
-            $targetInput.val('');
-            $source.parent().addClass("has-error");
-            cash[base]["conversion"] = 0;
-            cash[target]["conversion"] = 0;
-        }
+    if (baseCurrency === "USD") {
+        targetCurrency = "CAD";
     } else {
-        // Empty conversion value
+        targetCurrency = "USD";
+    }
+    $targetCurrency.text(targetCurrency);
 
-        $targetInput.val('');
-        $source.parent().removeClass("has-error");
-        cash[base]["conversion"] = 0;
-        cash[target]["conversion"] = 0;
+
+    if (baseVal.length > 0) { // Non-empty base value
+
+
+        if((/^\d+\.?\d{0,2}$/).test(baseVal)) { // Non-empty and valid base value
+
+            cash[baseCurrency]["conversion"] = -parseFloat(baseVal);
+
+            cash[targetCurrency]["conversion"]  = -cash[baseCurrency]["conversion"] * fxRate["" + baseCurrency + "->" + targetCurrency];
+            $targetVal.text(accounting.formatMoney(cash[targetCurrency]["conversion"]));
+            $targetCurrency.text(targetCurrency);
+
+            $baseVal.parent().removeClass("has-error");
+
+
+        } else { // Non-empty and invalid base value
+
+            $targetVal.text("$0.00");
+            $targetCurrency.text(targetCurrency);
+            $baseVal.parent().addClass("has-error");
+            cash[baseCurrency]["conversion"] = 0;
+            cash[targetCurrency]["conversion"] = 0;
+        }
+    } else { // Empty base value
+
+        $targetVal.text('$0.00');
+        $targetCurrency.text(targetCurrency);
+        $baseVal.parent().removeClass("has-error");
+        cash[baseCurrency]["conversion"] = 0;
+        cash[targetCurrency]["conversion"] = 0;
     }
 
     updateCashTable();
@@ -207,6 +223,9 @@ function updateCashTable(cashWarning) {
 
         $currency_row.find("[data-th='Sells']")
             .text(accounting.formatMoney(cash[currency]["SELL"]));
+
+        $currency_row.find("[data-th='Conversion']")
+            .text(accounting.formatMoney(cash[currency]["conversion"]));
 
         cash[currency]["net"] = (-cash[currency]["BUY"] + cash[currency]["SELL"] + cash[currency]["conversion"]);
         $currency_row.find("[data-th*='Net']").text(
@@ -278,7 +297,7 @@ function updateCashTable(cashWarning) {
 function orderSubmitCheck() {
 
     if (cash_error.length > 0 || securities_error.length > 0 ||
-        $("[data-th='Conversion']").children(".has-error").length > 0) {
+        $("#base_val").parent().hasClass("has-error")) {
 
         $("#pre_submit_order").prop("disabled", true);
     } else {
