@@ -1,9 +1,10 @@
-import paramiko
-import socks
+import csv
 import os
 import re
+import paramiko
 import psycopg2
-import csv
+import socks
+
 from aitrading.settings import DATABASES
 
 sftp_dir = os.path.dirname(os.path.realpath(__file__))
@@ -70,6 +71,7 @@ if __name__ == "__main__":
 
     except:
         print("Could not connect to the database")
+        exit(1)
 
     # Iterate through each report and update it's corresponding database table
     for report in most_recent_reports:
@@ -98,29 +100,26 @@ if __name__ == "__main__":
 
             # Check if database table exists
             table_name = report['name']
-            cur.execute("SELECT exists(SELECT * FROM information_schema.tables WHERE table_name='%s')" % table_name)
+            cur.execute("SELECT exists(SELECT * FROM information_schema.tables WHERE table_name=%s);", (table_name,))
             if not cur.fetchone()[0]:
-                # Create table
+                # Create table (needs string interpolation since table names cannot be parametrized)
                 cur.execute('CREATE TABLE %s (%s);'
                             % (table_name, ', '.join('"{0}" varchar'.format(column) for column in header)))
-                conn.commit()
-
 
             else:
-                cur.execute("SELECT column_name FROM information_schema.columns WHERE table_name='%s'" % table_name)
+                cur.execute("SELECT column_name FROM information_schema.columns WHERE table_name=%s;", (table_name,))
                 columns = [tup[0] for tup in cur.fetchall()]
                 # Check for column mismatch
                 if header != columns:
-                    # Recreate table
-                    cur.execute("DROP TABLE %s" % table_name)
+                    # Recreate table (needs string interpolation since table names cannot be parametrized)
+                    cur.execute("DROP TABLE %s;" % table_name)
                     cur.execute('CREATE TABLE %s (%s);'
                                 % (table_name, ', '.join('"{0}" varchar'.format(column) for column in header)))
-                    conn.commit()
 
                 # Table exists and no column mismatch
                 else:
-                    # Truncate table to make room for new data
-                    cur.execute("TRUNCATE TABLE %s" % table_name)
+                    # Truncate table to make room for new data (needs string interpolation since table names cannot be parametrized)
+                    cur.execute("TRUNCATE TABLE %s;" % table_name)
 
             # Use temporary file to load database
             with open(os.path.join(sftp_dir, 'temp.csv'), mode='r') as csv_report:
@@ -130,3 +129,7 @@ if __name__ == "__main__":
             os.remove(os.path.join(sftp_dir, 'temp.csv'))
 
             conn.commit()
+
+    # Local import needed to prevent cyclic import
+    from aitrading.sftp.portfolio_scraper import save_snapshots
+    save_snapshots()
