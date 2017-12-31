@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block head %}
+
+    {{ block.super }}
+    <script src="https://cdn.rawgit.com/openexchangerates/accounting.js/master/accounting.min.js"></script>
+    <script src="/static/js/portfolio/snapshots_js.js"></script>
+    <script>
+        accounting.settings.currency.format = {
+            pos: "%s%v",
+            neg: "%s(%v)",
+            zero: "%s --"
+        };
+    </script>
+{% endblock %}
+{% block navbar_buttons %}
+
+    <li><a href="/" class="no-focus-outline">Trade</a></li>
+    <li><a href="#" class="no-focus-outline" data-toggle="modal" data-target="#about_modal">About</a></li>
+    <li><a href="/accounts/password_change" class="no-focus-outline">Change Password</a></li>
+    <li><a href="/accounts/logout" class="no-focus-outline">Logout</a></li>
+
+{% endblock %}
+
+{% block content %}
+
+    {% include 'portfolio/containers/portfolio_snapshot.html' %}
+
+{% endblock %}

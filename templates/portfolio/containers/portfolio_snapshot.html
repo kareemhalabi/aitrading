@@ -1,0 +1,75 @@
+<div id="portfolio_snapshot_container" class="container">
+    <div class="panel panel-info">
+
+        <div class="panel-heading">
+            <h2>Portfolio Snapshot</h2>
+        </div>
+        <div class="panel-body">
+            {% csrf_token %}
+            <p>View the state of your portfolio on any business day in the past year</p>
+            <form id="snapshot_date" class="form-inline">
+                <fieldset>
+                    Select a date (YYYY/MM/DD)
+                        <select id="snapshot_year" class="form-control input-sm" style="width: 72px;
+                        display: inline-table; vertical-align: middle;" oninput="snapshotMonthHandler()">
+                        </select>
+                        <select id="snapshot_month" class="form-control input-sm" style="width: 62px;
+                        display: inline-table; vertical-align: middle;" oninput="snapshotMonthHandler()">
+                        </select>
+                        <select id="snapshot_day" class="form-control input-sm" style="width: 62px;
+                        display: inline-table; vertical-align: middle;">
+                        </select>
+                    <button type="button" class="btn btn-xs btn-info" style="padding-bottom: 5px" onclick="loadSnapshot()">Go</button>
+                </fieldset>
+            </form>
+
+            <br>
+            <p id="fx_info"></p>
+            <br>
+
+            <h3 style="margin-top: 0">Securities</h3>
+            <table class="rwd-table rwd-table-info table table-striped table-hover">
+                <thead>
+                <tr class="info">
+                    <th>Currency</th>
+                    <th>Ticker</th>
+                    <th>ISIN</th>
+                    <th>Security Name</th>
+                    <th>Asset Category</th>
+                    <th>Sector Name</th>
+                    <th>Shares</th>
+                    <th>Price</th>
+                    <th>Total</th>
+                </tr>
+                </thead>
+                <tbody id="snapshot_table"></tbody>
+            </table>
+
+            <h3>Security Totals</h3>
+            <ul class="list-group">
+                <li class="list-group-item">
+                    <b>CAD: </b> <span id="snapshot_CAD_security" style="float:right"></span>
+                </li>
+                <li class="list-group-item">
+                    <b>USD: </b> <span id="snapshot_USD_security" style="float:right"></span>
+                </li>
+            </ul>
+            <h3>Cash</h3>
+            <ul class="list-group">
+                <li class="list-group-item">
+                    <b>CAD: </b> <span id="snapshot_CAD_cash" style="float:right"></span>
+                </li>
+                <li class="list-group-item">
+                    <b>USD: </b> <span id="snapshot_USD_cash" style="float:right"></span>
+                </li>
+            </ul>
+            <h3>Portfolio Value</h3>
+            <ul class="list-group">
+                <li class="list-group-item">
+                    <b>Total Value (CAD): </b> <span id="snapshot_portfolio_total" style="float:right"></span>
+                </li>
+            </ul>
+
+        </div>
+    </div>
+</div>
