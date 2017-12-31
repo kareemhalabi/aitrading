@@ -2,8 +2,12 @@
 {% block head %}
 
     {{ block.super }}
+    <script src="https://www.amcharts.com/lib/3/amcharts.js"></script>
+    <script src="https://www.amcharts.com/lib/3/pie.js"></script>
+    <script src="https://www.amcharts.com/lib/3/plugins/export/export.min.js"></script>
+    <script src="https://www.amcharts.com/lib/3/themes/light.js"></script>
+    <script src="//www.amcharts.com/lib/3/plugins/animate/animate.min.js"></script>
     <script src="https://cdn.rawgit.com/openexchangerates/accounting.js/master/accounting.min.js"></script>
-    <script src="/static/js/portfolio/snapshots_js.js"></script>
     <script>
         accounting.settings.currency.format = {
             pos: "%s%v",
@@ -11,6 +15,11 @@
             zero: "%s --"
         };
     </script>
+
+    <script src="/static/js/portfolio/snapshot_charts_js.js"></script>
+    <script src="/static/js/portfolio/snapshots_js.js"></script>
+
+    <link rel="stylesheet" href="https://www.amcharts.com/lib/3/plugins/export/export.css" type="text/css" media="all" />
 {% endblock %}
 {% block navbar_buttons %}
 

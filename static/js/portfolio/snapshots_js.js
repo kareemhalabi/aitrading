@@ -1,4 +1,3 @@
-
 var snapshots;
 var dateToSnapshotMap = {};
 
@@ -152,4 +151,9 @@ function loadSnapshot() {
         selectedSnapshot["CAD_cash"] + cadSecurityTotal + fxRate*(selectedSnapshot["USD_cash"] + usdSecurityTotal)
     ));
 
+    // Generate all the charts
+    loadBySecurityChart(selectedSnapshot);
+    loadByCurrencyChart(selectedSnapshot, cadSecurityTotal, usdSecurityTotal);
+    loadBySectorChart(selectedSnapshot);
+    loadByAssetCategoryChart(selectedSnapshot);
 }

@@ -6,28 +6,63 @@
         </div>
         <div class="panel-body">
             {% csrf_token %}
-            <p>View the state of your portfolio on any business day in the past year</p>
-            <form id="snapshot_date" class="form-inline">
-                <fieldset>
-                    Select a date (YYYY/MM/DD)
-                        <select id="snapshot_year" class="form-control input-sm" style="width: 72px;
-                        display: inline-table; vertical-align: middle;" oninput="snapshotMonthHandler()">
-                        </select>
-                        <select id="snapshot_month" class="form-control input-sm" style="width: 62px;
-                        display: inline-table; vertical-align: middle;" oninput="snapshotMonthHandler()">
-                        </select>
-                        <select id="snapshot_day" class="form-control input-sm" style="width: 62px;
-                        display: inline-table; vertical-align: middle;">
-                        </select>
-                    <button type="button" class="btn btn-xs btn-info" style="padding-bottom: 5px" onclick="loadSnapshot()">Go</button>
-                </fieldset>
-            </form>
 
-            <br>
-            <p id="fx_info"></p>
+            <div class="row">
+                <div class="col-md-6">
+                    <p>View the state of your portfolio on any business day in the past year</p>
+                    <br>
+                    <p>Note all charts use base (CAD) values to calculate weights</p>
+                </div>
+                <div class="col-md-6">
+                    <br class="visible-sm visible-xs">
+
+                    <form id="snapshot_date" class="form-inline">
+                        <fieldset>
+                            <b>Select a date (YYYY/MM/DD)</b>
+                            <select id="snapshot_year" class="form-control input-sm" style="width: 72px;
+                        display: inline-table; vertical-align: middle;" oninput="snapshotMonthHandler()">
+                            </select>
+                            <select id="snapshot_month" class="form-control input-sm" style="width: 62px;
+                        display: inline-table; vertical-align: middle;" oninput="snapshotMonthHandler()">
+                            </select>
+                            <select id="snapshot_day" class="form-control input-sm" style="width: 62px;
+                        display: inline-table; vertical-align: middle;">
+                            </select>
+                            <button type="button" class="btn btn-xs btn-info" style="padding-bottom: 5px"
+                                    onclick="loadSnapshot()">Go
+                            </button>
+                        </fieldset>
+                    </form>
+                    <br>
+                    <p id="fx_info"></p>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <h3>By Security</h3>
+                    <div id="by_security_chart" style="height: 400px;"></div>
+                </div>
+                <div class="col-md-6">
+                    <h3>By Currency</h3>
+                    <div id="by_currency_chart" style="height: 400px;"></div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <h3>By Sector</h3>
+                    <div id="by_sector_chart" style="height: 500px;"></div>
+                </div>
+                <div class="col-md-6">
+                    <h3>By Asset Category</h3>
+                    <div id="by_asset_category_chart" style="height: 415px;"></div>
+                </div>
+            </div>
+
             <br>
 
             <h3 style="margin-top: 0">Securities</h3>
+            <p>Prices and totals of securities in this table and below are in their local currency</p>
             <table class="rwd-table rwd-table-info table table-striped table-hover">
                 <thead>
                 <tr class="info">
@@ -45,24 +80,32 @@
                 <tbody id="snapshot_table"></tbody>
             </table>
 
-            <h3>Security Totals</h3>
-            <ul class="list-group">
-                <li class="list-group-item">
-                    <b>CAD: </b> <span id="snapshot_CAD_security" style="float:right"></span>
-                </li>
-                <li class="list-group-item">
-                    <b>USD: </b> <span id="snapshot_USD_security" style="float:right"></span>
-                </li>
-            </ul>
-            <h3>Cash</h3>
-            <ul class="list-group">
-                <li class="list-group-item">
-                    <b>CAD: </b> <span id="snapshot_CAD_cash" style="float:right"></span>
-                </li>
-                <li class="list-group-item">
-                    <b>USD: </b> <span id="snapshot_USD_cash" style="float:right"></span>
-                </li>
-            </ul>
+            <div class="row">
+                <div class="col-md-6">
+                    <h3>Security Totals</h3>
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            <b>CAD: </b> <span id="snapshot_CAD_security" style="float:right"></span>
+                        </li>
+                        <li class="list-group-item">
+                            <b>USD: </b> <span id="snapshot_USD_security" style="float:right"></span>
+                        </li>
+                    </ul>
+
+                </div>
+                <div class="col-md-6">
+                    <h3>Cash</h3>
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            <b>CAD: </b> <span id="snapshot_CAD_cash" style="float:right"></span>
+                        </li>
+                        <li class="list-group-item">
+                            <b>USD: </b> <span id="snapshot_USD_cash" style="float:right"></span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
             <h3>Portfolio Value</h3>
             <ul class="list-group">
                 <li class="list-group-item">
