@@ -1,12 +1,11 @@
 {% extends 'base.html' %}
 {% block head %}
     {{ block.super }}
-    <link rel="stylesheet" href="/static/css/global_styles.css">
     <link rel="stylesheet" href="/static/css/trading_styles.css">
     <script src="https://cdn.rawgit.com/openexchangerates/accounting.js/master/accounting.min.js"></script>
-    <script src="/static/js/trading_js.js"></script>
-    <script src="/static/js/orderPreview_js.js"></script>
-    <script src="/static/js/portfolio_js.js"></script>
+    <script src="/static/js/trade/trading_js.js"></script>
+    <script src="/static/js/trade/orderPreview_js.js"></script>
+    <script src="/static/js/trade/portfolio_overview_js.js"></script>
     <script>
         accounting.settings.currency.format = {
             pos: "%s%v",
@@ -19,6 +18,7 @@
     </script>
 {% endblock %}
 {% block navbar_buttons %}
+    <li><a href="/portfolio" class="no-focus-outline">Portfolio</a></li>
     <li><a href="#" class="no-focus-outline" data-toggle="modal" data-target="#about_modal">About</a></li>
     <li><a href="/accounts/password_change" class="no-focus-outline">Change Password</a></li>
     <li><a href="/accounts/logout" class="no-focus-outline">Logout</a></li>
@@ -26,7 +26,7 @@
 
 {% block content %}
 
-    {% include 'trade/about_modal.html' %}
+    {% include 'trade/about.html' %}
     {% include 'trade/containers/group_info_container.html' %}
     {% include 'trade/containers/portfolio_container.html' %}
     {% include 'trade/containers/trade_details_container.html' %}

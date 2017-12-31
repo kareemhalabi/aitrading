@@ -12,18 +12,7 @@ from aitrading.models import AuthorizedUser
 from aitrading.morningstar_crawler import find_by_isin, find_by_ticker
 from aitrading.settings import DEBUG
 from aitrading.sftp import portfolio_scraper
-
-
-def get_group(email):
-    group_account = AuthorizedUser.objects.get(email=email).account
-    group_number = int(group_account[6:8])
-
-    member_emails = AuthorizedUser.objects.filter(account=group_account).values_list('email', flat=True)
-    members = User.objects.filter(email__in=member_emails)
-
-    supervisor = User.objects.get(groups__name='supervisor')
-
-    return {'supervisor': supervisor, 'group_number': group_number, 'group_account': group_account, 'members': members}
+from aitrading.views import get_group
 
 
 @login_required
@@ -34,7 +23,7 @@ def trade(request):
             keen.add_event("visits", {'group': group.get('group_account'), 'email': request.user.email})
 
         return render(request, 'trade/trade.html',
-                      {'title': 'AI Trading - %s %s' % (request.user.first_name, request.user.last_name),
+                      {'title': 'AI Trading - Trade',
                        'group': group})
 
     except AuthorizedUser.DoesNotExist:

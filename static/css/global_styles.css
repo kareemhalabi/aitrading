@@ -86,10 +86,6 @@
         display: table-cell;
         padding: .5em;
     }
-
-    .conversion-tooltip {
-        display: none;
-    }
 }
 
 /* Mobile table view */
@@ -111,13 +107,4 @@
     .rwd-table input {
         width: 100%;
     }
-
-    .conversion-tooltip {
-        margin-left: -12px;
-        display: inline-block;
-    }
-}
-
-[data-th="Edit/Delete"] {
-    white-space: nowrap;
 }

@@ -48,12 +48,6 @@
     .data-container {
         width: 788px;
     }
-
-    .navbar-brand {
-        font-size: 24px;
-        font-weight: 300;
-        padding-left: 40px;
-    }
 }
 
 @media screen and (max-width: 768px) {
@@ -63,4 +57,23 @@
     .user-box span {
         float: none !important;
     }
+}
+
+/* Desktop table view */
+@media (min-width: 992px) {
+    .conversion-tooltip {
+        display: none;
+    }
+}
+
+/* Mobile table view */
+@media (max-width: 992px) {
+    .conversion-tooltip {
+        margin-left: -12px;
+        display: inline-block;
+    }
+}
+
+[data-th="Edit/Delete"] {
+    white-space: nowrap;
 }
