@@ -10,6 +10,9 @@ $(document).ready(function () {
             if(response.length !== 0) {
 
                 snapshots = response["snapshots"];
+
+                loadPerformanceChart();
+
                 generateDateToSnapshotMap();
 
                 // Loads the default selected snapshot

@@ -1,3 +1,153 @@
+var valueProperty = "total";
+
+function loadPerformanceChart() {
+    var chartProps = {
+        "type": "stock",
+        "theme": "light",
+        "addClassNames": true,
+        "dataSets": [],
+        "panels": [{
+            "showCategoryAxis": true,
+            "title": valueProperty,
+            "percentHeight": 100,
+            "stockGraphs": [{
+                "id": "g1",
+                "valueField": valueProperty,
+                "comparable": true,
+                "compareField": valueProperty,
+                "balloonText": "[[title]]:<b>[[value]]</b>",
+                "compareGraphBalloonText": "[[title]]:<b>[[value]]</b>"
+            }],
+            "stockLegend": {
+                "periodValueTextComparing": "[[percents.value.close]]%",
+                "periodValueTextRegular": "[[value.close]]"
+            }
+        }],
+        "chartScrollbarSettings": {
+            "graph": "g1"
+        },
+
+        "chartCursorSettings": {
+            "valueBalloonsEnabled": true,
+            "cursorAlpha": 0.5,
+            "valueLineBalloonEnabled": true,
+            "valueLineEnabled": true,
+            "valueLineAlpha": 0.5
+        },
+
+        "periodSelector": {
+            "position": "left",
+            "periods": [{
+                "period": "MM",
+                "selected": true,
+                "count": 1,
+                "label": "1 month"
+            }, {
+                "period": "MM",
+                "count": 3,
+                "label": "3 month"
+            }, {
+                "period": "YTD",
+                "label": "YTD"
+            }, {
+                "period": "MAX",
+                "label": "MAX"
+            }]
+        },
+
+        "dataSetSelector": {
+            "position": "left"
+        },
+
+        "export": {
+            "enabled": true
+        }
+    };
+
+    var securityDataSets = {};
+
+
+    // Adds/updates a chart series which represents a security
+    function addDataPoint(dict, date, priceProperty, totalProperty, title) {
+
+        if (!securityDataSets.hasOwnProperty(title)) {
+            securityDataSets[title] = {
+                "title": title,
+                "fieldMappings": [{
+                    "fromField": valueProperty,
+                    "toField": valueProperty
+                }],
+                "dataProvider": [],
+                "categoryField": "date"
+            }
+        }
+
+        securityDataSets[title]["dataProvider"].push(
+            {
+                "date": date,
+                "price": dict[priceProperty],
+                "total": dict[totalProperty]
+            }
+        );
+
+    }
+
+    snapshots.forEach(function (snapshot) {
+        var dateComponents = snapshot["as_of_date"].split('/');
+        var date = new Date(parseInt(dateComponents[2]), parseInt(dateComponents[0]) - 1, parseInt(dateComponents[1]));
+
+        var fxRate = snapshot["fx_rate"];
+
+        var portfolioValue = {"total": snapshot["CAD_cash"] + fxRate*snapshot["USD_cash"]};
+
+        addDataPoint(snapshot, date, "fx_rate", "fx_rate", "USD->CAD");
+        addDataPoint(snapshot, date, "CAD_cash", "CAD_cash", "Cash (CAD)");
+        addDataPoint(snapshot, date, "USD_cash", "USD_cash", "Cash (USD)");
+
+        snapshot["securities"].forEach(function (security) {
+
+            // Bundle the pending trades in cash
+            if (security["sec_name"] === "PAYABLE FOR INVESTMENTS PURCHASED " ||
+                security["sec_name"] === "RECEIVABLE FOR INVESTMENTS SOLD ") {
+
+                var cashDataProvider = securityDataSets["Cash (" + security["currency"] + ")"]["dataProvider"];
+                var cashProviderLength = cashDataProvider.length;
+
+                cashDataProvider[cashProviderLength - 1]["price"] =
+                    (cashDataProvider[cashProviderLength - 1]["price"] + security["total"]).toFixed(2);
+
+                cashDataProvider[cashProviderLength - 1]["total"] =
+                    (cashDataProvider[cashProviderLength - 1]["total"] + security["total"]).toFixed(2);
+
+            } else {
+                addDataPoint(security, date, "price", "total", security["ticker"] + " (" + security["currency"] + ")")
+            }
+
+            // Add to portfolio value
+            if(security["currency"] === "CAD") {
+                portfolioValue["total"] += security["total"];
+            } else {
+                portfolioValue["total"] += fxRate*security["total"];
+            }
+
+        });
+
+        portfolioValue["total"] = (portfolioValue["total"]).toFixed(2);
+        addDataPoint(portfolioValue, date, "total", "total", "Portfolio (CAD)");
+
+    });
+
+    // Remove the portfolio set so that it is added back as
+    // the first element of the chartProps["dataSets"] list
+    var portfolioDataSet = securityDataSets["Portfolio (CAD)"];
+    delete securityDataSets["Portfolio (CAD)"];
+
+    chartProps["dataSets"] = Object.values(securityDataSets);
+    chartProps["dataSets"].unshift(portfolioDataSet);
+
+    AmCharts.makeChart("performance_chart", chartProps);
+}
+
 var bySecurityChart = AmCharts.makeChart("by_security_chart", {
     "type": "pie",
     "startDuration": 0,
@@ -8,7 +158,7 @@ var bySecurityChart = AmCharts.makeChart("by_security_chart", {
     "labelRadius": 2,
     "valueField": "total",
     "titleField": "ticker",
-    "balloonText": "[[title]] <span>$[[value]] &nbsp; ([[percents]]%)</span>",
+    "balloonText": "[[title]] <span>$[[value]] &nbsp; ([[percents]]%)</span> <br> [[sec_name]]",
     "export": {
         "enabled": true,
         "fileName": "snapshot_by_security"
@@ -80,12 +230,18 @@ var byCurrencyChart = AmCharts.makeChart("by_currency_chart", {
     }
 });
 
-function loadByCurrencyChart(snapshot,  cadSecurityTotal, usdSecurityTotal){
+function loadByCurrencyChart(snapshot, cadSecurityTotal, usdSecurityTotal) {
 
     var fxRate = snapshot["fx_rate"];
 
-    byCurrencyChart.animateData([{currency: "CAD", total: (parseFloat(snapshot["CAD_cash"]) + cadSecurityTotal).toFixed(2)},
-                                 {currency: "USD", total: (fxRate*(parseFloat(snapshot["USD_cash"]) + usdSecurityTotal)).toFixed(2)}], {duration: 500});
+    byCurrencyChart.animateData([{
+        currency: "CAD",
+        total: (parseFloat(snapshot["CAD_cash"]) + cadSecurityTotal).toFixed(2)
+    },
+        {
+            currency: "USD",
+            total: (fxRate * (parseFloat(snapshot["USD_cash"]) + usdSecurityTotal)).toFixed(2)
+        }], {duration: 500});
 
 }
 
