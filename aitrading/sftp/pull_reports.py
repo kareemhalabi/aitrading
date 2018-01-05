@@ -5,7 +5,7 @@ import paramiko
 import psycopg2
 import socks
 
-from aitrading.settings import DATABASES
+from aitrading.settings import DATABASES, DEBUG
 
 sftp_dir = os.path.dirname(os.path.realpath(__file__))
 
@@ -13,20 +13,22 @@ sftp_dir = os.path.dirname(os.path.realpath(__file__))
 def get_sftp():
     sock = socks.socksocket()
 
-    proxy_params = re.split('[(:\\@)]+', os.environ.get('QUOTAGUARDSTATIC_URL'))
+    if DEBUG != 'True':
+        proxy_params = re.split('[(:\\@)]+', os.environ.get('QUOTAGUARDSTATIC_URL'))
 
-    sock.set_proxy(
-        proxy_type=socks.SOCKS5,
-        username=proxy_params[0],
-        password=proxy_params[1],
-        addr=proxy_params[2],
-        port=int(proxy_params[3])
-    )
+        sock.set_proxy(
+            proxy_type=socks.SOCKS5,
+            username=proxy_params[0],
+            password=proxy_params[1],
+            addr=proxy_params[2],
+            port=int(proxy_params[3])
+        )
 
     username = 'wbnbno04'
     key = paramiko.DSSKey.from_private_key_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'id_dsa'),
                                                 password=os.environ.get('PKEY_PASSWORD'))
-    host = 'ftp5.pershing.com'
+
+    host = 'ftp5.pershing.com' if DEBUG != 'True' else 'devftp5.pershing.com'
     port = 22
 
     # Connect to server
@@ -133,3 +135,7 @@ if __name__ == "__main__":
     # Local import needed to prevent cyclic import
     from aitrading.sftp.portfolio_scraper import save_snapshots
     save_snapshots()
+
+    from aitrading.sftp.transaction_scraper import save_transactions
+    post_date = save_transactions()
+    print(post_date)

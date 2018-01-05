@@ -122,7 +122,7 @@ EMAIL_PORT = '587'
 EMAIL_HOST_USER = 'apikey'
 EMAIL_HOST_PASSWORD = os.environ.get('SENDGRID_API_KEY')
 EMAIL_USE_TLS = 'True'
-DEFAULT_FROM_EMAIL = 'AI Trading <mcgill.ai.trading@gmail.com>'
+DEFAULT_FROM_EMAIL = 'AI Trading <noreply@aitrading.herokuapp.com>'
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/

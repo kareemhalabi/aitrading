@@ -15,8 +15,8 @@ function loadPerformanceChart() {
                 "valueField": valueProperty,
                 "comparable": true,
                 "compareField": valueProperty,
-                "balloonText": "[[title]]:<b>[[value]]</b>",
-                "compareGraphBalloonText": "[[title]]:<b>[[value]]</b>"
+                "balloonText": "[[title]]:<b>$[[value]]</b>",
+                "compareGraphBalloonText": "[[title]]:<b>$[[value]]</b>"
             }],
             "stockLegend": {
                 "periodValueTextComparing": "[[percents.value.close]]%",
