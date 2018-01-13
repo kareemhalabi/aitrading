@@ -90,3 +90,15 @@ def save_transactions():
     conn.commit()
 
     return post_date
+
+def get_transactions(account, date_min=date.min, date_max=date.max):
+    # Both dates are inclusive
+
+    # Connect to a database
+    conn = get_db_conn()
+    dict_cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+
+    dict_cur.execute('''SELECT * from transaction_history WHERE account=%s AND posted_date >=%s AND posted_date <=%s
+                    ORDER BY posted_date''', (account, date_min, date_max))
+
+    return dict_cur.fetchall()

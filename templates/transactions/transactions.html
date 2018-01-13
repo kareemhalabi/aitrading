@@ -1,0 +1,161 @@
+{% extends 'base.html' %}
+{% load template_tags %}
+{% block head %}
+
+    {{ block.super }}
+    <script src="https://cdn.rawgit.com/openexchangerates/accounting.js/master/accounting.min.js"></script>
+    <script>
+        accounting.settings.currency.format = {
+            pos: "%s%v",
+            neg: "%s(%v)",
+            zero: "%s --"
+        };
+    </script>
+    <style>
+        .headcol {
+            position: sticky;
+            width: 10em;
+            left: 0;
+            top: auto;
+        }
+
+        td:nth-of-type(odd) {
+            background: #f3f3f3;
+        }
+
+        td {
+            width: 200px;
+        }
+    </style>
+
+
+{% endblock %}
+
+{% block navbar_buttons %}
+
+    <li><a href="/" class="no-focus-outline">Trade</a></li>
+    <li><a href="/portfolio" class="no-focus-outline">Portfolio</a></li>
+    <li><a href="#" class="no-focus-outline" data-toggle="modal" data-target="#about_modal">About</a></li>
+    <li><a href="/accounts/password_change" class="no-focus-outline">Change Password</a></li>
+    <li><a href="/accounts/logout" class="no-focus-outline">Logout</a></li>
+
+{% endblock %}
+
+{% block content %}
+
+    <div class="container">
+        <div class="panel panel-warning">
+
+            <div class="panel-heading">
+                <h2>Transactions</h2>
+            </div>
+            <div class="panel-body">
+                {% if transactions %} {# Only create table if transactions exist #}
+                <div style="overflow-x: scroll;">
+                    <table id="transactions_table" class="table" style="table-layout: fixed">
+                        <tr>
+                            <th class="headcol warning">Date</th>
+                            {% for transaction in transactions reversed %}
+                                <td>{{ transaction.posted_date }}</td>
+                            {% endfor %}
+                        </tr>
+                        <tr>
+                            <th class="headcol warning">Security Name</th>
+                            {% for transaction in transactions reversed %}
+                                <td>{{ transaction.security }}</td>
+                            {% endfor %}
+                        </tr>
+                        <tr>
+                            <th class="headcol warning">ISIN</th>
+                            {% for transaction in transactions reversed %}
+                                <td>{{ transaction.isin }}</td>
+                            {% endfor %}
+                        </tr>
+                        <tr>
+                            <th class="headcol warning">Ticker</th>
+                            {% for transaction in transactions reversed %}
+                                <td>{{ transaction.ticker }}</td>
+                            {% endfor %}
+                        </tr>
+                        <tr>
+                            <th class="headcol warning">Shares/Par</th>
+                            {% for transaction in transactions reversed %}
+                                <td>{{ transaction.shares_par|floatformat }}</td>
+                            {% endfor %}
+                        </tr>
+                        <tr>
+                            <th class="headcol warning">FX Receivables</th>
+                            {% for transaction in transactions reversed %}
+                                <td>{{ transaction.fx_receivables }}</td>
+                            {% endfor %}
+                        </tr>
+                        <tr>
+                            <th class="headcol warning">TX Category</th>
+                            {% for transaction in transactions reversed %}
+                                <td>{{ transaction.tx_category }}</td>
+                            {% endfor %}
+                        </tr>
+                        <tr>
+                            <th class="headcol warning">TX Description</th>
+                            {% for transaction in transactions reversed %}
+                                <td>{{ transaction.tx_description }}</td>
+                            {% endfor %}
+                        </tr>
+                        <tr>
+                            <th class="headcol warning">Currency</th>
+                            {% for transaction in transactions reversed %}
+                                <td>{{ transaction.currency }}</td>
+                            {% endfor %}
+                        </tr>
+                        <tr>
+                            <th class="headcol warning">Base FX Rate</th>
+                            {% for transaction in transactions reversed %}
+                                <td>{{ transaction.base_fx_rate }}</td>
+                            {% endfor %}
+                        </tr>
+                        <tr>
+                            <th class="headcol warning">Price</th>
+                            {% for transaction in transactions reversed %}
+                                <td>{{ transaction.price|currency }}</td>
+                            {% endfor %}
+                        </tr>
+                        <tr>
+                            <th class="headcol warning">TX Amount</th>
+                            {% for transaction in transactions reversed %}
+                                <td>{{ transaction.tx_amount|currency }}</td>
+                            {% endfor %}
+                        </tr>
+                        <tr>
+                            <th class="headcol warning">Original Cost</th>
+                            {% for transaction in transactions reversed %}
+                                <td>{{ transaction.original_cost|currency }}</td>
+                            {% endfor %}
+                        </tr>
+                        <tr>
+                            <th class="headcol warning">Gain/Loss</th>
+                            {% for transaction in transactions reversed %}
+                                <td>{{ transaction.gain_loss|currency }}</td>
+                            {% endfor %}
+                        </tr>
+                        <tr>
+                            <th class="headcol warning">Currency Gain/Loss</th>
+                            {% for transaction in transactions reversed %}
+                                <td>{{ transaction.currency_gain_loss|currency }}</td>
+                            {% endfor %}
+                        </tr>
+                        <tr>
+                            <th class="headcol warning">Fees and Commission</th>
+                            {% for transaction in transactions reversed %}
+                                <td>{{ transaction.fees_and_commission|currency }}</td>
+                            {% endfor %}
+                        </tr>
+                    </table>
+                </div>
+                {% else %}
+                    <h3 class="text-center">No Transactions Available</h3>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
