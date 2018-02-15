@@ -35,15 +35,15 @@ A few environment variables are needed to ensure proper functionality. (Includes
 2. Run `python manage.py createsuperuser` to create a superuser that can log into the admin page
 3. Go to the admin page, click to "Users" under the "Authentication and Authorization" pane and select the user just created
 4. Under the groups section assign the superuser the group "supervisor" by clicking on the + icon to make a new group. Then save at the bottom of the page.
-**NOTE: Only one supervisor can exist in the application, do not assign this group to any other user**
+**NOTE: Only one "supervisor" can exist in the application, do not assign this group to any other user**
 
 ## Usage
 
 ### Admin
 
 The first step at the beginning of each year is to delete all users from the previous year so that they are no longer able to access the service.
-1. On the admin page, go to "Users" and under the "Filter" pane, section "By group" click on "- -". This refines the list to all non-supervisor users.
-2. Select all users and under the "Action" drop down menu, select "Delete Selected Users". Click "Go" and confirm the accounts to be deleted. **Double check to ensure you do not delete your own account**
+1. On the admin page, go to "Users" and under the "Filter" pane, section "By staff status" click on "No". This refines the list to all non-staff users.
+2. Select all users with the top left checkbox and under the "Action" drop down menu, select "Delete Selected Users". Click "Go" and confirm the accounts to be deleted. **Double check to ensure you do not delete your own account**
 3. Return to the Admin Home and click "Authorized users"
 4. As in step 2, delete all users.
 
@@ -52,7 +52,7 @@ Now you can begin adding in the new group members by clicking on "Add Authorized
 ### Regular Users
 
 #### Registration
-Registering an account can be done at /accounts/register. Enter your McGill email and follow the steps
+Registering an account can be done at /accounts/register. Enter your McGill email (all lowercase) and follow the steps. Note that your unsername is what you will use to login **not your email address**.
 
 #### Trading Bonds
 Bond information must all be entered manually as this data is not available on Morningstar UK. For the price, use a par value of 1, not 100
