@@ -17,3 +17,8 @@ def currency(value):
 @register.filter
 def negate(value):
     return -value
+
+# Used to remove the extra 0 in the account number when sending emails
+@register.filter
+def remove_extra_0(value):
+    return value[:-2] + value[-1]

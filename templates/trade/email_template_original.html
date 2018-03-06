@@ -212,7 +212,7 @@
             <td data-th="MKT/LIMIT">{{ trade.mkt_limit }}</td>
             <td data-th="Order Type">{{ trade.order_type }}</td>
             <td data-th="Total">{{ trade.total|currency }}</td>
-            <td data-th="Account">{{ group_account }}</td>
+            <td data-th="Account">{{ group_account|remove_extra_0 }}</td>
         </tr>
     {% endfor %}
     </tbody>

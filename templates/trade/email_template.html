@@ -156,7 +156,7 @@
             <td data-th="Total"
                 style="-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;padding:0;padding:8px;line-height:1.42857143;vertical-align:top;border-top:1px solid #dddddd;">{{ trade.total|currency }}</td>
             <td data-th="Account"
-                style="-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;padding:0;padding:8px;line-height:1.42857143;vertical-align:top;border-top:1px solid #dddddd;">{{ group_account }}</td>
+                style="-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;padding:0;padding:8px;line-height:1.42857143;vertical-align:top;border-top:1px solid #dddddd;">{{ group_account|remove_extra_0 }}</td>
         </tr>
     {% endfor %}
     </tbody>

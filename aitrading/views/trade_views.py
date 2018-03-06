@@ -72,6 +72,7 @@ def submit_order(request):
             other_members_emails.append(
                 '%s %s <%s>' % (member.first_name, member.last_name, member.email))
 
+        from aitrading.templatetags.template_tags import remove_extra_0
         msg = EmailMessage(
             from_email=sender,
             to=['%s %s <%s>' % (group.get('supervisor').first_name, group.get('supervisor').last_name,
@@ -79,7 +80,7 @@ def submit_order(request):
             bcc=[sender],
             cc=other_members_emails,
             subject='Applied Investments Trade Request - Group %s (%s)' % (
-                group.get('group_number'), group.get('group_account')),
+                group.get('group_number'), remove_extra_0(group.get('group_account'))),
             body=str(content)
         )
         msg.content_subtype = 'html'
