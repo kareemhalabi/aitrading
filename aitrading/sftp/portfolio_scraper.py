@@ -22,7 +22,11 @@ def get_portfolio(group_account):
                         WHERE "Security Description 1" = 'CASH' AND  "Reporting Account Number" = %s;""",
                         (group_account,))
 
-    portfolio["CAD_cash"] = float(re.sub(',', '', dict_cur.fetchone()["Local Market Value"]))
+    try:
+        portfolio["CAD_cash"] = float(re.sub(',', '', dict_cur.fetchone()["Local Market Value"]))
+    except:
+        print("No CAD cash for %s" % group_account)
+        portfolio["CAD_cash"] = 0
 
     # Get USD Cash
     dict_cur.execute("""SELECT "Local Market Value"
@@ -30,7 +34,11 @@ def get_portfolio(group_account):
                         WHERE "Security Description 1" = 'NON-BASE CURRENCY' AND  "Reporting Account Number" = %s;""",
                         (group_account,))
 
-    portfolio["USD_cash"] = float(re.sub(',', '', dict_cur.fetchone()["Local Market Value"]))
+    try:
+        portfolio["USD_cash"] = float(re.sub(',', '', dict_cur.fetchone()["Local Market Value"]))
+    except:
+        print("No USD cash for %s" % group_account)
+        portfolio["USD_cash"] = 0
 
     # Get conversion rate
     dict_cur.execute("""SELECT "Exchange Rate"
@@ -39,7 +47,11 @@ def get_portfolio(group_account):
                         AND "Local Currency Code" = 'USD'
                         AND "Exchange Rate" != '0.00000000000';""")
 
-    portfolio["fx_rate"] = float(dict_cur.fetchone()["Exchange Rate"])
+    try:
+        portfolio["fx_rate"] = float(dict_cur.fetchone()["Exchange Rate"])
+    except:
+        print("No FX rate available for %s" % group_account)
+        portfolio["fx_rate"] = 0
 
     # Get securities
     dict_cur.execute("""SELECT "As Of Date", "Local Currency Code", "Ticker", "ISIN", "Security Description 1",
@@ -52,7 +64,12 @@ def get_portfolio(group_account):
     securities = dict_cur.fetchall()
 
     # Get As of date (Column E)
-    portfolio["as_of_date"] = securities[0]["As Of Date"]
+    try:
+        portfolio["as_of_date"] = securities[0]["As Of Date"]
+    except:
+        print("No As of Date available for %s" % group_account)
+        dict_cur.execute("""SELECT "As Of Date" FROM report_trdsht_asset_and_accrual_detail""")
+        portfolio["as_of_date"] = dict_cur.fetchone()["As Of Date"]
 
     # Format security info from string rows
     portfolio["securities"] = []

@@ -78,27 +78,12 @@ if __name__ == "__main__":
     # Iterate through each report and update it's corresponding database table
     for report in most_recent_reports:
 
-        # Ensure our temp file does not already exist
-        try:
-            os.remove(os.path.join(sftp_dir, 'temp.csv'))
-        except:
-            pass
-
         # Get the appropriate file
-        with sftp.file(report['filename'], mode='r') as csv_report_commas, \
-                open(os.path.join(sftp_dir, 'temp.csv'), mode='w', newline='') as csv_report_semicolons:
+        with sftp.file(report['filename'], mode='r') as csv_report:
 
-            # Need to convert delimiter to ; since too many commas occur in reports
-            # Semicolon most likely will not appear in data
-            # These commas prevent cur.copy_from() to execute properly
-            report_reader = csv.reader(csv_report_commas, delimiter=',')
-            header = next(report_reader)  # strip header before writing back
-
-            writer = csv.writer(csv_report_semicolons, delimiter=';')
-            for row in report_reader:
-                writer.writerow(row)
-
-            csv_report_semicolons.close()
+            # Strip header to check for column mismatch
+            report_reader = csv.reader(csv_report, delimiter=',', quotechar='"')
+            header = next(report_reader)
 
             # Check if database table exists
             table_name = report['name']
@@ -123,12 +108,7 @@ if __name__ == "__main__":
                     # Truncate table to make room for new data (needs string interpolation since table names cannot be parametrized)
                     cur.execute("TRUNCATE TABLE %s;" % table_name)
 
-            # Use temporary file to load database
-            with open(os.path.join(sftp_dir, 'temp.csv'), mode='r') as csv_report:
-                cur.copy_from(csv_report, table_name, sep=';')
-
-            # Delete temporary file
-            os.remove(os.path.join(sftp_dir, 'temp.csv'))
+            cur.copy_expert("COPY %s FROM STDIN WITH CSV DELIMITER AS ',';" % table_name, csv_report)
 
             conn.commit()
 
