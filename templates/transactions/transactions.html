@@ -43,11 +43,19 @@
 
 {% block content %}
 
+    {% include 'transactions/about.html' %}
+
     <div class="container">
         <div class="panel panel-warning">
 
             <div class="panel-heading">
-                <h2>Transactions</h2>
+                <h2>Transactions
+                    <span style="float: right">
+                        <button class="btn btn-warning no-focus-outline" onclick="location.href='download'">
+                            Download as CSV
+                        </button>
+                    </span>
+                </h2>
             </div>
             <div class="panel-body">
                 {% if transactions %} {# Only create table if transactions exist #}

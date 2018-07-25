@@ -1,7 +1,8 @@
 {% extends 'about_modal.html' %}
 {% block aboutBody %}
 
-    <p>"Portfolio Details" provides detailed and historical information about the assets in your account. There are two
+    <p>"Portfolio Details" provides detailed and historical information about the assets in your account. There are
+        three
         main panels on this page:
     </p>
 
@@ -12,9 +13,19 @@
             To compare the performance of securities, simply click on a line item in the Compare to field on the left
         </li>
         <li>
-            <b>Portfolio Snapshot:</b> View the value and details of your portfolio on any business day in the past year.
+            <b>Portfolio Snapshot:</b> View the value and details of your portfolio on any business day in the past
+            year.
             Also shows a breakdown of the portfolio by security, currency, sector and asset category. Note that any
             pending trades items are grouped with the respective cash items in the charts
+        </li>
+        <li>
+            <b>Export Data:</b> Allows you to export historical information about your portfolio in two formats.
+            <br>
+            <i>All Details</i> will have one row per security per day representing all available information about that security.
+            <br>
+            <i>Time Series</i> contains one row per date with columns describing the value of each security in the portfolio on that date. You can
+            select from multiple different identifiers for the column headers that represent each security as well as
+            numerous values to populate with.
         </li>
     </ol>
 

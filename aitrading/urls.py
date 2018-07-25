@@ -27,9 +27,12 @@ urlpatterns = [
     url(r'^$', views.trade, name='trade'),
     url(r'^portfolio/$', views.portfolio, name='portfolio'),
     url(r'^portfolio/get_snapshots/$', views.get_snapshots, name='get_snapshots'),
+    url(r'^portfolio/download_all$', views.download_portfolio_all, name='download_all_portfolio'),
+    url(r'^portfolio/download_ts$', views.download_portfolio_timeseries, name='download_all_timeseries'),
     url(r'^noscript/$', views.no_script, name='no_script'),
     url(r'^get_portfolio/$', views.get_portfolio, name='get_portfolio'),
     url(r'^search_by_(?P<method>[a-z]+)/$', views.security_search, name='security_search'),
     url(r'^submit_order/$', views.submit_order, name='order_submission'),
-    url(r'^transactions/$', views.transactions, name='transactions')
+    url(r'^transactions/$', views.transactions, name='transactions'),
+    url(r'^transactions/download$', views.download_transactions, name='download_transactions')
 ]

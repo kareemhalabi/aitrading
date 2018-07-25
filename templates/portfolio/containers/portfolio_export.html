@@ -1,0 +1,137 @@
+<div id="portfolio_export_container" class="container">
+    <div class="panel panel-success">
+
+        <div class="panel-heading">
+            <h2>Export Data</h2>
+        </div>
+        <div class="panel-body">
+            <p>Two options are available for export:</p>
+            <div class="row">
+                <div class="col-md-6">
+                    <h3>All details</h3>
+                    <p>One row for every date-security pair showing all details</p>
+                    <table class="table-success table table-striped table-hover">
+                        <thead>
+                        <tr class="success">
+                            <th>Date</th>
+                            <th>Ticker</th>
+                            <th>Shares</th>
+                            <th>Price</th>
+                            <th>...</th>
+                        </tr>
+                        </thead>
+                        <tbody id="preview_table">
+                        <tr>
+                            <td>2018-08-22</td>
+                            <td>ABC</td>
+                            <td>100</td>
+                            <td>$5.55</td>
+                            <td>...</td>
+                        </tr>
+                        <tr>
+                            <td>2018-08-22</td>
+                            <td>XYZ</td>
+                            <td>123</td>
+                            <td>$10.10</td>
+                            <td>...</td>
+                        </tr>
+                        <tr>
+                            <td>2018-08-23</td>
+                            <td>ABC</td>
+                            <td>100</td>
+                            <td>$6.55</td>
+                            <td>...</td>
+                        </tr>
+                        <tr>
+                            <td>2018-08-23</td>
+                            <td>XYZ</td>
+                            <td>123</td>
+                            <td>$15.10</td>
+                            <td>...</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <form class="form-inline" autocomplete="off" action="download_all">
+                        <fieldset>
+                            <button type="submit" class="btn btn-sm btn-success btn-block">Export All Details</button>
+                        </fieldset>
+                    </form>
+                </div>
+                <div class="col-md-6">
+                    <h3>Time Series</h3>
+                    <p>One row per date, each column is a security's price/shares/value</p>
+                    <table class="table-success table table-striped table-hover">
+                        <thead>
+                        <tr class="success">
+                            <th>Date\Identifier</th>
+                            <th>ABC</th>
+                            <th>DEF</th>
+                            <th>XYZ</th>
+                            <th>...</th>
+                        </tr>
+                        </thead>
+                        <tbody id="preview_table">
+                        <tr>
+                            <td>2018-08-22</td>
+                            <td>$5.55</td>
+                            <td>$20.50</td>
+                            <td>$10.10</td>
+                            <td>...</td>
+                        </tr>
+                        <tr>
+                            <td>2018-08-23</td>
+                            <td>$6.55</td>
+                            <td>$19.25</td>
+                            <td>$15.10</td>
+                            <td>...</td>
+                        </tr>
+                        <tr>
+                            <td>2018-08-24</td>
+                            <td>$7.00</td>
+                            <td>$19.50</td>
+                            <td>$16.10</td>
+                            <td>...</td>
+                        </tr>
+                        <tr>
+                            <td>2018-08-25</td>
+                            <td>$6.00</td>
+                            <td>$18.00</td>
+                            <td>$18.25</td>
+                            <td>...</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <form id="export_ts_form" class="form-inline" autocomplete="off" action="download_ts" method="get">
+                        <fieldset>
+                            <div class="form-group">
+                                <label for="identifier" class="control-label">Identifier</label>
+                                <select oninput="selectHandler($(this))" name="identifier" class="form-control input-sm">
+                                    <option disabled selected style="display: none"></option>
+                                    <option value="ticker">Ticker</option>
+                                    <option value="isin">ISIN</option>
+                                    <option value="sec_name">Security Name</option>
+                                </select>
+                            </div>
+                            &nbsp;&nbsp;&nbsp;
+                            <div class="form-group">
+                                <label for="value" class="control-label">Value</label>
+                                <select oninput="selectHandler($(this))" name="value" class="form-control input-sm">
+                                    <option disabled selected style="display: none"></option>
+                                    <option value="shares">Shares</option>
+                                    <option value="price">Local Price</option>
+                                    <option value="price_base">Base Price</option>
+                                    <option value="total">Local Value</option>
+                                    <option value="total_base">Base Value</option>
+                                </select>
+                            </div>
+                            &nbsp;&nbsp;
+                            <div class="form-group">
+                                <button disabled id="export_ts_btn" type="submit" class="btn btn-sm btn-success">Export Time Series</button>
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
