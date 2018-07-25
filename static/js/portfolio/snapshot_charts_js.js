@@ -114,10 +114,10 @@ function loadPerformanceChart() {
                 var cashProviderLength = cashDataProvider.length;
 
                 cashDataProvider[cashProviderLength - 1]["price"] =
-                    (cashDataProvider[cashProviderLength - 1]["price"] + security["total"]).toFixed(2);
+                    (cashDataProvider[cashProviderLength - 1]["price"] + security["total"]);
 
                 cashDataProvider[cashProviderLength - 1]["total"] =
-                    (cashDataProvider[cashProviderLength - 1]["total"] + security["total"]).toFixed(2);
+                    (cashDataProvider[cashProviderLength - 1]["total"] + security["total"]);
 
             } else {
                 addDataPoint(security, date, "price", "total", security["ticker"] + " (" + security["currency"] + ")")
