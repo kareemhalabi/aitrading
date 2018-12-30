@@ -1,10 +1,12 @@
 import csv
 import datetime
+import keen
 
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseNotFound, JsonResponse
 from django.shortcuts import render
 
+from aitrading.settings import DEBUG
 from aitrading.models import AuthorizedUser
 from aitrading.views import get_group, HttpResponse
 from aitrading.sftp.portfolio_scraper import get_snapshots as snapshots
@@ -13,6 +15,10 @@ from aitrading.sftp.portfolio_scraper import get_snapshots as snapshots
 @login_required
 def portfolio(request):
     try:
+        if DEBUG != 'True':
+            group = get_group(request.user.email)
+            keen.add_event('portfolio_visits', {'group': group.get('group_account'), 'email': request.user.email})
+
         return render(request, 'portfolio/portfolio.html', {'title': 'AI Trading - Portfolio Details'})
 
     except AuthorizedUser.DoesNotExist:
@@ -26,7 +32,7 @@ def get_snapshots(request):
     if account_snapshots is None:
         return HttpResponseNotFound('No data available on server')
 
-    return JsonResponse({"snapshots": account_snapshots})
+    return JsonResponse({'snapshots': account_snapshots})
 
 
 @login_required
@@ -67,6 +73,9 @@ def download_portfolio_all(request):
     writer = csv.DictWriter(response, headers, extrasaction='ignore')
     writer.writeheader()
     writer.writerows(rows)
+
+    if DEBUG != 'True':
+        keen.add_event('download_portfolio', {'group': group.get('group_account'), 'email': request.user.email})
 
     return response
 
@@ -135,5 +144,9 @@ def download_portfolio_timeseries(request):
     writer = csv.DictWriter(response, headers, extrasaction='ignore')
     writer.writeheader()
     writer.writerows(rows)
+
+    if DEBUG != 'True':
+        keen.add_event('download_timeseries', {'group': group.get('group_account'), 'email': request.user.email,
+                                               'identifier': identifier, 'value': request.GET.get('value')})
 
     return response

@@ -1,9 +1,11 @@
 import csv
 import datetime
+import keen
 
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 
+from aitrading.settings import DEBUG
 from aitrading.models import AuthorizedUser
 from aitrading.sftp.transaction_scraper import get_transactions as get_db_transactions
 from aitrading.views import get_group, HttpResponseNotFound, HttpResponse
@@ -14,6 +16,10 @@ def transactions(request):
     try:
         group = get_group(request.user.email)
         transaction_list = get_db_transactions(group.get('group_account'))
+
+        if DEBUG != 'True':
+            keen.add_event('transaction_visits', {'group': group.get('group_account'), 'email': request.user.email})
+
         return render(request, 'transactions/transactions.html', {'title': 'AI Trading - Transactions',
                                     'transactions': transaction_list})
     except AuthorizedUser.DoesNotExist:
@@ -37,6 +43,9 @@ def download_transactions(request):
         writer = csv.DictWriter(response, header, extrasaction='ignore')
         writer.writeheader()
         writer.writerows(transaction_list)
+
+        if DEBUG != 'True':
+            keen.add_event('download_transactions', {'group': group.get('group_account'), 'email': request.user.email})
 
         return response
 

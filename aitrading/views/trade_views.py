@@ -20,7 +20,7 @@ def trade(request):
     try:
         group = get_group(request.user.email)
         if DEBUG != 'True':
-            keen.add_event("visits", {'group': group.get('group_account'), 'email': request.user.email})
+            keen.add_event('visits', {'group': group.get('group_account'), 'email': request.user.email})
 
         return render(request, 'trade/trade.html',
                       {'title': 'AI Trading - Trade',
@@ -88,7 +88,7 @@ def submit_order(request):
 @login_required
 def security_search(request, method):
     if DEBUG != 'True':
-        keen.add_event("security_searches", {'email':request.user.email, 'method': method,
+        keen.add_event('security_searches', {'email':request.user.email, 'method': method,
                                          'isin': request.GET.get('isin'), 'ticker': request.GET.get('ticker'),
                                          'currency': request.GET.get('currency')})
     if method == 'isin':
