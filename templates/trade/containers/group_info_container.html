@@ -8,11 +8,13 @@
             </span></h2>
         </div>
         <div id="group_info_panel_body" class="panel-body collapse in">
-            <h3 style="margin-top: 0">Supervisor</h3>
+            <h3 style="margin-top: 0">Supervisors</h3>
             <ul class="list-group">
-                <li class="list-group-item">
-                    <p class="user-box">{{ group.supervisor.first_name }} {{ group.supervisor.last_name }}<br class="visible-xs"><span class="user-box" style="float: right">{{ group.supervisor.email }}</span></p>
-                </li>
+                {% for supervisor in group.supervisors %}
+                    <li class="list-group-item">
+                        <p class="user-box">{{ supervisor.first_name }} {{ supervisor.last_name }}<br class="visible-xs"><span class="user-box" style="float: right">{{ supervisor.email }}</span></p>
+                    </li>
+                {% endfor %}
             </ul>
             <h3>Account</h3>
             <ul class="list-group">

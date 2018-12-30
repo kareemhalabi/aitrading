@@ -333,7 +333,7 @@ function submitOrder() {
         success: function (response) {
             $modal.find(".modal-title").text("Success!");
             $modal.find(".modal-body").html("<p>Your Order has been submitted and a confirmation email has been sent " +
-                "to the supervisor and all group members. <b>Please verify this email and notify the supervisor if any " +
+                "to the supervisors and all group members. <b>Please verify this email and notify the supervisors if any " +
                 "information is missing or incorrect.</b></p>" +
                 "<p>Thanks for using AI Trading!</p>");
             $modal.on('hidden.bs.modal', function () {
@@ -345,7 +345,7 @@ function submitOrder() {
         error: function (error) {
             $modal.find(".modal-title").text("Oh Snap!");
             $modal.find(".modal-body").html("<p>An error occurred: " + error.status + " " + error.statusText + "</p>" +
-                "<p>Please try again. Contact the supervisor if this issue persists.</p>");
+                "<p>Please try again. Contact the supervisors if this issue persists.</p>");
             $modal.modal("show");
         },
         complete: function () {

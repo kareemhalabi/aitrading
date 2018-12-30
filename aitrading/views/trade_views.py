@@ -29,10 +29,6 @@ def trade(request):
     except AuthorizedUser.DoesNotExist:
         return render(request, 'unauthorized.html', {'title': 'AI Trading - Unauthorized'}, status=401)
 
-    except User.MultipleObjectsReturned:
-        return HttpResponse('Error: More than one trading supervisor exists. '
-                            'Please remove supervisor status from all but one user using the admin page.', status=500)
-
 
 @login_required
 def get_portfolio(request):
@@ -62,21 +58,19 @@ def submit_order(request):
     try:
         sender = '%s %s <%s>' % (request.user.first_name, request.user.last_name, request.user.email)
         other_members = group.get('members').exclude(email=request.user.email)
-        other_members_emails = []
+        other_members_emails = ['%s %s <%s>' % (member.first_name, member.last_name, member.email) for member in other_members]
+
+        supervisors = ['%s %s <%s>' % (supervisor.first_name, supervisor.last_name,
+                                       supervisor.email) for supervisor in group.get('supervisors')]
 
         content = render_to_string('trade/email_template.html', {'trades': trades, 'cash': cash, 'notes': notes,
                                                                  'group_account': group.get('group_account'),
                                                                  'group_number': group.get('group_number')}, request)
 
-        for member in other_members:
-            other_members_emails.append(
-                '%s %s <%s>' % (member.first_name, member.last_name, member.email))
-
         from aitrading.templatetags.template_tags import remove_extra_0
         msg = EmailMessage(
             from_email=sender,
-            to=['%s %s <%s>' % (group.get('supervisor').first_name, group.get('supervisor').last_name,
-                                group.get('supervisor').email)],
+            to=supervisors,
             bcc=[sender],
             cc=other_members_emails,
             subject='Applied Investments Trade Request - Group %s (%s)' % (

@@ -24,6 +24,6 @@ def get_group(email):
     member_emails = AuthorizedUser.objects.filter(account=group_account).values_list('email', flat=True)
     members = User.objects.filter(email__in=member_emails)
 
-    supervisor = User.objects.get(groups__name='supervisor')
+    supervisors = User.objects.filter(groups__name='supervisor')
 
-    return {'supervisor': supervisor, 'group_number': group_number, 'group_account': group_account, 'members': members}
+    return {'supervisors': supervisors, 'group_number': group_number, 'group_account': group_account, 'members': members}

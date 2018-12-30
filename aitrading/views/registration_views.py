@@ -20,7 +20,7 @@ def check_authorized_email(request):
             return HttpResponse(AuthorizedUser.objects.get(email=email).account)
         except AuthorizedUser.DoesNotExist:
             return HttpResponseNotFound('This address has not been authorized to use AI Trading.' +
-                                        ' Please contact the supervisor to request access.')
+                                        ' Please contact the supervisors to request access.')
 
 
 # Overrides default inactive user creator in registration.backends.hmac.views.RegistrationView

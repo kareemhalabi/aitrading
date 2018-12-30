@@ -35,7 +35,7 @@ A few environment variables are needed to ensure proper functionality. (Includes
 2. Run `python manage.py createsuperuser` to create a superuser that can log into the admin page
 3. Go to the admin page, click to "Users" under the "Authentication and Authorization" pane and select the user just created
 4. Under the groups section assign the superuser the group "supervisor" by clicking on the + icon to make a new group. Then save at the bottom of the page.
-**NOTE: Only one "supervisor" can exist in the application, do not assign this group to any other user**
+**NOTE: The "supervisor" group is only intended for course instructors as they will receive all trade emails, do not assign this group to any other user**
 
 ## Usage
 
