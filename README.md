@@ -41,18 +41,26 @@ A few environment variables are needed to ensure proper functionality. (Includes
 
 ### Admin
 
+#### Setting up a new class
 The first step at the beginning of each year is to delete all users from the previous year so that they are no longer able to access the service.
-1. On the admin page, go to "Users" and under the "Filter" pane, section "By staff status" click on "No". This refines the list to all non-staff users.
+1. On the [admin page](https://aitrading.herokuapp.com/admin), go to "Users" and under the "Filter" pane, section "By staff status" click on "No". This refines the list to all non-staff users.
 2. Select all users with the top left checkbox and under the "Action" drop down menu, select "Delete Selected Users". Click "Go" and confirm the accounts to be deleted. **Double check to ensure you do not delete your own account**
-3. Return to the Admin Home and click "Authorized users"
+3. Return to the admin Home and click "Authorized users"
 4. As in step 2, delete all users.
 
-Now you can begin adding in the new group members by clicking on "Add Authorized User" in the top right. This links each student's email with an trading group so that when they create their account on the site in their own time, they are automatically associated with the correct group.
+Now you can begin adding in the new group members by clicking on "Add Authorized User" in the top right. This links each student's email with an trading account (make sure to enter all 12 digits) so that when they create their account on the site in their own time, they are automatically associated with the correct group.
+
+#### A student moves between groups
+
+If there is a student that is moved from one group to another, this mapping needs to be changed in the application:
+1. On the [admin page](https://aitrading.herokuapp.com/admin), click "Authorized users"
+2. Click on the email of the student who needs to move groups
+3. Edit the account number and click Save. The next time the student accesses the site, they will be shown the data for their new group.
 
 ### Regular Users
 
 #### Registration
-Registering an account can be done at /accounts/register. Enter your McGill email (all lowercase) and follow the steps. Note that your unsername is what you will use to login **not your email address**.
+Registering an account can be done [here](https://aitrading.herokuapp.com/accounts/register/). Enter your McGill email (all lowercase) and follow the steps. Note that your unsername is what you will use to login **not your email address**.
 
 #### Trading Bonds
 Bond information must all be entered manually as this data is not available on Morningstar UK. For the price, use a par value of 1, not 100
