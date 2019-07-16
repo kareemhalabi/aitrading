@@ -5,7 +5,7 @@ import paramiko
 import psycopg2
 import socks
 
-from aitrading.settings import DATABASES, DEBUG
+from aitrading.settings import DATABASES
 
 sftp_dir = os.path.dirname(os.path.realpath(__file__))
 
@@ -13,22 +13,11 @@ sftp_dir = os.path.dirname(os.path.realpath(__file__))
 def get_sftp():
     sock = socks.socksocket()
 
-    if DEBUG != 'True':
-        proxy_params = re.split('[(:\\@)]+', os.environ.get('QUOTAGUARDSTATIC_URL'))
-
-        sock.set_proxy(
-            proxy_type=socks.SOCKS5,
-            username=proxy_params[0],
-            password=proxy_params[1],
-            addr=proxy_params[2],
-            port=int(proxy_params[3])
-        )
-
-    username = 'wbnbno04'
+    username = 'MCUN001P'
     key = paramiko.DSSKey.from_private_key_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'id_dsa'),
                                                 password=os.environ.get('PKEY_PASSWORD'))
 
-    host = 'ftp5.pershing.com' if DEBUG != 'True' else 'devftp5.pershing.com'
+    host = 'FTX-SERVSH.bnymellon.com'
     port = 22
 
     # Connect to server
@@ -47,8 +36,10 @@ def get_db_conn():
 if __name__ == "__main__":
     sftp = get_sftp()
 
+    sftp.chdir('/outbound/workbench/')
+
     # Only get csv files and sort alphabetically, this sorts each report by date (in case more than one exists)
-    # Because filenames are structured as 'Example_Report_Name_YYYYMMDD_MORENUMBERS_MORENUMBERS.csv'
+    # Because filenames are structured as 'Example_Report_Name_YYYYMMDDHHMMSS_9DigitDocID_8DigitDistCode.csv'
     dir_files = sorted(list(filter(lambda file_name: '.csv' in file_name, sftp.listdir())))
 
     # Iterate through sorted file list in reverse order (we want to go from newest to oldest
@@ -56,9 +47,8 @@ if __name__ == "__main__":
     most_recent_reports = []
     previous_report_name = ''
     for file in reversed(dir_files):
-        # Extracts report name by splitting on _YYYYMMDD_
-        # (_MORENUMBERS_ tend to be more than 8 so the regex won't match against them)
-        current_report_name = re.split('_\d{8}_', file)[0]
+        # Extracts report name by splitting on _YYYYMMDDHHMMSS_
+        current_report_name = re.split('_\d{14}_', file)[0]
 
         if current_report_name != previous_report_name:
             previous_report_name = current_report_name

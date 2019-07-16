@@ -23,11 +23,12 @@ A few environment variables are needed to ensure proper functionality. (Includes
 
 1. **SECRET_KEY** : Django's secret key, pick a random string
 2. **DJANGO_SETTINGS_MODULE** : Location of Django settings module
-2. **DEBUG** : Set to True if on development, ignore or set to false on production
-3. **DATABASE_URL** : URL of PostgreSQL database
-4. **SENDGRID_API_KEY** : The API key used to send emails via SMTP
-5. **QUOTAGUARDSTATIC_URL** : The proxy url given by QuotaGuard (a Heroku add on). Not required if the server hosting this application has a static IP
-6. **PKEY_PASSWORD** : The password to decrypt the private DSA key for SFTP access to Pershing server
+3. **DEBUG** : Set to True if on development, ignore or set to false on production
+4. **DATABASE_URL** : URL of PostgreSQL database
+5. **SENDGRID_API_KEY** : The API key used to send emails via SMTP
+6. ~~**QUOTAGUARDSTATIC_URL** : The proxy url given by QuotaGuard (a Heroku add on). Not required if the server hosting this application has a static IP~~
+**Deprecated**: New BNYM FTP server does not require a static IP
+7. **PKEY_PASSWORD** : The password to decrypt the private DSA key for SFTP access to Pershing server
 
 ### Database and Superuser Setup
 
