@@ -54,6 +54,9 @@
         <div class="navbar-collapse collapse" id="bs-example-navbar-collapse-1" aria-expanded="false"
              style="height: 1px;">
             <ul class="nav navbar-nav navbar-right">
+                {% if preview_groups %}
+                <li><a href="/admin" class="no-focus-outline">Admin</a></li>
+                {% endif %}
                 {% block navbar_buttons %}{% endblock %}
             </ul>
         </div>
