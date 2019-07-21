@@ -33,8 +33,13 @@
 
 {% block navbar_buttons %}
 
-    <li><a href="/" class="no-focus-outline">Trade</a></li>
-    <li><a href="/portfolio" class="no-focus-outline">Portfolio</a></li>
+    {% if preview_groups %}
+        <li><a href="/?preview-group={{ group.group_account }}" class="no-focus-outline">Trade</a></li>
+        <li><a href="/portfolio?preview-group={{ group.group_account }}" class="no-focus-outline">Portfolio</a></li>
+    {% else %}
+        <li><a href="/" class="no-focus-outline">Trade</a></li>
+        <li><a href="/portfolio" class="no-focus-outline">Portfolio</a></li>
+    {% endif %}
     <li><a href="#" class="no-focus-outline" data-toggle="modal" data-target="#about_modal">About</a></li>
     <li><a href="/accounts/password_change" class="no-focus-outline">Change Password</a></li>
     <li><a href="/accounts/logout" class="no-focus-outline">Logout</a></li>
@@ -51,7 +56,11 @@
             <div class="panel-heading">
                 <h2>Transactions
                     <span style="float: right">
-                        <button class="btn btn-warning no-focus-outline" onclick="location.href='download'">
+                        {% if preview_groups %}
+                            <button class="btn btn-warning no-focus-outline" onclick="location.href='download?preview-group={{ group.group_account }}'">
+                        {% else %}
+                            <button class="btn btn-warning no-focus-outline" onclick="location.href='download'">
+                        {% endif %}
                             Download as CSV
                         </button>
                     </span>

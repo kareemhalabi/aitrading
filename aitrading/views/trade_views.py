@@ -2,9 +2,8 @@ import json
 
 import keen
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
 from django.core.mail import EmailMessage
-from django.http import HttpResponse, HttpResponseNotFound, HttpResponseBadRequest, JsonResponse
+from django.http import HttpResponse, HttpResponseNotFound, HttpResponseBadRequest, JsonResponse, HttpResponseForbidden
 from django.shortcuts import render
 from django.template.loader import render_to_string
 
@@ -18,13 +17,38 @@ from aitrading.views import get_group
 @login_required
 def trade(request):
     try:
-        group = get_group(request.user.email)
-        if DEBUG != 'True':
-            keen.add_event('visits', {'group': group.get('group_account'), 'email': request.user.email})
+        # Check if user is a supervisor
+        if request.user.groups.filter(name='supervisor').exists():
 
-        return render(request, 'trade/trade.html',
-                      {'title': 'AI Trading - Trade',
-                       'group': group})
+            # Collect all viewable groups
+            preview_groups = AuthorizedUser.objects.order_by('account').values_list('account', flat=True).distinct()
+            # Collect the specific preview request (if available)
+            preview_group = request.GET.get('preview-group')
+
+            if preview_group:
+                group = get_group(request)
+
+                return render(request, 'trade/trade.html',
+                              {'title': 'AI Trading - Trade - Preview Group',
+                               'group': group,
+                               'preview_groups': preview_groups})
+
+            # When first loading the page, no preview group has been selected yet
+            else:
+                return render(request, 'preview_landing.html',
+                              {'title': 'AI Trading - Preview Group',
+                               'preview_groups': preview_groups})
+
+        else:
+            group = get_group(request)
+            if isinstance(group, HttpResponseForbidden):
+                return group
+            if DEBUG != 'True':
+                keen.add_event('visits', {'group': group.get('group_account'), 'email': request.user.email})
+
+            return render(request, 'trade/trade.html',
+                          {'title': 'AI Trading - Trade',
+                           'group': group})
 
     except AuthorizedUser.DoesNotExist:
         return render(request, 'unauthorized.html', {'title': 'AI Trading - Unauthorized'}, status=401)
@@ -32,7 +56,9 @@ def trade(request):
 
 @login_required
 def get_portfolio(request):
-    group = get_group(request.user.email)
+    group = get_group(request)
+    if isinstance(group, HttpResponseForbidden):
+        return group
     portfolio = portfolio_scraper.get_portfolio(group.get('group_account'))
     if portfolio is None:
         return HttpResponseNotFound('No data available on server')
@@ -50,7 +76,9 @@ def submit_order(request):
     if trades is None or cash is None:
         return HttpResponseBadRequest('Error: missing trade information')
 
-    group = get_group(request.user.email)
+    group = get_group(request)
+    if isinstance(group, HttpResponseForbidden):
+        return group
 
     if DEBUG != 'True':
         keen.add_events({'trades':trades, 'orders':[{'group':group.get('group_account'), 'email':request.user.email}]})

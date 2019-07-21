@@ -11,9 +11,9 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
         {% block noscript %}
-        <noscript>
-            <meta http-equiv="refresh" content="0; url=/noscript/?redirect={{ request.path }}"/>
-        </noscript>
+            <noscript>
+                <meta http-equiv="refresh" content="0; url=/noscript/?redirect={{ request.path }}"/>
+            </noscript>
         {% endblock %}
     {% endblock %}
 </head>
@@ -23,6 +23,25 @@
     <div class="container-fluid">
         <div class="navbar-header">
             <a class="navbar-brand" href="#">{{ title }}</a>
+            {% if preview_groups %}
+                <select class="navbar-brand" style="background-color: #333333; border: none; margin-top: 0; margin-left: 10px; padding-top: 10px;"
+                onchange="window.location.search = 'preview-group='+$(this).val()">
+                    {% if group %}
+                        {% for preview_group in preview_groups %}
+                            {% if preview_group == group.group_account %}
+                                <option value="{{ preview_group }}" selected>{{ preview_group }}</option>
+                            {% else %}
+                                <option value="{{ preview_group }}">{{ preview_group }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        <option disabled selected style="display: none"></option>
+                        {% for preview_group in preview_groups %}
+                            <option value="{{ preview_group }}">{{ preview_group }}</option>
+                        {% endfor %}
+                    {% endif %}
+                </select>
+            {% endif %}
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
                     data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
                 <span class="sr-only">Toggle navigation</span>

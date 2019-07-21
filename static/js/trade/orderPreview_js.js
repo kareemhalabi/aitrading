@@ -323,7 +323,7 @@ function submitOrder() {
     var $modal = $("#submit_modal");
     
     $.ajax({
-        url: "submit_order/",
+        url: "submit_order/" + window.location.search,
         method: "POST",
         contentType: "application/json; charset=utf-8",
         dataType: "json",

@@ -53,7 +53,11 @@
                     </table>
                     <form class="form-inline" autocomplete="off" action="download_all">
                         <fieldset>
+                            {% if preview_groups %}
+                            <button type="submit" class="btn btn-sm btn-success btn-block" name="preview-group" value="{{ group.group_account }}">Export All Details</button>
+                            {% else %}
                             <button type="submit" class="btn btn-sm btn-success btn-block">Export All Details</button>
+                            {% endif %}
                         </fieldset>
                     </form>
                 </div>
@@ -126,7 +130,11 @@
                             </div>
                             &nbsp;&nbsp;
                             <div class="form-group">
+                                {% if preview_groups %}
+                                <button disabled id="export_ts_btn" type="submit" class="btn btn-sm btn-success" name="preview-group" value="{{ group.group_account }}">Export Time Series</button>
+                                {% else %}
                                 <button disabled id="export_ts_btn" type="submit" class="btn btn-sm btn-success">Export Time Series</button>
+                                {% endif %}
                             </div>
                         </fieldset>
                     </form>

@@ -3,7 +3,7 @@ var dateToSnapshotMap = {};
 
 $(document).ready(function () {
 
-    $.ajax({url: "get_snapshots/", timeout: 30000,
+    $.ajax({url: "get_snapshots/" + window.location.search, timeout: 30000,
         headers: {"X-CSRFToken": $("[name=csrfmiddlewaretoken]").val()},
         success: function (response) {
 

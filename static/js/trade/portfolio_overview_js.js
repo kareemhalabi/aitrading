@@ -13,7 +13,7 @@ var fxRate = {
 };
 
 $(document).ready( function () {
-    $.ajax({url: "get_portfolio/", timeout: 30000,
+    $.ajax({url: "get_portfolio/" + window.location.search, timeout: 30000,
         headers: {"X-CSRFToken": $("[name=csrfmiddlewaretoken]").val()},
         success: function(response) {
 

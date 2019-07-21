@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User
+from django.http import HttpResponseForbidden
 from django.shortcuts import render
 from markupsafe import Markup
 
@@ -17,8 +18,17 @@ def no_script(request):
                    'redirect': Markup('window.location.replace("%s");' % redir)})
 
 
-def get_group(email):
-    group_account = AuthorizedUser.objects.get(email=email).account
+def get_group(request):
+
+    if request.GET.get('preview-group'):
+        if request.user.groups.filter(name='supervisor').exists():
+            group_account = request.GET.get('preview-group')
+
+        else:
+            return HttpResponseForbidden("Only supervisors can preview other groups")
+    else:
+        group_account = AuthorizedUser.objects.get(email=request.user.email).account
+
     group_number = int(group_account[6:8])
 
     member_emails = AuthorizedUser.objects.filter(account=group_account).values_list('email', flat=True)

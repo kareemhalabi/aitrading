@@ -3,7 +3,7 @@ import datetime
 import keen
 
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseNotFound, JsonResponse
+from django.http import HttpResponseNotFound, JsonResponse, HttpResponseForbidden
 from django.shortcuts import render
 
 from aitrading.settings import DEBUG
@@ -15,10 +15,37 @@ from aitrading.sftp.portfolio_scraper import get_snapshots as snapshots
 @login_required
 def portfolio(request):
     try:
+        # Get group and check if user is authorized to access the group
+        group = get_group(request)
+        if isinstance(group, HttpResponseForbidden):
+            return group
+
         if DEBUG != 'True':
-            group = get_group(request.user.email)
             keen.add_event('portfolio_visits', {'group': group.get('group_account'), 'email': request.user.email})
 
+        # Check if user is a supervisor
+        if request.user.groups.filter(name='supervisor').exists():
+
+            # Collect all viewable groups
+            preview_groups = AuthorizedUser.objects.order_by('account').values_list('account', flat=True).distinct()
+            # Collect the specific preview request (if available)
+            preview_group = request.GET.get('preview-group')
+
+            if preview_group:
+                group = get_group(request)
+
+                return render(request, 'portfolio/portfolio.html',
+                              {'title': 'AI Trading - Portfolio Details - Preview Group',
+                               'group': group,
+                               'preview_groups': preview_groups})
+
+            # When first loading the page, no preview group has been selected yet
+            else:
+                return render(request, 'preview_landing.html',
+                              {'title': 'AI Trading - Preview Group',
+                               'preview_groups': preview_groups})
+
+        # Render for regular user
         return render(request, 'portfolio/portfolio.html', {'title': 'AI Trading - Portfolio Details'})
 
     except AuthorizedUser.DoesNotExist:
@@ -27,7 +54,9 @@ def portfolio(request):
 
 @login_required
 def get_snapshots(request):
-    group = get_group(request.user.email)
+    group = get_group(request)
+    if isinstance(group, HttpResponseForbidden):
+        return group
     account_snapshots = snapshots(group.get('group_account'))
     if account_snapshots is None:
         return HttpResponseNotFound('No data available on server')
@@ -37,7 +66,9 @@ def get_snapshots(request):
 
 @login_required
 def download_portfolio_all(request):
-    group = get_group(request.user.email)
+    group = get_group(request)
+    if isinstance(group, HttpResponseForbidden):
+        return group
     account_snapshots = snapshots(group.get('group_account'))
     if account_snapshots is None:
         return HttpResponseNotFound('No data available on server')
@@ -81,7 +112,9 @@ def download_portfolio_all(request):
 
 @login_required
 def download_portfolio_timeseries(request):
-    group = get_group(request.user.email)
+    group = get_group(request)
+    if isinstance(group, HttpResponseForbidden):
+        return group
     account_snapshots = snapshots(group.get('group_account'))
     if account_snapshots is None:
         return HttpResponseNotFound('No data available on server')
