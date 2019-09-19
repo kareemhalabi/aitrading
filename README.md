@@ -29,6 +29,7 @@ A few environment variables are needed to ensure proper functionality. (Includes
 6. ~~**QUOTAGUARDSTATIC_URL** : The proxy url given by QuotaGuard (a Heroku add on). Not required if the server hosting this application has a static IP~~
 **Deprecated**: New BNYM FTP server does not require a static IP
 7. **PKEY_PASSWORD** : The password to decrypt the private DSA key for SFTP access to Pershing server
+8. **DEVELOPER_EMAIL**: Exceptions raised within `pull_reports.py` are sent here
 
 ### Database and Superuser Setup
 

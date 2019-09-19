@@ -4,6 +4,7 @@ import re
 import paramiko
 import psycopg2
 import socks
+from django.core.mail import EmailMessage
 
 from aitrading.settings import DATABASES
 
@@ -33,7 +34,7 @@ def get_db_conn():
                             port=DATABASES['default']['PORT'])
 
 
-if __name__ == "__main__":
+def main():
     sftp = get_sftp()
 
     sftp.chdir('/outbound/workbench/')
@@ -109,3 +110,17 @@ if __name__ == "__main__":
     from aitrading.sftp.transaction_scraper import save_transactions
     post_date = save_transactions()
     print(post_date)
+
+
+if __name__ == "__main__":
+    try:
+        main()
+    except:
+        import sys, cgitb
+        msg = EmailMessage(
+            to=[os.environ.get('DEVELOPER_EMAIL')],
+            subject='Exception Raised in ' + __file__,
+            body=cgitb.html(sys.exc_info())
+        )
+        msg.content_subtype = 'html'
+        msg.send()
