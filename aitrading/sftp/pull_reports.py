@@ -14,12 +14,12 @@ sftp_dir = os.path.dirname(os.path.realpath(__file__))
 def get_sftp():
     sock = socks.socksocket()
 
-    username = 'MCUN001P'
+    username = os.environ.get('SFTP_USERNAME')
     key = paramiko.DSSKey.from_private_key_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'id_dsa'),
                                                 password=os.environ.get('PKEY_PASSWORD'))
 
-    host = 'FTX-SERVSH.bnymellon.com'
-    port = 22
+    host = os.environ.get('SFTP_HOST')
+    port = int(os.environ.get('SFTP_PORT'))
 
     # Connect to server
     sock.connect((host, port))
