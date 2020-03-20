@@ -5,9 +5,9 @@ import keen
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 
+from aitrading.etl import db_client
 from aitrading.settings import DEBUG
 from aitrading.models import AuthorizedUser
-from aitrading.sftp.transaction_scraper import get_transactions as get_db_transactions
 from aitrading.views import get_group, HttpResponseNotFound, HttpResponse, HttpResponseForbidden
 
 
@@ -18,7 +18,7 @@ def transactions(request):
         group = get_group(request)
         if isinstance(group, HttpResponseForbidden):
             return group
-        transaction_list = get_db_transactions(group.get('group_account'))
+        transaction_list = db_client.get_transactions(group.get('group_account'))
 
         if DEBUG != 'True':
             keen.add_event('transaction_visits', {'group': group.get('group_account'), 'email': request.user.email})
@@ -57,15 +57,19 @@ def download_transactions(request):
         group = get_group(request)
         if isinstance(group, HttpResponseForbidden):
             return group
-        transaction_list = get_db_transactions(group.get('group_account'))
+        transaction_list = db_client.get_transactions(group.get('group_account'))
 
         if len(transaction_list) == 0:
             return HttpResponseNotFound('No transactions available')
 
+        # Convert posted_date datetime objects to properly formatted strings
+        for transaction in transaction_list:
+            transaction["posted_date"] = transaction["posted_date"].strftime('%Y-%m-%d')
+
         response = HttpResponse(content_type='text/csv')
         response['Content-Disposition'] = 'attachment; filename="%s_Transactions_as_of_%s.csv"' % (group.get('group_account'), datetime.datetime.now().strftime('%Y-%m-%d'))
 
-        header = [*transaction_list[0]._index][1:] # Get all column names (except for 'id')
+        header = transaction_list[0].keys()  # Get all column names
 
         writer = csv.DictWriter(response, header, extrasaction='ignore')
         writer.writeheader()

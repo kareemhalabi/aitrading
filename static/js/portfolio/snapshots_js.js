@@ -29,10 +29,10 @@ $(document).ready(function () {
 function generateDateToSnapshotMap() {
 
     snapshots.forEach(function (current, index) {
-        var dateElements = current["as_of_date"].split('/'); // MM/DD/YYYY
-        var year = dateElements[2];
-        var month = dateElements[0];
-        var day = dateElements[1];
+        var dateObj = new Date(current["as_of_date"]);
+        var year = dateObj.getFullYear();
+        var month = dateObj.getMonth() + 1;
+        var day = dateObj.getDate();
 
         // Create the year's dict if it does not yet exist
         if(!(dateToSnapshotMap.hasOwnProperty(year)))
@@ -116,7 +116,7 @@ function loadSnapshot() {
 
     // FX stuff
     var fxRate = selectedSnapshot["fx_rate"];
-    $("#fx_info").html("On " + selectedSnapshot["as_of_date"] +
+    $("#fx_info").html("On " + new Date(selectedSnapshot["as_of_date"]).toLocaleDateString("en-CA") +
                     ", <b>1 USD= " + fxRate + " CAD</b> and <b>1 CAD = " + (1/fxRate).toFixed(5) + " USD</b>");
 
     var cadSecurityTotal = 0, usdSecurityTotal = 0;

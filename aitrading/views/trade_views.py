@@ -7,10 +7,10 @@ from django.http import HttpResponse, HttpResponseNotFound, HttpResponseBadReque
 from django.shortcuts import render
 from django.template.loader import render_to_string
 
+from aitrading.etl import db_client
 from aitrading.models import AuthorizedUser
 from aitrading.morningstar_crawler import find_by_isin, find_by_ticker
 from aitrading.settings import DEBUG
-from aitrading.sftp import portfolio_scraper
 from aitrading.views import get_group
 
 
@@ -59,7 +59,7 @@ def get_portfolio(request):
     group = get_group(request)
     if isinstance(group, HttpResponseForbidden):
         return group
-    portfolio = portfolio_scraper.get_portfolio(group.get('group_account'))
+    portfolio = db_client.get_snapshots(group.get('group_account'), latest=True)
     if portfolio is None:
         return HttpResponseNotFound('No data available on server')
 

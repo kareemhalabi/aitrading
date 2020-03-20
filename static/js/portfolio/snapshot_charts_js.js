@@ -93,8 +93,7 @@ function loadPerformanceChart() {
     }
 
     snapshots.forEach(function (snapshot) {
-        var dateComponents = snapshot["as_of_date"].split('/');
-        var date = new Date(parseInt(dateComponents[2]), parseInt(dateComponents[0]) - 1, parseInt(dateComponents[1]));
+        var date = new Date(snapshot["as_of_date"]);
 
         var fxRate = snapshot["fx_rate"];
 

@@ -27,7 +27,7 @@ $(document).ready( function () {
                 fxRate["USD->CAD"] = response["fx_rate"];
                 fxRate["CAD->USD"] = parseFloat((1/fxRate["USD->CAD"]).toFixed(5));
 
-                as_of_date = response["as_of_date"];
+                as_of_date = (new Date(response["as_of_date"])).toLocaleDateString("en-CA");
 
                 // Set fields
                 $(".fx_info").html("As of " + as_of_date +

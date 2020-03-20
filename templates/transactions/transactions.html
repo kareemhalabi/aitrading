@@ -73,7 +73,7 @@
                         <tr>
                             <th class="headcol warning">Date</th>
                             {% for transaction in transactions reversed %}
-                                <td>{{ transaction.posted_date }}</td>
+                                <td>{{ transaction.posted_date|date:"Y-m-d" }}</td>
                             {% endfor %}
                         </tr>
                         <tr>
@@ -97,7 +97,7 @@
                         <tr>
                             <th class="headcol warning">Shares/Par</th>
                             {% for transaction in transactions reversed %}
-                                <td>{{ transaction.shares_par|floatformat }}</td>
+                                <td>{{ transaction.shares_par }}</td>
                             {% endfor %}
                         </tr>
                         <tr>

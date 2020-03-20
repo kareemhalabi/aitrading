@@ -6,10 +6,10 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseNotFound, JsonResponse, HttpResponseForbidden
 from django.shortcuts import render
 
+from aitrading.etl import db_client
 from aitrading.settings import DEBUG
 from aitrading.models import AuthorizedUser
 from aitrading.views import get_group, HttpResponse
-from aitrading.sftp.portfolio_scraper import get_snapshots as snapshots
 
 
 @login_required
@@ -57,11 +57,11 @@ def get_snapshots(request):
     group = get_group(request)
     if isinstance(group, HttpResponseForbidden):
         return group
-    account_snapshots = snapshots(group.get('group_account'))
-    if account_snapshots is None:
+    portfolio_snapshots = db_client.get_snapshots(group.get('group_account'))
+    if portfolio_snapshots is None:
         return HttpResponseNotFound('No data available on server')
 
-    return JsonResponse({'snapshots': account_snapshots})
+    return JsonResponse({'snapshots': portfolio_snapshots})
 
 
 @login_required
@@ -69,13 +69,13 @@ def download_portfolio_all(request):
     group = get_group(request)
     if isinstance(group, HttpResponseForbidden):
         return group
-    account_snapshots = snapshots(group.get('group_account'))
-    if account_snapshots is None:
+    portfolio_snapshots = db_client.get_snapshots(group.get('group_account'))
+    if portfolio_snapshots is None:
         return HttpResponseNotFound('No data available on server')
 
     rows = []
-    for snapshot in account_snapshots:
-        date = snapshot['as_of_date']
+    for snapshot in portfolio_snapshots:
+        date = snapshot['as_of_date'].strftime("%Y-%m-%d")
         fx_rate = snapshot['fx_rate']
         rows.append(
             {'as_of_date': date, 'sec_name': 'CAD Cash', 'asset_category': 'CASH & CASH EQUIVALENTS',
@@ -115,7 +115,7 @@ def download_portfolio_timeseries(request):
     group = get_group(request)
     if isinstance(group, HttpResponseForbidden):
         return group
-    account_snapshots = snapshots(group.get('group_account'))
+    account_snapshots = db_client.get_snapshots(group.get('group_account'))
     if account_snapshots is None:
         return HttpResponseNotFound('No data available on server')
 
@@ -134,7 +134,7 @@ def download_portfolio_timeseries(request):
             value = request.GET.get('value')
 
         row = {
-            'as_of_date': snapshot['as_of_date'],
+            'as_of_date': snapshot['as_of_date'].strftime("%Y-%m-%d"),
             'fx_rate': snapshot['fx_rate'],
             'CAD_cash': snapshot['CAD_cash'],
             'USD_cash': snapshot['USD_cash'] * fx_rate
