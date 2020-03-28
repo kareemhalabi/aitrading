@@ -12,6 +12,7 @@ import paramiko
 import pymongo
 import socks
 from django.core.mail import EmailMessage
+from pandas.errors import EmptyDataError
 
 from aitrading.etl.db_client import get_db
 from aitrading.etl.portfolio_snapshots_tl import transform_asset_and_accrual_detail_report, load_portfolio_snapshot
@@ -97,6 +98,9 @@ if __name__ == '__main__':
             transactions_df = None
             try:
                 transactions_df = transform_transaction_detail_report(report_file)
+            except EmptyDataError:
+                print("No transaction data available in ", report)
+                continue
             except:
                 send_error_email("Failed to transform %s" % report, report, report_file)
                 continue
