@@ -179,8 +179,16 @@
 </head>
 <body>
 
-<p>{{ user.first_name }} {{ user.last_name }} on behalf of Group {{ group_number }} has requested the following
+{% if reasoning %}
+    <p>{{ user.first_name }} {{ user.last_name }} on behalf of Group {{ group_number }} provided the following rationale
+    for the trades below:</p>
+
+    <h3>Trade Reasoning</h3>
+    <p>{{ reasoning }}</p>
+{% else %}
+    <p>{{ user.first_name }} {{ user.last_name }} on behalf of Group {{ group_number }} has requested the following
     trade(s):</p>
+{% endif %}
 
 <h3>Securities</h3>
 <table class="table table-striped table-hover">

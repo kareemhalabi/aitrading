@@ -292,12 +292,20 @@ function updateCashTable(cashWarning) {
 }
 
 /**
+ * Input handler for order reasoning field
+ */
+function orderReasoningInput() {
+    orderSubmitCheck();
+}
+
+/**
  * Check if errors present and disable submit, otherwise enable 
  */
 function orderSubmitCheck() {
 
     if (cash_error.length > 0 || securities_error.length > 0 ||
-        $("#base_val").parent().hasClass("has-error")) {
+        $("#base_val").parent().hasClass("has-error") ||
+        $("#order_reasoning").val().trim().length === 0) {
 
         $("#pre_submit_order").prop("disabled", true);
     } else {
@@ -314,6 +322,7 @@ function submitOrder() {
     var request = {
         trades: pending_trades,
         cash: cash,
+        reasoning: $("#order_reasoning").val(),
         notes: $("#order_notes").val()
     };
 

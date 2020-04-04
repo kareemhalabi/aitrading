@@ -71,6 +71,7 @@ def submit_order(request):
     json_request = json.loads(request.body)
     trades = json_request.get('trades')
     cash = json_request.get('cash')
+    reasoning = json_request.get('reasoning')
     notes = json_request.get('notes')
 
     if trades is None or cash is None:
@@ -91,22 +92,41 @@ def submit_order(request):
         supervisors = ['%s %s <%s>' % (supervisor.first_name, supervisor.last_name,
                                        supervisor.email) for supervisor in group.get('supervisors')]
 
-        content = render_to_string('trade/email_template.html', {'trades': trades, 'cash': cash, 'notes': notes,
-                                                                 'group_account': group.get('group_account'),
-                                                                 'group_number': group.get('group_number')}, request)
+        trader_content = render_to_string('trade/email_template.html', {'trades': trades, 'cash': cash, 'notes': notes,
+                                                                        'group_account': group.get('group_account'),
+                                                                        'group_number': group.get('group_number')},
+                                          request)
 
+        supervisor_content = render_to_string('trade/email_template.html', {'trades': trades, 'cash': cash,
+                                                                            'reasoning': reasoning, 'notes': notes,
+                                                                            'group_account': group.get('group_account'),
+                                                                            'group_number': group.get('group_number')},
+                                              request)
         from aitrading.templatetags.template_tags import remove_extra_0
-        msg = EmailMessage(
+        trader_msg = EmailMessage(
             from_email=sender,
             to=supervisors,
             bcc=[sender],
             cc=other_members_emails,
             subject='Applied Investments Trade Request - Group %s (%s)' % (
                 group.get('group_number'), remove_extra_0(group.get('group_account'))),
-            body=str(content)
+            body=str(trader_content)
         )
-        msg.content_subtype = 'html'
-        msg.send()
+        trader_msg.content_subtype = 'html'
+        trader_msg.send()
+
+        supervisor_msg = EmailMessage(
+            from_email=sender,
+            to=supervisors,
+            bcc=[sender],
+            cc=other_members_emails,
+            subject='Reasoning for Applied Investments Trade Request - Group %s (%s)' % (
+                group.get('group_number'), remove_extra_0(group.get('group_account'))),
+            body=str(supervisor_content)
+        )
+        supervisor_msg.content_subtype = 'html'
+        supervisor_msg.send()
+
         return JsonResponse(data={})
 
     except Exception as e:
