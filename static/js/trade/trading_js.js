@@ -88,12 +88,12 @@ function sharesInputHandler($field) {
 
     // Strip non-numeric for browsers without "number" support
     $field.val(function (i, oldval) {
-        return oldval.replace(/[^0-9]/,"");
+        return oldval.replace(/[^0-9.]/,"");
     });
 
     if($field.val().length > 0) {
 
-        if(parseInt($field.val()) > 0) {
+        if(parseFloat($field.val()) > 0) {
             // Non-empty and positive shares
 
             $("#shares_group").attr("class", "form-group has-success");

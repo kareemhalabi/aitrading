@@ -27,8 +27,7 @@ TRDSHT_ASSET_AND_ACCRUAL_DETAIL_COLUMNS = [
 
 def transform_asset_and_accrual_detail_report(file):
     assets_df = pandas.read_csv(file, usecols=TRDSHT_ASSET_AND_ACCRUAL_DETAIL_COLUMNS, delimiter=',', quotechar='"',
-                                thousands=',', parse_dates=["As Of Date"], dtype={"Shares/Par": np.int32},
-                                na_filter=False)
+                                thousands=',', parse_dates=["As Of Date"], na_filter=False)
 
     # Rename Columns
     assets_df = assets_df.rename(columns={
