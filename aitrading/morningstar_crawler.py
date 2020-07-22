@@ -8,8 +8,9 @@ import re, string
 from lxml import html
 import requests
 
-ALLOWED_EXCHANGES = {'CAD':['TSX', 'TSE'],'USD':['NAS','NASDAQ','NYSE','ARCA', 'AMEX', 'PINX', 'BATS']}
-MORNINGSTAR_BASE_URL = 'http://www.morningstar.co.uk/uk/funds/SecuritySearchResults.aspx?type=ALL&search='
+ALLOWED_EXCHANGES = {'CAD':['TSX', 'TSE'],'USD':['ARCA', 'AMEX', 'PINX', 'BATS','NAS','NASDAQ','NYSE']}
+MORNINGSTAR_BASE_URL = 'https://www.morningstar.ca/ca/funds/SecuritySearchResults.aspx?search='
+
 
 _quote = {}
 
@@ -48,20 +49,30 @@ def find_by_ticker(ticker, currency):
 
     try:
         page = html.fromstring(requests.get(MORNINGSTAR_BASE_URL + ticker).content)
+
     except Exception as e:
         _quote["error"] = "Error contacting security search: " + str(e)
         return _quote
 
     xpath_search = "//span[("
     for exch in ALLOWED_EXCHANGES[currency]:
-        xpath_search += "contains(.,'" + exch + "') or "
+        xpath_search += "contains(.,'" + exch + ':'+ ticker+"') or "
 
     # needs to start at -3 to override the last "or"
     xpath_search = xpath_search[:-3] + ") and contains(.,':" + ticker + "')]"
 
     try:
-        result = page.xpath(xpath_search)[0]
+        pos = 0
+        result = page.xpath(xpath_search)[pos]
+
+        while(result.xpath('.//ancestor::tr/td[3]/span')[0].text != currency or result.text.split(":", 1)[1]!= ticker):
+            pos +=1
+            result =page.xpath(xpath_search)[pos]
+           
+                
+
         link = result.xpath('.//ancestor::tr/td[1]/a')[0]
+
     except:
         _quote["error"] = "Invalid ticker/currency pair"
         return _quote
@@ -73,25 +84,27 @@ def find_by_ticker(ticker, currency):
 def _get_secutity_info(link):
 
     _quote["sec_name"] = ''.join(filter(lambda x : x in string.printable, link.text)) # removes any weird characters
+    href = link.attrib['href']
 
     # Some hrefs are relative, need to add back the domain
-    if str(link.attrib['href']).startswith('/uk'):
-        page = html.fromstring(requests.get('http://www.morningstar.co.uk' + link.attrib['href']).content)
+    if 'etf' in href:
+        serial_num = re.split("=", href)[1]
+        serial_num = re.split("&",serial_num)[0]
+        url = 'https://tools.morningstar.co.uk/uk/stockreport/default.aspx?SecurityToken='+serial_num+']3]0]E0WWE$$ALL'
     else:
-        page = html.fromstring(requests.get(link.attrib['href']).content)
+        serial_num = re.split("=", href)[1]
+        url = 'https://tools.morningstar.co.uk/uk/stockreport/default.aspx?SecurityToken='+serial_num+']3]0]E0WWE$$ALL'
+
+    page = html.fromstring(requests.get(url).content)
+
 
     # ETF pages have a different layout than Stock pages
     try:
-        if 'etf' in link.attrib['href']:
-            price_cell = page.xpath("//tr[contains(.,'Closing Price')]/td[3]")[0]
-            _quote["price"] = float(re.sub("[^0-9.]", "", price_cell.text))
-            _quote["isin"] = page.xpath("//tr[contains(.,'ISIN')]/td[3]")[0].text
-
-        else:
-            price_cell = page.xpath("//*[@id = 'Col0LastClose']")[0]
-            _quote["price"] = float(re.sub("[^0-9.]", "", price_cell.text))
-            _quote["isin"] = page.xpath("//*[@id = 'Col0Isin']")[0].text
-
+       
+        
+        _quote["price"] =   float(re.sub("[^0-9.]", "", page.xpath('//*[@id="Col0Price"]')[0].text))    
+         
+        _quote["isin"] = page.xpath("//*[@id = 'Col0Isin']")[0].text
         _quote.pop("error", None)
     except Exception as e:
         _quote["error"] = "Error gathering security info: " + str(e)
