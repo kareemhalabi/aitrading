@@ -6,7 +6,7 @@ chardet==3.0.4
 cryptography==2.4.2
 dj-database-url==0.4.2
 Django==1.11.15
-django-registration==2.2
+django-registration==3.1.2
 dnspython==1.16.0
 gunicorn==19.7.1
 idna==2.8
