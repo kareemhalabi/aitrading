@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block navbar_buttons %}
-    <li><a href="/accounts/logout" class="no-focus-outline">Logout</a></li>
+    {% include "registration/logout_button.html" %}
 {% endblock %}
 
 {% block content %}

@@ -3,7 +3,7 @@ import re
 from django.contrib.auth.models import User
 from django.http import HttpResponseBadRequest, HttpResponse, HttpResponseNotFound
 
-from registration.backends.hmac.views import RegistrationView
+from django_registration.backends.activation.views import RegistrationView
 
 from aitrading.models import AuthorizedUser
 
@@ -23,7 +23,7 @@ def check_authorized_email(request):
                                         ' Please contact the supervisors to request access.')
 
 
-# Overrides default inactive user creator in registration.backends.hmac.views.RegistrationView
+# Overrides default inactive user creator in django_registration.backends.activation.views.RegistrationView
 def create_inactive_user(self, form):
     new_user = form.save(commit=False)
     new_user.first_name = re.sub(r'[^a-zàâçéèêëîïôûùüÿñæœ \'-]/gi', '', form.data.get('first_name'))

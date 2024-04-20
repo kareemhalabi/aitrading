@@ -51,6 +51,17 @@
     outline: 0;
 }
 
+.logout-button {
+    padding: 14.5px 15px;
+    border: none;
+    background-color: #222222;
+    color: #ffffff;
+}
+
+.logout-button:focus, .logout-button:hover {
+    background-color: #090909;
+}
+
 /* For responsive table. Modified from https://codepen.io/geoffyuen/pen/FCBEg */
 .rwd-table th {
     display: none;

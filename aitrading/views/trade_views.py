@@ -85,9 +85,8 @@ def submit_order(request):
         keen.add_events({'trades':trades, 'orders':[{'group':group.get('group_account'), 'email':request.user.email}]})
 
     try:
-        sender = '%s %s <%s>' % (request.user.first_name, request.user.last_name, request.user.email)
-        other_members = group.get('members').exclude(email=request.user.email)
-        other_members_emails = ['%s %s <%s>' % (member.first_name, member.last_name, member.email) for member in other_members]
+        members = group.get('members')
+        members_emails = ['%s %s <%s>' % (member.first_name, member.last_name, member.email) for member in members]
 
         supervisors = ['%s %s <%s>' % (supervisor.first_name, supervisor.last_name,
                                        supervisor.email) for supervisor in group.get('supervisors')]
@@ -104,10 +103,8 @@ def submit_order(request):
                                               request)
         from aitrading.templatetags.template_tags import remove_extra_0
         trader_msg = EmailMessage(
-            from_email=sender,
             to=supervisors,
-            bcc=[sender],
-            cc=other_members_emails,
+            cc=members_emails,
             subject='Applied Investments Trade Request - Group %s (%s)' % (
                 group.get('group_number'), remove_extra_0(group.get('group_account'))),
             body=str(trader_content)
@@ -116,10 +113,8 @@ def submit_order(request):
         trader_msg.send()
 
         supervisor_msg = EmailMessage(
-            from_email=sender,
             to=supervisors,
-            bcc=[sender],
-            cc=other_members_emails,
+            cc=members_emails,
             subject='Reasoning for Applied Investments Trade Request - Group %s (%s)' % (
                 group.get('group_number'), remove_extra_0(group.get('group_account'))),
             body=str(supervisor_content)
