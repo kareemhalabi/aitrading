@@ -4,7 +4,7 @@
 
 AI Trading was an application developed for the Applied Investments class (FINE 541) at McGill to facilitate the approval/execution of stock and bond trades. A primary activity of the course involves managing an investment portfolio where trades were formally sent by email to the professor who would approve them before they were executed by an authorized trader, however several issues including incorrect formatting, missing data and not notifying other members caused problems for the professor and authorized trader. AI Trading solves these problems by providing a web interface for students to log in, get stock quotes, fill in the remaining trade details and submit with all formatting and email delivery handled on the backend. Also included are several error checks, input validators as well as the convenience of viewing the current stocks and cash available in the group's portfolio.
 
-The application is built on Django with a fairly heavy amount of front-end Javascript/JQuery code. User data and group mappings are stored in a PostgreSQL database while financial data is stored in MongoDB. Security information is scraped from the [Morningstar UK](http://www.morningstar.co.uk/uk/) website (As there was no publicly available API that included ISIN data) and the portfolio data is pulled from BNY Mellon via SFTP. I have also utilized a library called [django-registration](https://django-registration.readthedocs.io) to support the use of activation emails and all emails are delivered through [SendGrid](https://sendgrid.com/)'s SMTP service.
+The application is built on Django with a fairly heavy amount of front-end Javascript/JQuery code. User data and group mappings are stored in a PostgreSQL database while financial data is stored in MongoDB. Security information is pulled from [EODHD](https://eodhd.com) (caching identical requests by default for 12 hours to try to stay within the rate limits) and the portfolio data is pulled from BNY Mellon via SFTP. I have also utilized a library called [django-registration](https://django-registration.readthedocs.io) to support the use of activation emails and all emails are delivered through [SendGrid](https://sendgrid.com/)'s SMTP service.
 
 ## Table of contents
 
@@ -38,6 +38,8 @@ A few environment variables are needed to ensure proper functionality. (Includes
 14. **SFTP_HOST**: URL for BNY Mellon SFTP server
 15. **SFTP_PORT**: Port number for BNY Mellon SFTP server
 16. **SFTP_USERNAME**: Username for BNY Mellon SFTP server
+17. **EODHD_API_TOKEN**: API token for eodhd.com (source of security search)
+18. **EODHD_CACHE_TTL_SECONDS**: Duration of the cache for calls to eodhd.com
 
 ### Database and Superuser Setup
 
@@ -73,4 +75,4 @@ If there is a student that is moved from one group to another, this mapping need
 Registering an account can be done [here](https://aitrading.herokuapp.com/accounts/register/). Enter your McGill email (all lowercase) and follow the steps. Note that your unsername is what you will use to login **not your email address**.
 
 #### Trading Bonds
-Bond information must all be entered manually as this data is not available on Morningstar UK. For the price, use a par value of 1, not 100
+Bond information must all be entered manually as this data is not easily available. For the price, use a par value of 1, not 100

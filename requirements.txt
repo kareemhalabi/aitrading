@@ -12,11 +12,12 @@ dj-database-url==2.1.0
 Django==5.0.4
 django-registration==3.4
 dnspython==2.6.1
+eod==0.2.1
 gunicorn==21.2.0
 idna==3.7
 keen==0.7.0
-lxml==5.2.1
 MarkupSafe==2.1.5
+memoization==0.4.0
 numpy==1.26.4
 packaging==24.0
 pandas==2.2.2

@@ -9,7 +9,7 @@ from django.template.loader import render_to_string
 
 from aitrading.etl import db_client
 from aitrading.models import AuthorizedUser
-from aitrading.morningstar_crawler import find_by_isin, find_by_ticker
+from aitrading.security_search import find_by_isin, find_by_ticker
 from aitrading.settings import DEBUG
 from aitrading.views import get_group
 
