@@ -131,7 +131,7 @@ DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL')
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'Canada/Eastern'
+TIME_ZONE = 'America/Montreal'
 
 USE_I18N = True
 
